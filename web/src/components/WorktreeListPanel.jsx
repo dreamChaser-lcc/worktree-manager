@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { DirectoryPicker } from './DirectoryPicker.jsx';
+import { RecentRepoBar } from './RecentRepoBar.jsx';
 import {
   fetchWorktreeList,
   removeWorktree,
@@ -8,9 +9,8 @@ import {
   openDirectoryInEditor
 } from '../api/client.js';
 
-/** Worktree 管理面板：列表展示、删除（安全拦截）、prune、打开编辑器 */
-export function WorktreeListPanel() {
-  const [repoPath, setRepoPath] = useState('');
+/** Worktree 管理面板：列表展示、删除（安全拦截）、prune、打开编辑器；主仓库目录由应用层共享 */
+export function WorktreeListPanel({ repoPath, onRepoPathChange, recentRepoList, initialBrowsePath }) {
   const [repositoryValid, setRepositoryValid] = useState(false);
   const [worktreeList, setWorktreeList] = useState([]);
   const [listError, setListError] = useState(null);
@@ -115,14 +115,16 @@ export function WorktreeListPanel() {
 
   return (
     <div>
+      <RecentRepoBar repoPath={repoPath} recentRepoList={recentRepoList} onRepoPathChange={onRepoPathChange} />
       <DirectoryPicker
         label="选择主仓库"
         value={repoPath}
         onChange={(selectedPath) => {
-          setRepoPath(selectedPath);
+          onRepoPathChange(selectedPath);
           setActionMessage(null);
         }}
         hintText="选择后展示该仓库全部 worktree"
+        initialPath={initialBrowsePath}
       />
 
       {repoPath && !repositoryValid ? <div className="alert-error">该目录不是有效 git 仓库</div> : null}

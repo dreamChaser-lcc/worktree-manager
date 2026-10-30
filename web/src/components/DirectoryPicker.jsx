@@ -1,13 +1,33 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { fetchDriveList, fetchDirectoryListing } from '../api/client.js';
 
 /**
  * 目录选择器：只读输入框 + 弹层目录树。
  * 从盘符逐级进入，选中"当前目录"回填绝对路径。
+ * initialPath：打开时默认定位的起始目录（如项目存放目录），仅首次打开生效，
+ * 之后保留用户浏览位置；盘符根目录的"上一级"回到盘符列表。
  * allowNewSubdirectory：允许在当前目录下拼接一个尚不存在的新子目录名
  * （用于 worktree 目标路径——目标目录通常还没建）。
  */
-export function DirectoryPicker({ label, value, onChange, hintText, allowNewSubdirectory }) {
+/** 计算初始路径中尚不存在的子路径尾巴（相对最终可列出的祖先目录），如 D:\ws\需求 → D:\ws 时返回 "需求" */
+function getMissingTail(fullPath, existingDirectoryPath) {
+  const normalizedFull = String(fullPath || '').replace(/\//g, '\\').replace(/\\+$/, '').toLowerCase();
+  const normalizedExisting = String(existingDirectoryPath || '').replace(/\//g, '\\').replace(/\\+$/, '').toLowerCase();
+  if (!normalizedExisting || !normalizedFull.startsWith(normalizedExisting)) {
+    return '';
+  }
+  return String(fullPath || '').replace(/\//g, '\\').slice(normalizedExisting.length).replace(/^\\+/, '');
+}
+
+export function DirectoryPicker({
+  label,
+  value,
+  onChange,
+  hintText,
+  allowNewSubdirectory,
+  initialPath,
+  suggestSubdirectoryName
+}) {
   const [pickerVisible, setPickerVisible] = useState(false);
   const [currentPath, setCurrentPath] = useState(null);
   const [parentPath, setParentPath] = useState(null);
@@ -16,13 +36,59 @@ export function DirectoryPicker({ label, value, onChange, hintText, allowNewSubd
   const [pickerError, setPickerError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [newSubdirectoryName, setNewSubdirectoryName] = useState('');
+  const initialPathAppliedRef = useRef(false);
+
+  // 打开选择器时预填建议的子目录名（如按项目名/需求名建子目录）
+  useEffect(() => {
+    if (pickerVisible) {
+      setNewSubdirectoryName(suggestSubdirectoryName || '');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pickerVisible]);
 
   useEffect(() => {
     if (!pickerVisible) {
       return;
     }
+    if (!currentPath && initialPath && !initialPathAppliedRef.current) {
+      // 首次打开定位到初始目录；目录尚不存在时逐级向上找到存在的祖先目录浏览，
+      // 缺失的子路径并入"新建子目录"输入（不静默创建目录，由用户确认后随创建动作生成）
+      initialPathAppliedRef.current = true;
+      let cancelled = false;
+      (async () => {
+        let probePath = initialPath;
+        for (let attempt = 0; attempt < 8; attempt += 1) {
+          try {
+            const data = await fetchDirectoryListing(probePath);
+            if (cancelled) {
+              return;
+            }
+            setCurrentPath(data.currentPath);
+            setDirectoryList(data.directories);
+            setParentPath(data.parentPath);
+            setPickerError(null);
+            const missingTail = getMissingTail(initialPath, data.currentPath);
+            const combinedSubdirectoryName = [missingTail, suggestSubdirectoryName].filter(Boolean).join('\\');
+            if (combinedSubdirectoryName) {
+              setNewSubdirectoryName(combinedSubdirectoryName);
+            }
+            return;
+          } catch {
+            const parentPath = probePath.replace(/[\\/]+$/, '').replace(/[\\/][^\\/]*$/, '');
+            if (!parentPath || parentPath === probePath) {
+              break;
+            }
+            probePath = parentPath;
+          }
+        }
+        if (!cancelled) {
+          setPickerError('初始目录不可用，请从盘符重新选择');
+        }
+      })();
+      return;
+    }
     if (!currentPath) {
-      // 首次打开：列驱动器
+      // 列驱动器
       fetchDriveList()
         .then((data) => setDriveList(data.drives))
         .catch((error) => setPickerError(error.message));
@@ -72,8 +138,12 @@ export function DirectoryPicker({ label, value, onChange, hintText, allowNewSubd
               <span className="picker-current-path" title={currentPath || ''}>
                 {currentPath || '请选择驱动器'}
               </span>
-              {currentPath && parentPath ? (
-                <button type="button" className="button-secondary" onClick={() => setCurrentPath(parentPath)}>
+              {currentPath ? (
+                <button
+                  type="button"
+                  className="button-secondary"
+                  onClick={() => setCurrentPath(parentPath || null)}
+                >
                   上一级
                 </button>
               ) : null}

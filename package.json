@@ -9,7 +9,10 @@
   "scripts": {
     "setup": "npm --prefix server install && npm --prefix web install",
     "dev:server": "npm --prefix server run start",
+    "dev:server:watch": "node --watch server/src/server.js",
     "dev:web": "npm --prefix web run dev",
+    "build:web:watch": "npm --prefix web run build -- --watch",
+    "dev": "node scripts/dev.js",
     "build:web": "npm --prefix web run build",
     "start": "node server/src/server.js",
     "test": "npm --prefix server run test"

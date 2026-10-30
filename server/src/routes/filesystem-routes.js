@@ -3,6 +3,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { isGitRepository } from '../core/validators.js';
 import { executeGitCommand } from '../core/git-executor.js';
+import { revealInExplorer } from '../core/explorer-revealer.js';
+import { persistenceManager } from '../storage/persistence-manager.js';
 import { NotFoundError, ValidationError } from '../core/errors.js';
 
 /** 目录浏览与 git 仓库校验路由：支撑前端目录选择器 */
@@ -52,6 +54,19 @@ export function registerFilesystemRoutes(router) {
     };
   });
 
+  // 在系统文件管理器中显示路径（文件则定位选中，目录则直接打开）
+  router.post('/api/filesystem/reveal', async (context) => {
+    const targetPath = context.request.body?.targetPath;
+    if (!targetPath || typeof targetPath !== 'string') {
+      throw new ValidationError('缺少 targetPath');
+    }
+    const resolvedPath = path.resolve(targetPath);
+    if (!fs.existsSync(resolvedPath)) {
+      throw new NotFoundError(`路径不存在: ${resolvedPath}`);
+    }
+    context.body = revealInExplorer(resolvedPath);
+  });
+
   // 实时校验所选目录是否为 git 仓库
   router.get('/api/filesystem/repository-check', async (context) => {
     const targetDirectoryPath = requireValidDirectory(context.query.path);
@@ -65,6 +80,8 @@ export function registerFilesystemRoutes(router) {
       } catch {
         currentBranchName = null;
       }
+      // 校验通过视为一次使用：写入最近主仓库记录（LRU-10，内部已捕获异常）
+      persistenceManager.upsertRecentRepoPath(targetDirectoryPath);
     }
     context.body = { path: targetDirectoryPath, isGitRepository: repositoryExists, currentBranch: currentBranchName };
   });

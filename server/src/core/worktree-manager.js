@@ -25,6 +25,8 @@ function normalizePathForComparison(targetPath) {
   }
 }
 
+export { normalizePathForComparison };
+
 /** worktree 信息：路径 / 分支 / HEAD / 脏状态 / 是否主 worktree / 目录是否已失效 */
 export async function listWorktrees(repoPath) {
   const porcelainOutput = await executeGitCommand(repoPath, ['worktree', 'list', '--porcelain']);
@@ -172,11 +174,19 @@ export async function removeWorktree({ repoPath, targetPath, force, deleteDirect
   const unmergedCommitCount = await getUnmergedCommitCount(repoPath, targetEntry.branch);
 
   if (!targetEntry.stale) {
-    const statusResult = await executeGitCommand(normalizedTargetPath, ['status', '--porcelain']);
-    uncommittedFileList = statusResult.stdout
-      .split('\n')
-      .map((lineText) => lineText.trim())
-      .filter(Boolean);
+    try {
+      const statusResult = await executeGitCommand(normalizedTargetPath, ['status', '--porcelain']);
+      uncommittedFileList = statusResult.stdout
+        .split('\n')
+        .map((lineText) => lineText.trim())
+        .filter(Boolean);
+    } catch (statusError) {
+      // 目录已损坏（.git 元数据丢失、不再是 git 仓库）：没有可保护的 git 数据，视为无未提交内容
+      if (!/not a git repository/i.test(statusError.message || '')) {
+        throw statusError;
+      }
+      uncommittedFileList = [];
+    }
 
     if (uncommittedFileList.length > 0 && !force) {
       throw new ConflictError(

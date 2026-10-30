@@ -1,19 +1,56 @@
 import Router from '@koa/router';
-import { getJob, subscribeJobLog } from '../jobs/job-runner.js';
+import { getJob, listMemoryJobs, subscribeJobLog } from '../jobs/job-runner.js';
+import { persistenceManager } from '../storage/persistence-manager.js';
 import { NotFoundError } from '../core/errors.js';
 
 const SSE_HEARTBEAT_INTERVAL_MS = 15_000;
 
-/** 任务状态与 SSE 日志流路由 */
+/** 任务状态与 SSE 日志流路由：内存任务为运行态，重启后由持久层补齐历史 */
 export function registerTaskRoutes(router) {
-  router.get('/api/tasks/:jobId', async (context) => {
-    const job = requireJob(context.params.jobId);
-    context.body = serializeJob(job);
+  // 任务列表：内存任务 + 持久化历史合并（按创建时间倒序），列表不携带日志体
+  router.get('/api/tasks', async (context) => {
+    const taskList = [];
+    const memoryJobIdSet = new Set();
+    for (const memoryJob of listMemoryJobs()) {
+      memoryJobIdSet.add(memoryJob.id);
+      taskList.push(serializeJobSummary(memoryJob));
+    }
+    const persistedRecordList = await persistenceManager.listJobRecords();
+    for (const jobRecord of persistedRecordList) {
+      if (!memoryJobIdSet.has(jobRecord.id)) {
+        taskList.push(jobRecord);
+      }
+    }
+    taskList.sort((firstTask, secondTask) => (firstTask.createdAt < secondTask.createdAt ? 1 : -1));
+    context.body = { tasks: taskList };
   });
 
-  // SSE 日志流：先推历史日志，再推增量，终态后关闭
+  router.get('/api/tasks/:jobId', async (context) => {
+    const jobId = context.params.jobId;
+    const memoryJob = getJob(jobId);
+    if (memoryJob) {
+      context.body = serializeJob(memoryJob);
+      return;
+    }
+    const persistedRecord = await persistenceManager.findJobRecordById(jobId);
+    if (!persistedRecord) {
+      throw new NotFoundError(`任务不存在: ${jobId}`);
+    }
+    context.body = { ...persistedRecord, logLines: await persistenceManager.readJobLogLines(jobId) };
+  });
+
+  // SSE 日志流：先推历史日志，再推增量，终态后关闭；历史任务推全量后立即落终态关闭（事件格式一致，前端无感知）
   router.get('/api/tasks/:jobId/logs', async (context) => {
-    const job = requireJob(context.params.jobId);
+    const jobId = context.params.jobId;
+    const memoryJob = getJob(jobId);
+    const persistedRecord = memoryJob ? null : await persistenceManager.findJobRecordById(jobId);
+    if (!memoryJob && !persistedRecord) {
+      throw new NotFoundError(`任务不存在: ${jobId}`);
+    }
+
+    const logLineList = memoryJob ? memoryJob.logLines : await persistenceManager.readJobLogLines(jobId);
+    const jobStatus = memoryJob ? memoryJob.status : persistedRecord.status;
+    const jobExitCode = memoryJob ? memoryJob.exitCode : persistedRecord.exitCode;
 
     context.set({
       'Content-Type': 'text/event-stream',
@@ -24,15 +61,15 @@ export function registerTaskRoutes(router) {
     context.respond = false;
 
     const responseBody = context.res;
-    responseBody.write(`event: history\ndata: ${JSON.stringify(job.logLines)}\n\n`);
+    responseBody.write(`event: history\ndata: ${JSON.stringify(logLineList)}\n\n`);
 
-    if (job.status !== 'running') {
-      responseBody.write(`event: end\ndata: ${JSON.stringify({ status: job.status, exitCode: job.exitCode })}\n\n`);
+    if (jobStatus !== 'running') {
+      responseBody.write(`event: end\ndata: ${JSON.stringify({ status: jobStatus, exitCode: jobExitCode })}\n\n`);
       responseBody.end();
       return;
     }
 
-    const unsubscribeLog = subscribeJobLog(job, (payload) => {
+    const unsubscribeLog = subscribeJobLog(memoryJob, (payload) => {
       if (payload.type === 'append') {
         responseBody.write(`event: append\ndata: ${JSON.stringify(payload.lines)}\n\n`);
       } else {
@@ -54,12 +91,15 @@ export function registerTaskRoutes(router) {
   });
 }
 
-function requireJob(jobId) {
-  const job = getJob(jobId);
-  if (!job) {
-    throw new NotFoundError(`任务不存在: ${jobId}`);
-  }
-  return job;
+function serializeJobSummary(job) {
+  return {
+    id: job.id,
+    name: job.name,
+    status: job.status,
+    exitCode: job.exitCode,
+    createdAt: job.createdAt,
+    finishedAt: job.finishedAt
+  };
 }
 
 function serializeJob(job) {

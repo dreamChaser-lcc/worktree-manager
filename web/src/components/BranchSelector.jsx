@@ -17,16 +17,19 @@ export function BranchSelector({
   onOverviewLoaded
 }) {
   const [branchItemList, setBranchItemList] = useState([]);
+  const [remoteBranchItemList, setRemoteBranchItemList] = useState([]);
   const [loadError, setLoadError] = useState(null);
 
   useEffect(() => {
     if (!repoPath) {
       setBranchItemList([]);
+      setRemoteBranchItemList([]);
       return;
     }
     fetchBranchOverview(repoPath)
       .then((overviewData) => {
         setBranchItemList(overviewData.branches);
+        setRemoteBranchItemList(overviewData.remoteBranches || []);
         setLoadError(null);
         if (onOverviewLoaded) {
           onOverviewLoaded({
@@ -89,13 +92,41 @@ export function BranchSelector({
             value={branchName}
             onChange={(changeEvent) => onBranchNameChange(changeEvent.target.value)}
           />
-          <input
-            className="form-input base-ref-input"
-            type="text"
-            placeholder="起点 ref（留空 = 当前 HEAD）"
-            value={baseRef}
-            onChange={(changeEvent) => onBaseRefChange(changeEvent.target.value)}
-          />
+          <div className="base-ref-block">
+            <label className="form-label" htmlFor={`base-branch-select-${repoPath}`}>起点分支（新分支基于它创建）</label>
+            <select
+              id={`base-branch-select-${repoPath}`}
+              className="form-input"
+              value={remoteBranchItemList.includes(baseRef) || branchItemList.some((branchItem) => branchItem.name === baseRef) ? baseRef : ''}
+              onChange={(changeEvent) => onBaseRefChange(changeEvent.target.value)}
+            >
+              <option value="">请选择起点分支（或在下方的输入框手动填写 ref）</option>
+              {remoteBranchItemList.length > 0 ? (
+                <optgroup label="远程分支（最新代码）">
+                  {remoteBranchItemList.map((remoteBranchName) => (
+                    <option key={remoteBranchName} value={remoteBranchName}>
+                      {remoteBranchName}
+                    </option>
+                  ))}
+                </optgroup>
+              ) : null}
+              <optgroup label="本地分支">
+                {branchItemList.map((branchItem) => (
+                  <option key={branchItem.name} value={branchItem.name}>
+                    {branchItem.name}
+                    {branchItem.occupiedBy ? `（已被占用: ${branchItem.occupiedBy}）` : ''}
+                  </option>
+                ))}
+              </optgroup>
+            </select>
+            <input
+              className="form-input base-ref-input"
+              type="text"
+              placeholder="起点 ref（已默认远程最新分支，可下拉选择或手动输入；留空 = 当前 HEAD）"
+              value={baseRef}
+              onChange={(changeEvent) => onBaseRefChange(changeEvent.target.value)}
+            />
+          </div>
         </div>
       )}
 

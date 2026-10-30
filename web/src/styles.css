@@ -131,13 +131,22 @@ button {
 }
 
 .button-secondary {
-  background-color: #f6f8fa;
-  color: #24292f;
-  border: 1px solid #d0d7de;
+  background-color: #ffffff;
+  color: #0969da;
+  border: 1px solid rgba(9, 105, 218, 0.55);
   border-radius: 4px;
   padding: 6px 12px;
   font-size: 13px;
   cursor: pointer;
+}
+
+.button-secondary:hover:not(:disabled) {
+  background-color: #ddf4ff;
+}
+
+.button-secondary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .button-danger {
@@ -307,8 +316,20 @@ button {
   margin-bottom: 0;
 }
 
-.base-ref-input {
+.base-ref-block {
   margin-top: 8px;
+}
+
+.base-ref-block .form-label {
+  margin-bottom: 4px;
+}
+
+.base-ref-block select {
+  margin-bottom: 8px;
+}
+
+.base-ref-input {
+  margin-top: 0;
 }
 
 .strategy-radio {
@@ -341,25 +362,29 @@ button {
   margin-bottom: 12px;
 }
 
-.list-toolbar .button-secondary {
+.list-toolbar button {
   margin-right: 8px;
 }
 
-.worktree-table {
+.worktree-table,
+.record-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 13px;
 }
 
 .worktree-table th,
-.worktree-table td {
+.worktree-table td,
+.record-table th,
+.record-table td {
   border: 1px solid #d0d7de;
   padding: 6px 8px;
   text-align: left;
   vertical-align: middle;
 }
 
-.worktree-table th {
+.worktree-table th,
+.record-table th {
   background-color: #f6f8fa;
 }
 
@@ -370,10 +395,8 @@ button {
 
 .cell-actions {
   display: flex;
-}
-
-.cell-actions .button-secondary {
-  margin-right: 6px;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
 .badge-main {
@@ -444,4 +467,291 @@ button {
   overflow-y: auto;
   white-space: pre-wrap;
   word-break: break-all;
+}
+
+/* ── 最近主仓库 / 任务记录 / 创建历史 / 设置 ── */
+.recent-repo-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.recent-repo-bar .form-label {
+  margin: 0 8px 0 0;
+  flex-shrink: 0;
+}
+
+.recent-repo-select {
+  width: auto;
+  min-width: 320px;
+  max-width: 560px;
+}
+
+.badge-status {
+  display: inline-block;
+  font-size: 12px;
+  border-radius: 10px;
+  padding: 1px 8px;
+}
+
+.badge-interrupted {
+  background-color: #ffebe9;
+  color: #cf222e;
+}
+
+.section-block {
+  margin-top: 24px;
+  border-top: 1px solid #d0d7de;
+  padding-top: 14px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.section-header .form-label {
+  margin: 0 12px 0 0;
+}
+
+.section-header .button-secondary {
+  margin-right: 6px;
+}
+
+.section-empty {
+  color: #8c959f;
+  font-size: 13px;
+}
+
+.task-detail-panel {
+  margin-top: 12px;
+  border-top: 1px solid #d0d7de;
+  padding-top: 12px;
+}
+
+.history-reason {
+  font-size: 12px;
+  color: #8c959f;
+  margin-top: 2px;
+  word-break: break-all;
+}
+
+.project-name-line {
+  margin-bottom: 2px;
+  word-break: break-all;
+}
+
+.project-name-line .project-git-link {
+  margin-left: 8px;
+  color: #0969da;
+  text-decoration: none;
+}
+
+.project-name-line .project-git-link:hover {
+  text-decoration: underline;
+}
+
+/* 项目明细卡片：纵向布局，避免多列挤压 */
+.project-detail-card {
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  background-color: #fafbfc;
+}
+
+.project-detail-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.project-detail-header .form-label {
+  margin: 0;
+}
+
+.project-detail-header .badge-status {
+  margin-left: 8px;
+}
+
+.project-detail-line {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 6px;
+}
+
+.project-detail-line:last-child {
+  margin-bottom: 0;
+}
+
+.project-detail-line .button-secondary,
+.project-detail-line button {
+  white-space: nowrap;
+}
+
+.project-detail-line .button-secondary {
+  margin-left: 6px;
+}
+
+.detail-line-label {
+  flex-shrink: 0;
+  width: 72px;
+  font-weight: 600;
+  color: #57606a;
+}
+
+.detail-line-value {
+  flex: 1 1 auto;
+  min-width: 0;
+  word-break: break-all;
+}
+
+.detail-line-value .form-hint {
+  margin-top: 2px;
+}
+
+.dependency-status-row {
+  display: flex;
+  align-items: center;
+}
+
+.dependency-status-row .badge-status {
+  margin-right: 8px;
+}
+
+.dependency-status-row .dependency-install-button {
+  padding: 2px 10px;
+  font-size: 12px;
+}
+
+.conflict-hint {
+  margin-top: 4px;
+  color: #cf222e;
+  font-size: 12px;
+  word-break: break-all;
+}
+
+/* 已删除行：仅弱化文字（按钮保持完全对比度，可正常操作） */
+.requirement-deleted-row td {
+  color: #8c959f;
+}
+
+.requirement-deleted-row td a {
+  color: #6e7781;
+}
+
+.settings-current-path {
+  font-size: 13px;
+  color: #24292f;
+  word-break: break-all;
+  margin-bottom: 6px;
+}
+
+/* ── 需求任务 ─────────────────────────── */
+.requirement-project-block {
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  background-color: #fafbfc;
+}
+
+.requirement-project-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.requirement-project-header .project-name-input {
+  width: 200px;
+  margin-right: 8px;
+}
+
+.requirement-project-header .button-danger {
+  margin-left: auto;
+}
+
+.requirement-link-cell {
+  max-width: 220px;
+  word-break: break-all;
+}
+
+.requirement-link-cell a {
+  color: #0969da;
+  text-decoration: none;
+}
+
+.requirement-link-cell a:hover {
+  text-decoration: underline;
+}
+
+.detail-expanded-panel {
+  background-color: #f6f8fa;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.detail-expanded-panel .form-label {
+  margin-top: 10px;
+}
+
+.detail-expanded-panel .form-label:first-child {
+  margin-top: 0;
+}
+
+.worktree-select {
+  width: 100%;
+}
+
+.worktree-select-row {
+  display: flex;
+  align-items: center;
+}
+
+.worktree-select-row .form-label {
+  margin: 0 8px 0 0;
+}
+
+.worktree-select-row .button-secondary {
+  margin-left: auto;
+}
+
+.quick-create-dialog {
+  width: 680px;
+  max-width: 94%;
+}
+
+.quick-create-body {
+  overflow-y: auto;
+  max-height: 64vh;
+}
+
+.requirement-form-dialog {
+  width: 760px;
+  max-width: 94%;
+  max-height: 88vh;
+}
+
+.requirement-form-body {
+  overflow-y: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.workspace-generate-button {
+  margin-left: 8px;
+}
+
+.reserved-textarea {
+  width: 100%;
+  min-height: 64px;
+  padding: 6px 8px;
+  border: 1px solid #d0d7de;
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: inherit;
+  resize: vertical;
 }

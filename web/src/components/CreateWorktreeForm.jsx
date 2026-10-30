@@ -1,13 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { DirectoryPicker } from './DirectoryPicker.jsx';
+import { RecentRepoBar } from './RecentRepoBar.jsx';
 import { BranchSelector } from './BranchSelector.jsx';
 import { DependencyStrategySection } from './DependencyStrategySection.jsx';
 import { TaskLogPanel } from './TaskLogPanel.jsx';
-import { createWorktree, fetchRepositoryCheck } from '../api/client.js';
+import { buildRequirementDirectoryPath, deriveProjectNameFromPath } from './RequirementTaskForm.jsx';
+import { createWorktree, fetchRepositoryCheck, fetchRequirementTaskList, fetchDefaultBaseRef } from '../api/client.js';
 
-/** 创建 Worktree 表单：目录选择 → 分支 → 依赖策略 → 可选后置动作 */
-export function CreateWorktreeForm() {
-  const [repoPath, setRepoPath] = useState('');
+/** 创建 Worktree 表单：目录选择 → 分支 → 依赖策略 → 可选后置动作；主仓库目录由应用层共享 */
+export function CreateWorktreeForm({
+  repoPath,
+  onRepoPathChange,
+  recentRepoList,
+  initialBrowsePath,
+  workspaceDirectory,
+  workspaceLayoutEnabled
+}) {
   const [repoCheckResult, setRepoCheckResult] = useState(null);
   const [targetPath, setTargetPath] = useState('');
   const [branchMode, setBranchMode] = useState('existing');
@@ -15,9 +23,13 @@ export function CreateWorktreeForm() {
   const [baseRef, setBaseRef] = useState('');
   const [packageManager, setPackageManager] = useState(undefined); // undefined=未检测 null=无 lockfile
   const [recommendedStrategy, setRecommendedStrategy] = useState(null);
-  const [strategy, setStrategy] = useState('skip');
+  const [strategy, setStrategy] = useState('share');
   const [shouldCopyIgnoredFiles, setShouldCopyIgnoredFiles] = useState(true);
   const [shouldOpenInEditor, setShouldOpenInEditor] = useState(false);
+  const [requirementTaskList, setRequirementTaskList] = useState([]);
+  const [requirementTaskId, setRequirementTaskId] = useState('');
+  // 新建分支的默认起点（远程最新分支，如 origin/master）
+  const [defaultBaseRef, setDefaultBaseRef] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [createResult, setCreateResult] = useState(null);
   const [createError, setCreateError] = useState(null);
@@ -39,9 +51,27 @@ export function CreateWorktreeForm() {
   function handleBranchOverviewLoaded(overviewData) {
     setPackageManager(overviewData.packageManager);
     setRecommendedStrategy(overviewData.recommendedStrategy);
-    // 有推荐则跟随推荐，无推荐保持 skip
-    setStrategy(overviewData.recommendedStrategy || 'skip');
+    // 默认共享主目录（推荐标识仅作参考展示）
+    setStrategy('share');
   }
+
+  // 需求任务下拉数据：本组件随页签挂载，加载一次即可
+  useEffect(() => {
+    fetchRequirementTaskList()
+      .then((listData) => setRequirementTaskList(listData.tasks || []))
+      .catch(() => setRequirementTaskList([]));
+  }, []);
+
+  // 主仓库变化 → 取新建分支默认起点（远程最新分支）
+  useEffect(() => {
+    setDefaultBaseRef('');
+    if (!repoPath) {
+      return;
+    }
+    fetchDefaultBaseRef(repoPath)
+      .then((baseData) => setDefaultBaseRef(baseData.baseRef || ''))
+      .catch(() => setDefaultBaseRef(''));
+  }, [repoPath]);
 
   function resetResult() {
     setCreateResult(null);
@@ -60,7 +90,8 @@ export function CreateWorktreeForm() {
         baseRef: baseRef || undefined,
         dependencyStrategy: strategy,
         copyIgnoredFiles: shouldCopyIgnoredFiles,
-        openInEditor: shouldOpenInEditor
+        openInEditor: shouldOpenInEditor,
+        requirementTaskId: requirementTaskId || undefined
       });
       setCreateResult(responseData);
     } catch (submitError) {
@@ -73,15 +104,34 @@ export function CreateWorktreeForm() {
   const repositoryValid = Boolean(repoCheckResult && repoCheckResult.isGitRepository);
   const canSubmit = repositoryValid && Boolean(targetPath) && Boolean(branchName) && !submitting;
 
+  // 关联需求且开启聚合目录模式时，目标路径默认定位到 <工作区目录>\<需求名称>，子目录按项目名预填
+  const selectedRequirementTask = requirementTaskId
+    ? requirementTaskList.find((taskEntry) => taskEntry.id === requirementTaskId)
+    : null;
+  const targetRequirementDirectory =
+    requirementTaskId && workspaceLayoutEnabled && selectedRequirementTask
+      ? buildRequirementDirectoryPath(
+          workspaceDirectory,
+          selectedRequirementTask.requirementName || selectedRequirementTask.branchName
+        )
+      : '';
+  const targetSuggestSubdirectoryName =
+    requirementTaskId && repoPath ? deriveProjectNameFromPath(repoPath) : undefined;
+
   return (
     <div>
+      <RecentRepoBar repoPath={repoPath} recentRepoList={recentRepoList} onRepoPathChange={(selectedPath) => {
+        onRepoPathChange(selectedPath);
+        resetResult();
+      }} />
       <DirectoryPicker
         label="主仓库目录"
         value={repoPath}
         onChange={(selectedPath) => {
-          setRepoPath(selectedPath);
+          onRepoPathChange(selectedPath);
           resetResult();
         }}
+        initialPath={initialBrowsePath}
       />
       {repoPath && repoCheckResult ? (
         repositoryValid ? (
@@ -95,8 +145,14 @@ export function CreateWorktreeForm() {
         label="新 worktree 路径"
         value={targetPath}
         onChange={setTargetPath}
-        hintText="建议放主仓库同级目录；可在选择目录时追加一个尚未存在的子目录名"
+        hintText={
+          targetRequirementDirectory
+            ? '已定位到需求聚合目录；子目录名已按项目名预填，可修改'
+            : '建议放主仓库同级目录；可在选择目录时追加一个尚未存在的子目录名'
+        }
         allowNewSubdirectory
+        initialPath={targetRequirementDirectory || initialBrowsePath}
+        suggestSubdirectoryName={targetSuggestSubdirectoryName}
       />
 
       <BranchSelector
@@ -107,6 +163,8 @@ export function CreateWorktreeForm() {
         onBranchModeChange={(selectedMode) => {
           setBranchMode(selectedMode);
           setBranchName('');
+          // 切到新建分支时预填远程默认起点
+          setBaseRef(selectedMode === 'new' ? defaultBaseRef : '');
         }}
         onBranchNameChange={setBranchName}
         onBaseRefChange={setBaseRef}
@@ -119,6 +177,26 @@ export function CreateWorktreeForm() {
         strategy={strategy}
         onStrategyChange={setStrategy}
       />
+
+      {requirementTaskList.length > 0 ? (
+        <div className="form-row">
+          <label className="form-label" htmlFor="requirement-task-select">关联需求任务（可选）</label>
+          <select
+            id="requirement-task-select"
+            className="form-input worktree-select"
+            value={requirementTaskId}
+            onChange={(changeEvent) => setRequirementTaskId(changeEvent.target.value)}
+          >
+            <option value="">不关联</option>
+            {requirementTaskList.map((taskEntry) => (
+              <option key={taskEntry.id} value={taskEntry.id}>
+                {taskEntry.branchName} — {taskEntry.requirementUrl}
+              </option>
+            ))}
+          </select>
+          <div className="form-hint">创建成功后自动把新 worktree 挂到需求中主仓库匹配的项目条目</div>
+        </div>
+      ) : null}
 
       <div className="form-row">
         <label className="form-label">创建后动作（可选）</label>
@@ -156,6 +234,13 @@ export function CreateWorktreeForm() {
           ) : null}
           {createResult.dependencyResult.status === 'failed' ? (
             <div className="alert-warning">依赖处理失败：{createResult.dependencyResult.message}</div>
+          ) : null}
+          {createResult.requirementTaskAttach ? (
+            createResult.requirementTaskAttach.attached ? (
+              <div className="alert-success">{createResult.requirementTaskAttach.message}</div>
+            ) : (
+              <div className="alert-warning">需求任务关联未完成：{createResult.requirementTaskAttach.message}</div>
+            )
           ) : null}
           {createResult.ignoreFileCopyResult && !createResult.ignoreFileCopyResult.skipped ? (
             <div className="alert-success">

@@ -9,6 +9,9 @@ import { registerFilesystemRoutes } from './routes/filesystem-routes.js';
 import { registerBranchRoutes } from './routes/branch-routes.js';
 import { registerWorktreeRoutes } from './routes/worktree-routes.js';
 import { registerTaskRoutes } from './routes/task-routes.js';
+import { registerRecordRoutes } from './routes/record-routes.js';
+import { registerSettingsRoutes } from './routes/settings-routes.js';
+import { registerRequirementTaskRoutes } from './routes/requirement-task-routes.js';
 import { AppError } from './core/errors.js';
 
 /** 组装 Koa 应用：路由注册 + 静态托管 + 统一错误处理 */
@@ -21,6 +24,9 @@ export function createApp() {
   registerBranchRoutes(apiRouter);
   registerWorktreeRoutes(apiRouter);
   registerTaskRoutes(apiRouter);
+  registerRecordRoutes(apiRouter);
+  registerSettingsRoutes(apiRouter);
+  registerRequirementTaskRoutes(apiRouter);
 
   koaApplication.use(async (context, next) => {
     try {

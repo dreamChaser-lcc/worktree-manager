@@ -15,9 +15,12 @@
 npm run setup        # 安装 server/ 与 web/ 依赖
 npm run build:web    # 构建前端产物
 npm start            # 启动服务，访问 http://127.0.0.1:5210
+npm run dev:server:watch  # 开发热重启：改动 server/src 下代码自动重启（Node ≥ 18.11 内置 --watch，零依赖）
+npm run build:web:watch  # 前端源码改动自动重新打包 dist（打包后刷新浏览器即生效，后端无需重启）
+npm run dev              # 一键开发：当前终端同时跑后端热重启 + 前端自动打包（输出带 [server]/[web] 前缀，Ctrl+C 全部退出）
 ```
 
-服务仅监听 `127.0.0.1`，局域网内其他机器不可访问。
+默认仅监听 `127.0.0.1`（仅本机可访问）。`start.bat` 已默认设置 `WORKTREE_MANAGER_HOST=0.0.0.0` 允许局域网通过本机 IP 访问（如仅本机使用，注释掉 start.bat 中该行即可收回）。注意：首次被局域网访问时 Windows 防火墙可能拦截，需允许 Node.js 或放行 5210 端口（管理员执行 `netsh advfirewall firewall add rule name="Worktree Manager" dir=in action=allow protocol=TCP localport=5210`）。
 
 ## 功能
 
@@ -30,6 +33,19 @@ npm start            # 启动服务，访问 http://127.0.0.1:5210
 | 删除 | 三道拦截：未提交修改需强制确认、未合并提交数提示、主 worktree 禁删 |
 | prune | 清理目录已不存在的失效 worktree 记录 |
 | 后置动作 | 复制被忽略文件（.env、.env.local、*.local 白名单，可配置）；用编辑器打开新目录 |
+| 持久化 | 任务记录与完整安装日志、worktree 创建历史（成功/失败均留痕）、最近主仓库目录（10 条）跨重启保留；数据用纯 JS 嵌入式库 @seald-io/nedb 存储，零原生编译 |
+| 主仓库记忆 | 页面打开自动回填最后使用的主仓库，"最近主仓库"下拉一键切换 |
+| 需求任务 | 以需求为维度聚合：需求链接、分支名称、涉及项目及各自关联的 worktree、预留备注；表单内可直接创建 worktree 或选已有；支持查看明细与一键打开 |
+| 工作区文件 | 保存需求任务时可生成 `.code-workspace`（默认勾选），聚合各项目已关联 worktree，文件带需求标识注释；存放目录默认为数据目录下 `workspaces\`，设置页可改 |
+| 设置页 | 查看/修改：数据根目录（立即生效，历史数据保留原目录不迁移）、代码默认存储目录（目录选择器默认定位，默认 `D:\project`）、工作区文件目录（默认数据目录下 `workspaces\`）、编辑器命令（"打开"所用，默认 `code`，可改 `cursor` 等） |
+
+## 数据与持久化
+
+- 数据根目录默认 `D:\softwares\worktree-manager`（D 盘不存在时自动回退到 `%USERPROFILE%\worktree-manager-data`），可在网页"设置"页修改
+- 目录内容：`nedb/`（任务元数据、创建历史、最近主仓库三个库）+ `job-logs/`（每个安装任务一个 `.jsonl` 日志文件）
+- 配置文件固定在 `%USERPROFILE%\.worktree-manager\settings.json`，与数据目录分离；配置缺失/损坏会按默认规则重建，不影响业务数据
+- 服务重启后：历史任务与日志可回看（任务列表含"已中断"状态 = 上次运行中进程被终止）；主仓库目录自动回填
+- 请勿同时启动多个服务实例（嵌入式库无跨进程锁）
 
 ## 依赖共享模式的重要约束（务必了解）
 
@@ -49,7 +65,8 @@ server/                 Koa 后端（仅监听本机）
     ignore-file-copier  忽略文件白名单复制
     editor-opener       编辑器打开
   src/routes/           REST API 路由
-  src/jobs/             内存任务表 + SSE 日志流
+  src/jobs/             任务执行器（内存运行态 + 持久化留存 + SSE 日志流）
+  src/storage/          持久化存储（@seald-io/nedb 三库 + JSONL 任务日志 + 设置文件）
 web/                    React + Vite 前端
 openspec/               规格与变更文档（spec-driven）
 ```
