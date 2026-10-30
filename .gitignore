@@ -1,0 +1,9 @@
+node_modules/
+dist/
+*.log
+.vite/
+.tmp-*/
+.demo-repo/
+.screenshots/
+.server-pid.txt
+.setup-demo.cjs

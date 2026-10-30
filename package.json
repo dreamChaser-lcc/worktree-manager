@@ -1,0 +1,17 @@
+{
+  "name": "worktree-manager",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Git worktree 本地管理工具：并行开发 + 依赖共享",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "setup": "npm --prefix server install && npm --prefix web install",
+    "dev:server": "npm --prefix server run start",
+    "dev:web": "npm --prefix web run dev",
+    "build:web": "npm --prefix web run build",
+    "start": "node server/src/server.js",
+    "test": "npm --prefix server run test"
+  }
+}
