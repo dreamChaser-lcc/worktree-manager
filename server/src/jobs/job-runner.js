@@ -21,7 +21,7 @@ function toJobRecordSnapshot(job) {
   };
 }
 
-export function createJob(jobName) {
+export function createJob(jobName, jobMetadata = null) {
   const job = {
     id: randomUUID(),
     name: jobName,
@@ -31,6 +31,8 @@ export function createJob(jobName) {
     exitCode: null,
     createdAt: new Date().toISOString(),
     finishedAt: null,
+    // 业务元数据（如 kind/worktreePath/taskId），用于运行中任务的互斥判断，不落盘
+    metadata: jobMetadata,
     logListeners: new Set()
   };
   jobMap.set(job.id, job);
@@ -45,6 +47,24 @@ export function getJob(jobId) {
 /** 枚举内存任务（任务列表接口合并持久化历史时用） */
 export function listMemoryJobs() {
   return Array.from(jobMap.values());
+}
+
+/** 移除已结束任务的内存条目（任务记录删除用；运行中任务由调用方先行拦截） */
+export function removeMemoryJob(jobId) {
+  return jobMap.delete(jobId);
+}
+
+/**
+ * 按条件查找运行中的任务（互斥锁等场景用）。
+ * 运行态权威在内存 jobMap，服务重启后 running 任务已被标记 interrupted，无需查持久层。
+ */
+export function findRunningJob(matchPredicate) {
+  for (const job of jobMap.values()) {
+    if (job.status === 'running' && matchPredicate(job)) {
+      return job;
+    }
+  }
+  return null;
 }
 
 /** 追加一行日志并通知 SSE 监听者，同步追加到任务日志文件 */
@@ -100,14 +120,15 @@ export async function recoverInterruptedJobs() {
  * 启动一个进程型任务：输出按行进入日志，进程退出即落终态。
  * 返回 job 供调用方立即响应，进度走 SSE。
  */
-export function startProcessJob({ jobName, command, commandArguments, cwd }) {
-  const job = createJob(jobName);
+export function startProcessJob({ jobName, command, commandArguments, cwd, metadata, useShell }) {
+  const job = createJob(jobName, metadata || null);
   appendJobLog(job, `$ ${command} ${commandArguments.join(' ')} (cwd: ${cwd})`);
 
   const childProcess = spawn(command, commandArguments, {
     cwd,
     windowsHide: true,
-    shell: process.platform === 'win32'
+    // 默认维持原行为：Windows 走 shell（路径/命令解析一致）；useShell 可显式覆盖（自定义脚本必须走 shell）
+    shell: useShell !== undefined ? useShell : process.platform === 'win32'
   });
 
   childProcess.stdout.on('data', (chunk) => appendJobLog(job, chunk.toString('utf8')));

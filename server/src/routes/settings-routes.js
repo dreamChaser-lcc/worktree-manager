@@ -51,6 +51,10 @@ export function registerSettingsRoutes(router) {
     context.body = {
       dataDirectory: persistenceManager.getDataRootPath(),
       dataDirectoryResolved: Boolean(persistenceManager.getDataRootPath()),
+      // 独立目录模式下 settings.json 记录的自定义目录（可能为空 = 使用默认解析）；供输入框回填，与生效目录区分
+      configuredDataDirectory: persistenceManager.getConfiguredDataDirectory(),
+      dataLocationMode: persistenceManager.getDataLocationMode(),
+      appDataDirectoryPath: persistenceManager.getAppDataDirectoryPath(),
       projectDirectory: persistenceManager.getProjectDirectoryPath(),
       workspaceDirectory: persistenceManager.getWorkspaceDirectoryPath(),
       workspaceLayoutEnabled: persistenceManager.getWorkspaceLayoutEnabled(),
@@ -61,6 +65,10 @@ export function registerSettingsRoutes(router) {
   router.put('/api/settings', async (context) => {
     const requestData = context.request.body || {};
     const dataDirectoryInput = typeof requestData.dataDirectory === 'string' ? requestData.dataDirectory.trim() : '';
+    const dataLocationModeInput =
+      requestData.dataLocationMode === 'app-data' || requestData.dataLocationMode === 'standalone'
+        ? requestData.dataLocationMode
+        : '';
     const projectDirectoryInput =
       typeof requestData.projectDirectory === 'string' ? requestData.projectDirectory.trim() : '';
     const workspaceDirectoryInput =
@@ -70,6 +78,7 @@ export function registerSettingsRoutes(router) {
       typeof requestData.workspaceLayoutEnabled === 'boolean' ? requestData.workspaceLayoutEnabled : null;
     if (
       !dataDirectoryInput &&
+      !dataLocationModeInput &&
       !projectDirectoryInput &&
       !workspaceDirectoryInput &&
       !editorCommandInput &&
@@ -79,6 +88,10 @@ export function registerSettingsRoutes(router) {
     }
 
     try {
+      // 数据目录模式先行（app-data 切换 / standalone 恢复）；随后同请求的自定义目录会以 standalone 语义覆盖
+      if (dataLocationModeInput) {
+        await persistenceManager.changeDataLocationMode(dataLocationModeInput);
+      }
       if (dataDirectoryInput) {
         await persistenceManager.changeDataRoot(dataDirectoryInput);
       }
@@ -102,8 +115,20 @@ export function registerSettingsRoutes(router) {
     }
 
     const noticeList = [];
+    if (dataLocationModeInput === 'app-data') {
+      noticeList.push(
+        '数据目录已切换到程序目录下 data，记录与任务日志已自动迁移（worktree 代码目录不迁移，已创建的 worktree 不受影响）。'
+      );
+    }
+    if (dataLocationModeInput === 'standalone' && !dataDirectoryInput) {
+      noticeList.push(
+        '已切回独立数据目录（沿用此前记录的自定义目录或默认目录），记录与任务日志已自动迁移；worktree 代码目录不迁移。'
+      );
+    }
     if (dataDirectoryInput) {
-      noticeList.push('数据目录已切换并立即生效；历史数据保留在原目录，不会自动迁移。');
+      noticeList.push(
+        '数据目录已切换，记录与任务日志已自动迁移到新目录（worktree 代码目录不迁移，已创建的 worktree 不受影响）。'
+      );
     }
     if (projectDirectoryInput) {
       noticeList.push('代码默认存储目录已生效，目录选择器将默认定位到该目录。');
@@ -116,6 +141,8 @@ export function registerSettingsRoutes(router) {
     }
     context.body = {
       dataDirectory: persistenceManager.getDataRootPath(),
+      dataLocationMode: persistenceManager.getDataLocationMode(),
+      appDataDirectoryPath: persistenceManager.getAppDataDirectoryPath(),
       projectDirectory: persistenceManager.getProjectDirectoryPath(),
       workspaceDirectory: persistenceManager.getWorkspaceDirectoryPath(),
       workspaceLayoutEnabled: persistenceManager.getWorkspaceLayoutEnabled(),

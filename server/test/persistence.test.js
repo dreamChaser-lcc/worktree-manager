@@ -42,6 +42,71 @@ afterAll(async () => {
   await fs.promises.rm(storageTestRootDirectory, { recursive: true, force: true });
 });
 
+describe('数据目录模式（app-data / standalone）', () => {
+  it('切换到程序目录 data 后生效，切回独立目录沿用原目录；模式持久化到设置文件', async () => {
+    const environment = createIsolatedEnvironment();
+    const appDataDirectoryPath = path.join(storageTestRootDirectory, 'app-data-mode-test', 'app-data');
+    const manager = createTestManager(environment, { appDataDirectoryPath });
+    await manager.initialize();
+    const standaloneDataRootPath = manager.getDataRootPath();
+    expect(manager.getDataLocationMode()).toBe('standalone');
+
+    // 切到程序目录下 data：立即生效并持久化
+    await manager.changeDataLocationMode('app-data');
+    expect(manager.getDataRootPath()).toBe(appDataDirectoryPath);
+    expect(manager.getDataLocationMode()).toBe('app-data');
+
+    // 重启（新实例读同一设置文件）：模式保持 app-data
+    const restartedManager = createTestManager(environment, { appDataDirectoryPath });
+    await restartedManager.initialize();
+    expect(restartedManager.getDataLocationMode()).toBe('app-data');
+    expect(restartedManager.getDataRootPath()).toBe(appDataDirectoryPath);
+
+    // 切回独立目录：沿用切换前记录的原目录
+    await restartedManager.changeDataLocationMode('standalone');
+    expect(restartedManager.getDataLocationMode()).toBe('standalone');
+    expect(restartedManager.getDataRootPath()).toBe(standaloneDataRootPath);
+  });
+
+  it('未知模式返回 400 语义错误', async () => {
+    const environment = createIsolatedEnvironment();
+    const manager = createTestManager(environment);
+    await manager.initialize();
+    await expect(manager.changeDataLocationMode('cloud')).rejects.toThrow('未知的数据目录模式');
+  });
+
+  it('切换数据目录时自动迁移记录数据与任务日志；workspaces 不迁移', async () => {
+    const environment = createIsolatedEnvironment();
+    const manager = createTestManager(environment);
+    await manager.initialize();
+    const oldDataRootPath = manager.getDataRootPath();
+
+    // 写入记录与日志，造一个 workspaces 目录（应保留在旧目录不迁移）
+    await manager.insertJobRecord(buildJobSnapshot('migrate-job', { status: 'success', exitCode: 0, finishedAt: new Date().toISOString() }));
+    manager.appendJobLogLines('migrate-job', ['line-1']);
+    await new Promise((resolvePromise) => setTimeout(resolvePromise, 120));
+    const workspacesPath = path.join(oldDataRootPath, 'workspaces');
+    fs.mkdirSync(workspacesPath, { recursive: true });
+    fs.writeFileSync(path.join(workspacesPath, 'demo.code-workspace'), '{}', 'utf8');
+
+    // 切换到新目录：记录与日志自动迁移，workspaces 留在原地，旧根目录被清理
+    const newDataRootPath = path.join(storageTestRootDirectory, 'migrated-data');
+    await manager.changeDataRoot(newDataRootPath);
+    expect(manager.getDataRootPath()).toBe(path.resolve(newDataRootPath));
+
+    const jobRecordList = await manager.listJobRecords();
+    expect(jobRecordList.map((record) => record.id)).toContain('migrate-job');
+    // nedb 需要重新加载句柄后可见；直接读日志文件验证迁移
+    const migratedLogLines = await manager.readJobLogLines('migrate-job');
+    expect(migratedLogLines).toEqual(['line-1']);
+    expect(fs.existsSync(path.join(newDataRootPath, 'workspaces', 'demo.code-workspace'))).toBe(false);
+    expect(fs.existsSync(path.join(oldDataRootPath, 'workspaces', 'demo.code-workspace'))).toBe(true);
+
+    // 旧目录中的记录库已清理（nedb/job-logs 移除）
+    expect(fs.existsSync(path.join(oldDataRootPath, 'nedb'))).toBe(false);
+  });
+});
+
 describe('resolveDataRootCandidates（纯函数）', () => {
   it('配置值优先于默认值', () => {
     const candidateList = resolveDataRootCandidates({
@@ -191,7 +256,7 @@ describe('持久化管理器', () => {
     expect(await persistenceManagerInstance.listWorktreeHistoryRecords()).toEqual([]);
   });
 
-  it('切换数据目录立即生效、写回设置、旧目录数据保留，新实例按设置解析', async () => {
+  it('切换数据目录立即生效、写回设置、记录数据自动迁移到新目录，新实例按设置解析', async () => {
     const environment = createIsolatedEnvironment();
     const firstManager = createTestManager(environment);
     const initialDataRootPath = await firstManager.initialize();
@@ -205,18 +270,16 @@ describe('持久化管理器', () => {
     const settingsFilePath = path.join(environment.homeDirectoryPath, '.worktree-manager', 'settings.json');
     expect(JSON.parse(fs.readFileSync(settingsFilePath, 'utf8')).dataDirectory).toBe(path.resolve(nextDataRootPath));
 
-    // 旧目录数据未被迁移但仍保留
-    const legacyManager = createTestManager(environment, {
-      settingsFilePath: path.join(environment.homeDirectoryPath, '.worktree-manager', 'unused-settings.json')
-    });
-    await legacyManager.initialize();
-    expect(await legacyManager.findJobRecordById('job-in-old-root')).not.toBeNull();
+    // 记录数据已自动迁移到新目录，当前实例可直接读到
+    expect(await firstManager.findJobRecordById('job-in-old-root')).not.toBeNull();
 
-    // 新实例按设置值解析到新目录，且看不到旧目录的任务
+    // 旧目录的记录库已清理
+    expect(fs.existsSync(path.join(initialDataRootPath, 'nedb'))).toBe(false);
+
+    // 新实例按设置值解析到新目录，迁移的数据可见
     const restartedManager = createTestManager(environment);
     expect(await restartedManager.initialize()).toBe(path.resolve(nextDataRootPath));
-    expect(await restartedManager.findJobRecordById('job-in-old-root')).toBeNull();
-    expect(initialDataRootPath).toBeTruthy();
+    expect(await restartedManager.findJobRecordById('job-in-old-root')).not.toBeNull();
   });
 
   it('非法目录切换抛 ValidationError', async () => {

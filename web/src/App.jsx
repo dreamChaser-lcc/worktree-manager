@@ -5,9 +5,10 @@ import { RequirementTaskPanel } from './components/RequirementTaskPanel.jsx';
 import { TaskHistoryPanel } from './components/TaskHistoryPanel.jsx';
 import { CreationHistoryPanel } from './components/CreationHistoryPanel.jsx';
 import { SettingsPanel } from './components/SettingsPanel.jsx';
+import { HelpGuideDialog } from './components/HelpGuideDialog.jsx';
 import { fetchRecentRepositories, fetchSettings } from './api/client.js';
 
-/** 应用外壳：顶部标题 + 页签（创建 / 管理 / 需求任务 / 任务记录 / 设置），主仓库目录全局共享 */
+/** 应用外壳：顶部标题 + 页签（需求任务 / 任务记录 / 创建 / 管理 / 设置），主仓库目录全局共享 */
 export function App() {
   const [activeTab, setActiveTab] = useState('requirements');
   const [serverReady, setServerReady] = useState(false);
@@ -19,6 +20,8 @@ export function App() {
   // 工作区文件目录与需求聚合目录模式（worktree 代码与工作区文件同目录）
   const [workspaceDirectory, setWorkspaceDirectory] = useState('');
   const [workspaceLayoutEnabled, setWorkspaceLayoutEnabled] = useState(true);
+  // 使用指南弹窗开关：入口在页头右上角
+  const [helpDialogVisible, setHelpDialogVisible] = useState(false);
 
   useEffect(() => {
     fetch('/api/health')
@@ -56,6 +59,13 @@ export function App() {
         <span className={serverReady ? 'server-badge server-badge-online' : 'server-badge server-badge-offline'}>
           {serverReady ? '服务已连接' : '服务未连接'}
         </span>
+        <button
+          type="button"
+          className="button-secondary help-entry-button"
+          onClick={() => setHelpDialogVisible(true)}
+        >
+          使用指南
+        </button>
       </header>
       <nav className="app-tabs">
         <button
@@ -64,6 +74,13 @@ export function App() {
           onClick={() => setActiveTab('requirements')}
         >
           需求任务
+        </button>
+        <button
+          type="button"
+          className={activeTab === 'task-records' ? 'tab-button tab-button-active' : 'tab-button'}
+          onClick={() => setActiveTab('task-records')}
+        >
+          任务记录
         </button>
         <button
           type="button"
@@ -110,17 +127,11 @@ export function App() {
           </div>
         ) : null}
         {activeTab === 'requirements' ? (
-          <div>
-            <RequirementTaskPanel
-              initialBrowsePath={projectDirectory}
-              workspaceDirectory={workspaceDirectory}
-              workspaceLayoutEnabled={workspaceLayoutEnabled}
-            />
-            <div className="section-block">
-              <span className="form-label">任务记录</span>
-              <TaskHistoryPanel />
-            </div>
-          </div>
+          <RequirementTaskPanel
+            initialBrowsePath={projectDirectory}
+            workspaceDirectory={workspaceDirectory}
+            workspaceLayoutEnabled={workspaceLayoutEnabled}
+          />
         ) : null}
         {activeTab === 'settings' ? (
           <SettingsPanel
@@ -128,7 +139,9 @@ export function App() {
             onWorkspaceLayoutChange={setWorkspaceLayoutEnabled}
           />
         ) : null}
+        {activeTab === 'task-records' ? <TaskHistoryPanel /> : null}
       </main>
+      {helpDialogVisible ? <HelpGuideDialog onClose={() => setHelpDialogVisible(false)} /> : null}
     </div>
   );
 }

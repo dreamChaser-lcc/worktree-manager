@@ -202,7 +202,11 @@ export async function removeWorktree({ repoPath, targetPath, force, deleteDirect
     // 实测 git 2.46/Windows 的 worktree remove 会跟随 junction 删除目标内容，
     // 直接破坏共享主目录依赖。改为：先 junction 感知删除目录，再 prune 清记录。
     if (fs.existsSync(normalizedTargetPath)) {
-      removeDirectoryTree(normalizedTargetPath);
+      try {
+        removeDirectoryTree(normalizedTargetPath);
+      } catch (removeFsError) {
+        throw translateDirectoryRemoveError(removeFsError, normalizedTargetPath);
+      }
     }
     await pruneWorktrees(repoPath);
 
@@ -228,6 +232,26 @@ export async function removeWorktree({ repoPath, targetPath, force, deleteDirect
     unmergedCommitCount,
     defaultBranch: await detectDefaultBranch(repoPath)
   };
+}
+
+/** 目录删除占用类错误码：Windows 上编辑器/终端/资源管理器持有句柄时的典型表现 */
+const OCCUPIED_ERROR_CODE_LIST = ['EBUSY', 'EPERM', 'ENOTEMPTY', 'EACCES'];
+
+/**
+ * 把删除目录时的系统错误翻译为可执行的提示：
+ * Windows 上目录被 VSCode/终端/资源管理器占用时表现为 EBUSY/EPERM，
+ * 用户需要的是"关掉占用程序再试"，而不是原始错误码。
+ * 非占用类错误原样返回，不掩盖真实问题。
+ */
+export function translateDirectoryRemoveError(removeFsError, targetPath) {
+  const errorCode = removeFsError && removeFsError.code ? removeFsError.code : '';
+  if (!OCCUPIED_ERROR_CODE_LIST.includes(errorCode)) {
+    return removeFsError;
+  }
+  return new ConflictError(
+    `删除目录失败（${errorCode}）：目录可能正被编辑器、终端或资源管理器占用，请关闭打开了该目录的程序（如 VSCode、终端窗口、文件管理器）后重试；若仍失败，可手动删除目录后点击 prune 清理记录（原始错误：${removeFsError.message}）`,
+    { details: { targetPath, errorCode } }
+  );
 }
 
 function worktreeEntryEntryByPath(worktreeEntryList, normalizedTargetPath) {

@@ -6,9 +6,9 @@ import { persistenceManager } from '../storage/persistence-manager.js';
 import { generateWorkspaceFileForTask } from '../core/workspace-file-generator.js';
 import { listWorktrees, removeWorktree, createWorktree, normalizePathForComparison } from '../core/worktree-manager.js';
 import { executeGitCommand } from '../core/git-executor.js';
-import { detectPackageManager } from '../core/dep-linker.js';
+import { detectPackageManager, applySharedDependencyLink } from '../core/dep-linker.js';
 import { checkWorktreeDependencyStatus } from '../core/dependency-risk-checker.js';
-import { startProcessJob } from '../jobs/job-runner.js';
+import { startProcessJob, findRunningJob } from '../jobs/job-runner.js';
 import { ValidationError, NotFoundError, ConflictError } from '../core/errors.js';
 
 /**
@@ -166,7 +166,8 @@ export function registerRequirementTaskRoutes(router) {
     context.body = { projectList: projectDependencyList };
   });
 
-  // 独立安装：对指定项目的 worktree 执行独立依赖安装（异步任务，SSE 可查）
+  // 独立安装：先断开共享 junction（避免 install 写穿主目录），再启动独立安装任务（SSE 可查）。
+  // 包管理器检测三级回退：worktree lockfile → 主仓库 lockfile → npm 兜底
   router.post('/api/requirement-tasks/:taskId/install-independent', async (context) => {
     const taskId = context.params.taskId;
     const taskRecord = await persistenceManager.findRequirementTaskById(taskId);
@@ -186,11 +187,12 @@ export function registerRequirementTaskRoutes(router) {
       throw new ValidationError(`该项目未关联此 worktree: ${targetWorktreePath}`);
     }
 
-    const packageManagerName = detectPackageManager(targetWorktreePath);
-    if (!packageManagerName) {
-      throw new ValidationError(
-        `未检测到包管理器（worktree 缺少 lockfile），无法独立安装: ${targetWorktreePath}`
-      );
+    // 互斥锁：同一 worktree 已有运行中的安装任务时拒绝重复触发（前端连点/多入口重复提交兜底）
+    const runningInstallJob = findRunningJob((job) => isRunningInstallForWorktree(job, targetWorktreePath));
+    if (runningInstallJob) {
+      throw new ConflictError(`该 worktree 已有安装任务执行中（${runningInstallJob.name}），请等待完成后再试`, {
+        details: { runningJobId: runningInstallJob.id, worktreePath: targetWorktreePath }
+      });
     }
 
     // 若 node_modules 是共享 junction，先只断开链接本身（不删主目录内容），避免 install 写穿主目录
@@ -206,23 +208,101 @@ export function registerRequirementTaskRoutes(router) {
       // 不存在或删除失败时按原状继续（真实目录不会被删除）
     }
 
+    let packageManagerName = detectPackageManager(targetWorktreePath);
+    let packageManagerSource = 'worktree';
+    if (!packageManagerName && matchedProjectEntry.repoPath) {
+      packageManagerName = detectPackageManager(matchedProjectEntry.repoPath);
+      packageManagerSource = packageManagerName ? 'main-repo' : packageManagerSource;
+    }
+    if (!packageManagerName) {
+      packageManagerName = 'npm';
+      packageManagerSource = 'fallback';
+    }
+
+    // 自定义脚本：非空时以 shell 在 worktree 目录执行整段脚本；留空保持默认（包管理器 install）
+    const customScriptText = typeof requestBody.customScript === 'string' ? requestBody.customScript.trim() : '';
+    const installMode = customScriptText ? 'custom' : 'default';
     const { job } = startProcessJob({
-      jobName: `install-independent:${matchedProjectEntry.projectName}`,
-      command: packageManagerName,
-      commandArguments: ['install'],
-      cwd: targetWorktreePath
+      jobName: customScriptText
+        ? `install-script:${matchedProjectEntry.projectName}`
+        : `install-independent:${matchedProjectEntry.projectName}`,
+      command: customScriptText || packageManagerName,
+      commandArguments: customScriptText ? [] : ['install'],
+      cwd: targetWorktreePath,
+      useShell: customScriptText ? true : undefined,
+      metadata: { kind: 'worktree-install', taskId, worktreePath: targetWorktreePath }
     });
 
     context.body = {
       jobId: job.id,
+      installMode,
       packageManager: packageManagerName,
+      packageManagerSource,
       worktreePath: targetWorktreePath,
       junctionRemoved
     };
   });
 
+  // 恢复共享：删除独立安装的 node_modules，重建与主仓库的 junction 共享依赖
+  router.post('/api/requirement-tasks/:taskId/restore-shared', async (context) => {
+    const taskId = context.params.taskId;
+    const taskRecord = await persistenceManager.findRequirementTaskById(taskId);
+    if (!taskRecord) {
+      throw new NotFoundError(`需求任务不存在: ${taskId}`);
+    }
+
+    const requestBody = context.request.body || {};
+    const targetWorktreePath = requestBody.worktreePath;
+    if (!targetWorktreePath || typeof targetWorktreePath !== 'string') {
+      throw new ValidationError('缺少 worktreePath');
+    }
+    const matchedProjectEntry = (taskRecord.projectList || []).find(
+      (projectEntry) => projectEntry.worktreePath === targetWorktreePath
+    );
+    if (!matchedProjectEntry) {
+      throw new ValidationError(`该项目未关联此 worktree: ${targetWorktreePath}`);
+    }
+    if (!matchedProjectEntry.repoPath) {
+      throw new ValidationError('项目缺少主仓库路径，无法恢复共享依赖');
+    }
+
+    // 互斥锁：安装任务执行中禁止恢复共享（会删除正在写入的 node_modules）
+    const runningInstallJob = findRunningJob((job) => isRunningInstallForWorktree(job, targetWorktreePath));
+    if (runningInstallJob) {
+      throw new ConflictError(`该 worktree 的安装任务执行中（${runningInstallJob.name}），完成前不能恢复共享`, {
+        details: { runningJobId: runningInstallJob.id, worktreePath: targetWorktreePath }
+      });
+    }
+
+    const worktreeNodeModulesPath = path.join(targetWorktreePath, 'node_modules');
+    let removedIndependentModules = false;
+    try {
+      const moduleStat = fs.lstatSync(worktreeNodeModulesPath);
+      if (moduleStat.isSymbolicLink()) {
+        fs.rmdirSync(worktreeNodeModulesPath);
+      } else {
+        fs.rmSync(worktreeNodeModulesPath, { recursive: true, force: true });
+        removedIndependentModules = true;
+      }
+    } catch {
+      // node_modules 不存在则直接建链
+    }
+
+    const sharedResult = applySharedDependencyLink({
+      repoPath: matchedProjectEntry.repoPath,
+      worktreePath: targetWorktreePath
+    });
+
+    context.body = {
+      restored: true,
+      removedIndependentModules,
+      shared: sharedResult
+    };
+  });
+
   // 删除需求任务（软删除）：移除关联 worktree 与其文件目录，git 分支（本地/远程）一律保留；
-  // 删除前记录每个 worktree 当时的实际分支（lastBranch），供恢复按原分支重建
+  // 删除前记录每个 worktree 当时的实际分支（lastBranch），供恢复按原分支重建。
+  // ?force=true 时忽略未提交修改强制删除（前端显式勾选确认后才会带上）
   router.delete('/api/requirement-tasks/:taskId', async (context) => {
     const taskId = context.params.taskId;
     const taskRecord = await persistenceManager.findRequirementTaskById(taskId);
@@ -232,16 +312,20 @@ export function registerRequirementTaskRoutes(router) {
     if (taskRecord.deletedAt) {
       throw new ConflictError('该需求任务已处于删除状态，可直接点击恢复');
     }
+    const forceRemoval = context.query.force === 'true';
 
     const { removedWorktreeList, failedList, branchAtRemovalMap } = await removeTaskWorktrees(taskRecord, {
-      recordBranch: true
+      recordBranch: true,
+      force: forceRemoval
     });
 
     if (failedList.length > 0) {
-      // 存在失败（如未提交修改被拦截）：中止删除，保留现场供用户处理
+      // 存在失败（如未提交修改被拦截）：中止删除，保留现场；失败详情含未提交文件清单，供前端给出可执行的指引
       context.status = 409;
       context.body = {
-        error: '部分关联 worktree 删除失败，已中止本次需求删除（分支与现场均已保留）',
+        error: forceRemoval
+          ? '部分关联 worktree 删除失败，已中止本次需求删除（分支与现场均已保留）'
+          : '部分关联 worktree 删除失败（存在未提交修改等），已中止；确认放弃修改可勾选“强制删除”重试（分支与现场均已保留）',
         details: { failedList, removedWorktreeList }
       };
       return;
@@ -280,19 +364,23 @@ export function registerRequirementTaskRoutes(router) {
     };
   });
 
-  // 彻底删除：移除关联 worktree 与目录、删除工作区文件后，物理删除任务记录（不可恢复；git 分支保留）
+  // 彻底删除：移除关联 worktree 与目录、删除工作区文件后，物理删除任务记录（不可恢复；git 分支保留）。
+  // ?force=true 时忽略未提交修改强制删除
   router.delete('/api/requirement-tasks/:taskId/permanent', async (context) => {
     const taskId = context.params.taskId;
     const taskRecord = await persistenceManager.findRequirementTaskById(taskId);
     if (!taskRecord) {
       throw new NotFoundError(`需求任务不存在: ${taskId}`);
     }
+    const forceRemoval = context.query.force === 'true';
 
-    const { removedWorktreeList, failedList } = await removeTaskWorktrees(taskRecord);
+    const { removedWorktreeList, failedList } = await removeTaskWorktrees(taskRecord, { force: forceRemoval });
     if (failedList.length > 0) {
       context.status = 409;
       context.body = {
-        error: '部分关联 worktree 删除失败，已中止彻底删除（现场已保留）',
+        error: forceRemoval
+          ? '部分关联 worktree 删除失败，已中止彻底删除（现场已保留）'
+          : '部分关联 worktree 删除失败（存在未提交修改等），已中止；确认放弃修改可勾选“强制删除”重试（现场已保留）',
         details: { failedList, removedWorktreeList }
       };
       return;
@@ -350,7 +438,8 @@ export function registerRequirementTaskRoutes(router) {
           skippedWorktreeList.push({
             projectName: projectEntry.projectName,
             worktreePath: projectEntry.worktreePath,
-            branchName: recreateBranchName
+            branchName: recreateBranchName,
+            dependencyReason: '此前已恢复，未重复处理依赖'
           });
           continue;
         }
@@ -360,10 +449,26 @@ export function registerRequirementTaskRoutes(router) {
           branchMode: 'existing',
           branchName: recreateBranchName
         });
+        // 依赖处理：主仓库已有 node_modules 时自动重建共享链接（junction 秒级、零磁盘，与创建流程默认策略一致）；
+        // 主仓库未装依赖/跨卷等场景不阻断恢复，记下原因由用户按需「独立安装」
+        let dependencyAction = 'skipped';
+        let dependencyReason = '主仓库尚未安装依赖（node_modules 不存在）';
+        try {
+          applySharedDependencyLink({
+            repoPath: projectEntry.repoPath,
+            worktreePath: projectEntry.worktreePath
+          });
+          dependencyAction = 'shared';
+          dependencyReason = '已重建共享依赖（junction）';
+        } catch (linkError) {
+          dependencyReason = linkError.message;
+        }
         restoredWorktreeList.push({
           projectName: projectEntry.projectName,
           worktreePath: projectEntry.worktreePath,
-          branchName: recreateBranchName
+          branchName: recreateBranchName,
+          dependencyAction,
+          dependencyReason
         });
       } catch (restoreError) {
         failedList.push({
@@ -400,9 +505,23 @@ export function registerRequirementTaskRoutes(router) {
   });
 }
 
+/** 判断运行中任务是否为指定 worktree 的安装任务（路径规范化后比较，规避斜杠/大小写差异漏判） */
+function isRunningInstallForWorktree(job, targetWorktreePath) {
+  const jobMetadata = job.metadata || {};
+  if (jobMetadata.kind !== 'worktree-install' || !jobMetadata.worktreePath) {
+    return false;
+  }
+  try {
+    return normalizePathForComparison(jobMetadata.worktreePath) === normalizePathForComparison(targetWorktreePath);
+  } catch {
+    return false;
+  }
+}
+
 /** 移除需求任务关联的全部 worktree（含文件目录）；返回移除/失败清单，可选记录删除前实际分支 */
 async function removeTaskWorktrees(taskRecord, options = {}) {
   const recordBranch = options.recordBranch === true;
+  const forceRemoval = options.force === true;
   const removedWorktreeList = [];
   const failedList = [];
   const branchAtRemovalMap = {};
@@ -429,7 +548,7 @@ async function removeTaskWorktrees(taskRecord, options = {}) {
       await removeWorktree({
         repoPath: projectEntry.repoPath,
         targetPath: projectEntry.worktreePath,
-        force: false,
+        force: forceRemoval,
         deleteDirectory: true
       });
       removedWorktreeList.push({
@@ -450,7 +569,14 @@ async function removeTaskWorktrees(taskRecord, options = {}) {
       failedList.push({
         projectName: projectEntry.projectName,
         worktreePath: projectEntry.worktreePath,
-        reason: removeError.message
+        reason: removeError.message,
+        // 带出拦截原因的明细（如未提交文件清单、未合并提交数），前端据此给出可执行的指引
+        uncommittedFiles:
+          (removeError.details && removeError.details.uncommittedFiles) || [],
+        unmergedCommitCount:
+          removeError.details && removeError.details.unmergedCommitCount !== undefined
+            ? removeError.details.unmergedCommitCount
+            : null
       });
     }
   }

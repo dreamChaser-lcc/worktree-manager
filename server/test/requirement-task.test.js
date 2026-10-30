@@ -43,6 +43,19 @@ function putJson(pathWithQuery, requestBody) {
   return requestJson('PUT', pathWithQuery, requestBody);
 }
 
+/** 轮询任务直至落终态（success/failed/interrupted），超时抛错避免用例悬挂 */
+async function waitForJobFinished(jobId) {
+  const deadlineTimestamp = Date.now() + 15000;
+  while (Date.now() < deadlineTimestamp) {
+    const jobResult = await getJson(`/api/tasks/${jobId}`);
+    if (jobResult.status === 200 && jobResult.body.status !== 'running') {
+      return jobResult.body;
+    }
+    await new Promise((resolvePromise) => setTimeout(resolvePromise, 200));
+  }
+  throw new Error(`任务未在预期时间内结束: ${jobId}`);
+}
+
 function buildRequirementPayload(overrides = {}) {
   return {
     requirementName: '【微赞+星享】【小蛋】直播任务支持区分不同路径玩法',
@@ -57,7 +70,15 @@ function buildRequirementPayload(overrides = {}) {
 afterAll(async () => {
   await serverInstance.close();
   await fixtureRepository.cleanup();
-  await fs.promises.rm(requirementTestRootDirectory, { recursive: true, force: true });
+  // 独立安装的 npm 进程可能仍占用临时目录（EBUSY），重试清理
+  for (let cleanupAttempt = 0; cleanupAttempt < 6; cleanupAttempt += 1) {
+    try {
+      await fs.promises.rm(requirementTestRootDirectory, { recursive: true, force: true });
+      return;
+    } catch {
+      await new Promise((resolvePromise) => setTimeout(resolvePromise, 1000));
+    }
+  }
 });
 
 describe('需求任务 API', () => {
@@ -364,16 +385,19 @@ describe('需求任务删除与恢复', () => {
     expect(updatedTask.workspaceFilePath).toBe(regenerateResult.body.workspace.workspaceFilePath);
   });
 
-  it('独立安装：worktree 缺少 lockfile 时返回 400', async () => {
+  it('独立安装无 lockfile 回退 npm 并断链；恢复共享重建 junction', async () => {
     const createResult = await postJson('/api/requirement-tasks', buildRequirementPayload({
       branchName: 'feature/no-lock',
       generateWorkspace: false
     }));
     const createdTask = createResult.body.task;
 
-    // 造一个无 lockfile 的目录作为关联 worktree
+    // 造一个 junction 共享状态的"worktree"目录（无 lockfile）
     const fakeWorktreePath = path.join(requirementTestRootDirectory, 'fake-wt-no-lock');
+    const fakeMainModulesPath = path.join(requirementTestRootDirectory, 'fake-main-modules');
+    fs.mkdirSync(fakeMainModulesPath, { recursive: true });
     fs.mkdirSync(fakeWorktreePath, { recursive: true });
+    fs.symlinkSync(fakeMainModulesPath, path.join(fakeWorktreePath, 'node_modules'), 'junction');
     await putJson(`/api/requirement-tasks/${createdTask.id}`, buildRequirementPayload({
       branchName: 'feature/no-lock',
       projectList: [
@@ -381,11 +405,147 @@ describe('需求任务删除与恢复', () => {
       ]
     }));
 
+    // 独立安装：断开 junction，包管理器回退 npm（worktree 与主仓库都无 lockfile）
     const installResult = await postJson(`/api/requirement-tasks/${createdTask.id}/install-independent`, {
       worktreePath: fakeWorktreePath
     });
-    expect(installResult.status).toBe(400);
-    expect(installResult.body.error).toContain('未检测到包管理器');
+    expect(installResult.status).toBe(200);
+    expect(installResult.body.packageManager).toBe('npm');
+    expect(installResult.body.packageManagerSource).toBe('fallback');
+    expect(installResult.body.junctionRemoved).toBe(true);
+    expect(fs.existsSync(path.join(fakeWorktreePath, 'node_modules'))).toBe(false);
+
+    // 默认安装任务仍在运行时会触发互斥锁，先等它结束再恢复共享
+    await waitForJobFinished(installResult.body.jobId);
+
+    // 恢复共享：重建 junction 指向主仓库 node_modules
+    fs.mkdirSync(path.join(fixtureRepository.repoPath, 'node_modules'), { recursive: true });
+    const restoreResult = await postJson(`/api/requirement-tasks/${createdTask.id}/restore-shared`, {
+      worktreePath: fakeWorktreePath
+    });
+    expect(restoreResult.status).toBe(200);
+    const restoredLinkStat = fs.lstatSync(path.join(fakeWorktreePath, 'node_modules'));
+    expect(restoredLinkStat.isSymbolicLink()).toBe(true);
+  });
+
+  it('安装互斥：同 worktree 执行中禁止重复安装与恢复共享；自定义脚本按 custom 模式启动', async () => {
+    const createResult = await postJson('/api/requirement-tasks', buildRequirementPayload({
+      branchName: 'feature/install-lock',
+      generateWorkspace: false
+    }));
+    const createdTask = createResult.body.task;
+
+    const fakeWorktreePath = path.join(requirementTestRootDirectory, 'fake-wt-install-lock');
+    fs.mkdirSync(fakeWorktreePath, { recursive: true });
+    await putJson(`/api/requirement-tasks/${createdTask.id}`, buildRequirementPayload({
+      branchName: 'feature/install-lock',
+      projectList: [
+        { projectName: 'lock-fixture', repoPath: fixtureRepository.repoPath, worktreePath: fakeWorktreePath }
+      ]
+    }));
+
+    // 自定义脚本：长跑任务占住执行窗口
+    const customInstallResult = await postJson(`/api/requirement-tasks/${createdTask.id}/install-independent`, {
+      worktreePath: fakeWorktreePath,
+      customScript: 'node -e "setTimeout(function(){}, 3000)"'
+    });
+    expect(customInstallResult.status).toBe(200);
+    expect(customInstallResult.body.installMode).toBe('custom');
+    expect(customInstallResult.body.packageManagerSource).toBe('fallback');
+
+    // 执行中重复触发（默认安装）→ 409
+    const duplicateInstallResult = await postJson(`/api/requirement-tasks/${createdTask.id}/install-independent`, {
+      worktreePath: fakeWorktreePath
+    });
+    expect(duplicateInstallResult.status).toBe(409);
+    expect(duplicateInstallResult.body.error).toContain('已有安装任务执行中');
+
+    // 执行中恢复共享 → 409
+    const restoreDuringInstallResult = await postJson(`/api/requirement-tasks/${createdTask.id}/restore-shared`, {
+      worktreePath: fakeWorktreePath
+    });
+    expect(restoreDuringInstallResult.status).toBe(409);
+
+    // 任务结束后恢复共享放行
+    await waitForJobFinished(customInstallResult.body.jobId);
+    const restoreAfterResult = await postJson(`/api/requirement-tasks/${createdTask.id}/restore-shared`, {
+      worktreePath: fakeWorktreePath
+    });
+    expect(restoreAfterResult.status).toBe(200);
+  });
+
+  it('恢复时主仓库已有依赖：自动重建共享链接（junction）', async () => {
+    // 造一个真实 worktree（独立于 fixture 的常规流程，直接用 git 创建）
+    const worktreePath = path.join(requirementTestRootDirectory, 'restore-dep-wt');
+    await executeGitCommand(fixtureRepository.repoPath, [
+      'worktree', 'add', '-b', 'feature/restore-dep', worktreePath
+    ]);
+
+    const createResult = await postJson('/api/requirement-tasks', buildRequirementPayload({
+      branchName: 'feature/restore-dep',
+      generateWorkspace: false,
+      projectList: [{ projectName: 'restore-fixture', repoPath: fixtureRepository.repoPath, worktreePath }]
+    }));
+    const createdTask = createResult.body.task;
+
+    // 删除：worktree 与目录被移除
+    const deleteResult = await requestJson('DELETE', `/api/requirement-tasks/${createdTask.id}`);
+    expect(deleteResult.status).toBe(200);
+    expect(fs.existsSync(worktreePath)).toBe(false);
+
+    // 主仓库装好依赖后恢复：worktree 重建且依赖自动共享
+    fs.mkdirSync(path.join(fixtureRepository.repoPath, 'node_modules'), { recursive: true });
+    const restoreResult = await postJson(`/api/requirement-tasks/${createdTask.id}/restore`, {});
+    expect(restoreResult.status).toBe(200);
+    expect(restoreResult.body.restoredWorktreeList.length).toBe(1);
+    const restoredItem = restoreResult.body.restoredWorktreeList[0];
+    expect(restoredItem.dependencyAction).toBe('shared');
+    expect(restoredItem.dependencyReason).toContain('已重建共享依赖');
+    const linkStat = fs.lstatSync(path.join(worktreePath, 'node_modules'));
+    expect(linkStat.isSymbolicLink()).toBe(true);
+  });
+
+  it('任务记录删除：运行中拒绝（409）；已结束可删且详情/日志一并清理', async () => {
+    const fakeWorktreePath = path.join(requirementTestRootDirectory, 'fake-wt-task-delete');
+    fs.mkdirSync(fakeWorktreePath, { recursive: true });
+    const createResult = await postJson('/api/requirement-tasks', buildRequirementPayload({
+      branchName: 'feature/task-delete',
+      generateWorkspace: false,
+      projectList: [
+        { projectName: 'delete-fixture', repoPath: fixtureRepository.repoPath, worktreePath: fakeWorktreePath }
+      ]
+    }));
+    const createdTask = createResult.body.task;
+
+    // 快速失败任务 → 落终态后可删除
+    const failedInstallResult = await postJson(`/api/requirement-tasks/${createdTask.id}/install-independent`, {
+      worktreePath: fakeWorktreePath,
+      customScript: 'node -e "process.exit(1)"'
+    });
+    expect(failedInstallResult.status).toBe(200);
+    const finishedJobId = failedInstallResult.body.jobId;
+    await waitForJobFinished(finishedJobId);
+
+    // 长任务执行中删除 → 409
+    const runningInstallResult = await postJson(`/api/requirement-tasks/${createdTask.id}/install-independent`, {
+      worktreePath: fakeWorktreePath,
+      customScript: 'node -e "setTimeout(function(){}, 2500)"'
+    });
+    expect(runningInstallResult.status).toBe(200);
+    const runningDeleteResult = await requestJson('DELETE', `/api/tasks/${runningInstallResult.body.jobId}`);
+    expect(runningDeleteResult.status).toBe(409);
+    await waitForJobFinished(runningInstallResult.body.jobId);
+
+    // 已结束任务删除成功：详情 404（记录与日志一并清理）
+    const deleteResult = await requestJson('DELETE', `/api/tasks/${finishedJobId}`);
+    expect(deleteResult.status).toBe(200);
+    expect(deleteResult.body.deleted).toBe(true);
+    const detailAfterDelete = await getJson(`/api/tasks/${finishedJobId}`);
+    expect(detailAfterDelete.status).toBe(404);
+
+    // 重复删除 → 404
+    const repeatDeleteResult = await requestJson('DELETE', `/api/tasks/${finishedJobId}`);
+    expect(repeatDeleteResult.status).toBe(404);
   });
 
   it('分支定位：返回各主仓库 worktree 实时清单（含当前分支）', async () => {

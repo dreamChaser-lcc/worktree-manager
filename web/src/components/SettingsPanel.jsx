@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { SearchableSelect } from './SearchableSelect.jsx';
+import { DirectoryPicker } from './DirectoryPicker.jsx';
 import { fetchSettings, updateSettings, fetchInstalledEditors } from '../api/client.js';
 
 /**
@@ -8,6 +10,10 @@ import { fetchSettings, updateSettings, fetchInstalledEditors } from '../api/cli
 export function SettingsPanel({ onProjectDirectoryChange, onWorkspaceLayoutChange }) {
   const [currentDataDirectory, setCurrentDataDirectory] = useState('');
   const [inputDataDirectory, setInputDataDirectory] = useState('');
+  // 数据目录模式：standalone = 独立/默认目录（现状）；app-data = 程序目录下 data
+  const [dataLocationMode, setDataLocationMode] = useState('standalone');
+  const [appDataDirectoryPath, setAppDataDirectoryPath] = useState('');
+  const [savingLocationMode, setSavingLocationMode] = useState(false);
   const [currentProjectDirectory, setCurrentProjectDirectory] = useState('');
   const [inputProjectDirectory, setInputProjectDirectory] = useState('');
   const [currentWorkspaceDirectory, setCurrentWorkspaceDirectory] = useState('');
@@ -29,7 +35,10 @@ export function SettingsPanel({ onProjectDirectoryChange, onWorkspaceLayoutChang
     fetchSettings()
       .then((settingsData) => {
         setCurrentDataDirectory(settingsData.dataDirectory || '');
-        setInputDataDirectory(settingsData.dataDirectory || '');
+        // 输入框回填 settings.json 记录的自定义目录（app-data 模式下与生效目录区分，避免误存程序目录路径）
+        setInputDataDirectory(settingsData.configuredDataDirectory || '');
+        setDataLocationMode(settingsData.dataLocationMode === 'app-data' ? 'app-data' : 'standalone');
+        setAppDataDirectoryPath(settingsData.appDataDirectoryPath || '');
         setCurrentProjectDirectory(settingsData.projectDirectory || '');
         setInputProjectDirectory(settingsData.projectDirectory || '');
         setCurrentWorkspaceDirectory(settingsData.workspaceDirectory || '');
@@ -53,14 +62,38 @@ export function SettingsPanel({ onProjectDirectoryChange, onWorkspaceLayoutChang
     setSavingData(true);
     setDataSaveState(null);
     try {
-      const savedSettings = await updateSettings({ dataDirectory: inputDataDirectory.trim() });
+      // 自定义目录即独立目录模式（后端 changeDataRoot 同步落 dataLocationMode=standalone）
+      const savedSettings = await updateSettings({
+        dataDirectory: inputDataDirectory.trim(),
+        dataLocationMode: 'standalone'
+      });
       setCurrentDataDirectory(savedSettings.dataDirectory);
-      setInputDataDirectory(savedSettings.dataDirectory);
+      setDataLocationMode(savedSettings.dataLocationMode || 'standalone');
+      setInputDataDirectory(inputDataDirectory.trim());
       setDataSaveState({ type: 'success', text: savedSettings.notice || '数据目录已生效。' });
     } catch (saveError) {
       setDataSaveState({ type: 'error', text: saveError.message });
     } finally {
       setSavingData(false);
+    }
+  }
+
+  /** 切换数据目录模式（独立目录 ↔ 程序目录下 data），立即生效，历史数据保留原目录 */
+  async function handleSwitchDataLocation(nextMode) {
+    if (nextMode === dataLocationMode) {
+      return;
+    }
+    setSavingLocationMode(true);
+    setDataSaveState(null);
+    try {
+      const savedSettings = await updateSettings({ dataLocationMode: nextMode });
+      setCurrentDataDirectory(savedSettings.dataDirectory);
+      setDataLocationMode(savedSettings.dataLocationMode || nextMode);
+      setDataSaveState({ type: 'success', text: savedSettings.notice || '数据目录模式已切换。' });
+    } catch (switchError) {
+      setDataSaveState({ type: 'error', text: switchError.message });
+    } finally {
+      setSavingLocationMode(false);
     }
   }
 
@@ -165,24 +198,48 @@ export function SettingsPanel({ onProjectDirectoryChange, onWorkspaceLayoutChang
       </div>
 
       <div className="form-row">
-        <label className="form-label" htmlFor="data-directory-input">新的数据目录</label>
-        <input
-          id="data-directory-input"
-          className="form-input"
-          type="text"
-          value={inputDataDirectory}
-          placeholder="例如 D:\softwares\worktree-manager"
-          onChange={(changeEvent) => setInputDataDirectory(changeEvent.target.value)}
-        />
+        <label className="form-label">数据目录位置</label>
+        <label className="radio-label">
+          <input
+            type="radio"
+            name="dataLocationMode"
+            checked={dataLocationMode === 'standalone'}
+            onChange={() => handleSwitchDataLocation('standalone')}
+            disabled={savingLocationMode || dataLocationMode === 'standalone'}
+          />
+          独立数据目录（默认 D:\softwares\worktree-manager，D 盘缺失自动回退到用户目录；下方可自定义）
+        </label>
+        <label className="radio-label">
+          <input
+            type="radio"
+            name="dataLocationMode"
+            checked={dataLocationMode === 'app-data'}
+            onChange={() => handleSwitchDataLocation('app-data')}
+            disabled={savingLocationMode || dataLocationMode === 'app-data'}
+          />
+          程序目录下 data（随程序目录携带：{appDataDirectoryPath || '（程序根）\data'}）
+        </label>
       </div>
+
+      <DirectoryPicker
+        label="自定义数据目录（弹窗选择）"
+        value={dataLocationMode === 'app-data' ? '' : inputDataDirectory}
+        onChange={(selectedPath) => setInputDataDirectory(selectedPath)}
+        initialPath={inputDataDirectory || currentDataDirectory}
+        hintText={
+          dataLocationMode === 'app-data'
+            ? '当前为程序目录下 data 模式；如需自定义目录，先切回「独立数据目录」。选择后点击保存，记录与任务日志会自动迁移。'
+            : '选择后点击保存，记录与任务日志会自动迁移到新目录；留空表示使用默认目录。'
+        }
+      />
 
       <button
         type="button"
         className="button-primary"
-        disabled={savingData || !inputDataDirectory.trim() || !hasDataDirectoryChanged}
+        disabled={savingData || dataLocationMode === 'app-data' || !inputDataDirectory.trim() || !hasDataDirectoryChanged}
         onClick={handleSaveDataDirectory}
       >
-        {savingData ? '保存中...' : '保存数据目录'}
+        {savingData ? '保存中...' : '保存自定义数据目录'}
       </button>
 
       {dataSaveState ? (
@@ -198,17 +255,13 @@ export function SettingsPanel({ onProjectDirectoryChange, onWorkspaceLayoutChang
           </div>
         </div>
 
-        <div className="form-row">
-          <label className="form-label" htmlFor="project-directory-input">新的代码默认存储目录</label>
-          <input
-            id="project-directory-input"
-            className="form-input"
-            type="text"
-            value={inputProjectDirectory}
-            placeholder="例如 D:\project"
-            onChange={(changeEvent) => setInputProjectDirectory(changeEvent.target.value)}
-          />
-        </div>
+        <DirectoryPicker
+          label="新的代码默认存储目录（弹窗选择）"
+          value={inputProjectDirectory}
+          onChange={(selectedPath) => setInputProjectDirectory(selectedPath)}
+          initialPath={currentProjectDirectory}
+          hintText="选择后点击保存，目录选择器（主仓库、worktree 目标路径、需求项目等）将默认定位到该目录。"
+        />
 
         <button
           type="button"
@@ -252,17 +305,17 @@ export function SettingsPanel({ onProjectDirectoryChange, onWorkspaceLayoutChang
           </label>
         </div>
 
-        <div className="form-row">
-          <label className="form-label" htmlFor="workspace-directory-input">新的工作区文件目录</label>
-          <input
-            id="workspace-directory-input"
-            className="form-input"
-            type="text"
-            value={inputWorkspaceDirectory}
-            placeholder="例如 D:\softwares\worktree-manager\workspaces"
-            onChange={(changeEvent) => setInputWorkspaceDirectory(changeEvent.target.value)}
-          />
-        </div>
+        <DirectoryPicker
+          label="新的工作区文件目录（弹窗选择）"
+          value={inputWorkspaceDirectory}
+          onChange={(selectedPath) => setInputWorkspaceDirectory(selectedPath)}
+          initialPath={currentWorkspaceDirectory}
+          hintText={
+            workspaceLayoutEnabled
+              ? '聚合模式下这是唯一目录设置：worktree 代码与 .code-workspace 统一存放在 <该目录>\\<需求名称>\\ 下。'
+              : '选择后点击保存，新生成的 .code-workspace 工作区文件将保存到该目录。'
+          }
+        />
 
         <button
           type="button"
@@ -282,27 +335,27 @@ export function SettingsPanel({ onProjectDirectoryChange, onWorkspaceLayoutChang
 
       <div className="section-block">
         <div className="form-row">
-          <label className="form-label" htmlFor="editor-select">用什么打开（已检测本机安装的编辑器）</label>
-          <select
-            id="editor-select"
-            className="form-input"
+          <label className="form-label">用什么打开（已检测本机安装的编辑器）</label>
+          <SearchableSelect
             value={selectedEditorOptionValue}
-            onChange={(changeEvent) => {
-              const selectedValue = changeEvent.target.value;
+            onChange={(selectedValue) => {
               if (selectedValue !== '__custom__') {
                 setInputEditorCommand(selectedValue);
               } else {
                 setInputEditorCommand('');
               }
             }}
-          >
-            {selectableEditorList.map((editorEntry) => (
-              <option key={editorEntry.command} value={editorEntry.command}>
-                {editorEntry.label}（{editorEntry.command}）
-              </option>
-            ))}
-            <option value="__custom__">自定义命令...</option>
-          </select>
+            placeholder="请选择编辑器（或自定义命令）"
+            filterPlaceholder="输入筛选编辑器..."
+            emptyText="无匹配编辑器"
+            options={[
+              ...selectableEditorList.map((editorEntry) => ({
+                value: editorEntry.command,
+                label: `${editorEntry.label}（${editorEntry.command}）`
+              })),
+              { value: '__custom__', label: '自定义命令...' }
+            ]}
+          />
           <div className="form-hint">
             当前生效：{currentEditorCommand || 'code'}
             {selectedEditorLabel ? `（${selectedEditorLabel}）` : ''}。"打开"目录与工作区文件时使用该编辑器。

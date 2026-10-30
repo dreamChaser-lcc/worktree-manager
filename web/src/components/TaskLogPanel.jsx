@@ -2,11 +2,15 @@ import React, { useEffect, useRef, useState } from 'react';
 
 /**
  * 任务日志面板：SSE 订阅任务日志，实时滚动展示，落终态后关闭连接。
+ * 可选 onFinished：任务落终态时回调（供父组件刷新依赖状态等后续动作）。
  */
-export function TaskLogPanel({ jobId, title }) {
+export function TaskLogPanel({ jobId, title, onFinished }) {
   const [logLines, setLogLines] = useState([]);
   const [taskStatus, setTaskStatus] = useState('running');
   const logViewReference = useRef(null);
+  // 用 ref 持有回调，避免父组件每次渲染的新函数引用触发 SSE 重连
+  const onFinishedRef = useRef(onFinished);
+  onFinishedRef.current = onFinished;
 
   useEffect(() => {
     if (!jobId) {
@@ -25,6 +29,9 @@ export function TaskLogPanel({ jobId, title }) {
       const endPayload = JSON.parse(endEvent.data);
       setTaskStatus(endPayload.status);
       eventSource.close();
+      if (onFinishedRef.current) {
+        onFinishedRef.current(endPayload.status);
+      }
     });
     eventSource.onerror = () => {
       eventSource.close();

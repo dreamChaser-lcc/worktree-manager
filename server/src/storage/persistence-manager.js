@@ -29,6 +29,8 @@ export function createPersistenceManager(managerOptions = {}) {
     managerOptions.settingsFilePath || path.join(homeDirectoryPath, '.worktree-manager', 'settings.json');
   let defaultDataRootPath = managerOptions.defaultDataRootPath || DEFAULT_DATA_ROOT_PATH;
   let dataRootOverride = managerOptions.dataRootOverride || null;
+  // 便携数据目录（<程序根>/data）可注入以便单测；默认取服务配置
+  let appDataDirectoryPath = managerOptions.appDataDirectoryPath || serverConfig.appDataDirectoryPath;
 
   let initialized = false;
   let currentDataRootPath = null;
@@ -130,11 +132,20 @@ export function createPersistenceManager(managerOptions = {}) {
       warnStorageError(`项目存放目录创建失败(${getProjectDirectoryPath()})`, projectDirectoryError);
     }
 
-    const candidateList = resolveDataRootCandidates({
-      settingsDataDirectory: dataRootOverride || settingsCache.dataDirectory,
-      homeDirectoryPath,
-      defaultDataRootPath
-    });
+    // 数据目录模式（settings.dataLocationMode）：'app-data' = 程序目录下 data（优先于独立目录链）；
+    // 缺省/'standalone' = 现状解析链（自定义 dataDirectory → 默认 → 用户目录回退）。测试注入 dataRootOverride 时始终最优先。
+    const useAppDataLocation = !dataRootOverride && settingsCache.dataLocationMode === 'app-data';
+    const candidateList = [];
+    if (useAppDataLocation) {
+      candidateList.push({ source: 'app-data', dataRootPath: appDataDirectoryPath });
+    }
+    candidateList.push(
+      ...resolveDataRootCandidates({
+        settingsDataDirectory: dataRootOverride || settingsCache.dataDirectory,
+        homeDirectoryPath,
+        defaultDataRootPath
+      })
+    );
 
     for (const candidate of candidateList) {
       try {
@@ -159,19 +170,14 @@ export function createPersistenceManager(managerOptions = {}) {
     return null;
   }
 
-  /** 切换数据根目录：新库就绪后原子提交并写回设置。旧数据保留原目录不迁移（design D3） */
+  /** 切换数据根目录：自动迁移记录数据（nedb 记录库 + 任务日志）到新目录后原子提交并写回设置；显式自定义目录即独立目录模式 */
   async function changeDataRoot(newDataRootPath) {
     if (!newDataRootPath || typeof newDataRootPath !== 'string' || !path.isAbsolute(newDataRootPath)) {
       throw new ValidationError(`数据目录必须为绝对路径: ${newDataRootPath}`);
     }
-    const normalizedDataRootPath = path.resolve(newDataRootPath);
-    try {
-      await openStores(normalizedDataRootPath);
-    } catch (openError) {
-      throw new ValidationError(`目标数据目录不可用: ${openError.message}`);
-    }
+    const normalizedDataRootPath = await switchDataRootWithMigration(newDataRootPath);
     initialized = true;
-    settingsCache = { ...settingsCache, dataDirectory: normalizedDataRootPath };
+    settingsCache = { ...settingsCache, dataDirectory: normalizedDataRootPath, dataLocationMode: 'standalone' };
     try {
       await writeSettingsFile(settingsFilePath, settingsCache);
     } catch (persistSettingError) {
@@ -180,8 +186,128 @@ export function createPersistenceManager(managerOptions = {}) {
     return currentDataRootPath;
   }
 
+  /** 需要随数据目录迁移的记录类子目录；workspaces 不迁移——聚合模式下它是 worktree 代码现场，移动会破坏 git worktree 关联 */
+  const MIGRATABLE_DATA_DIRECTORY_NAME_LIST = ['nedb', 'job-logs'];
+
+  /** 把旧数据根的记录类数据复制到新数据根（复制而非移动，源在切换成功后再清理）；目标已存在的同名文件跳过不覆盖 */
+  async function copyRecordDataToNewDataRoot(oldDataRootPath, newDataRootPath) {
+    for (const directoryName of MIGRATABLE_DATA_DIRECTORY_NAME_LIST) {
+      const sourceDirectoryPath = path.join(oldDataRootPath, directoryName);
+      try {
+        await fs.access(sourceDirectoryPath);
+      } catch {
+        continue; // 源子目录不存在则跳过
+      }
+      await fs.cp(sourceDirectoryPath, path.join(newDataRootPath, directoryName), {
+        recursive: true,
+        force: false
+      });
+    }
+  }
+
+  /** 切换成功后清理旧目录中已迁移的记录数据；旧根目录非空（如含 workspaces）则保留现场 */
+  async function cleanupMigratedDataRoot(oldDataRootPath) {
+    try {
+      for (const directoryName of MIGRATABLE_DATA_DIRECTORY_NAME_LIST) {
+        await fs.rm(path.join(oldDataRootPath, directoryName), { recursive: true, force: true });
+      }
+      await fs.rmdir(oldDataRootPath);
+    } catch (cleanupError) {
+      warnStorageError(`旧数据目录未能完全清理（不影响使用，可手动删除）: ${oldDataRootPath}`, cleanupError);
+    }
+  }
+
+  /**
+   * 数据根目录切换统一入口（changeDataRoot / changeDataLocationMode 共用）：
+   * 1. 先把旧目录的记录数据复制到新目录（此时旧库仍在服务、新库未打开，复制无冲突）
+   * 2. 打开新目录的库（加载迁移过来的数据）
+   * 3. 成功后清理旧目录中已迁移的记录数据；打开失败时清理半成品复制内容并保持旧库可用
+   */
+  async function switchDataRootWithMigration(targetDataRootPath) {
+    const normalizedTargetPath = path.resolve(targetDataRootPath);
+    const oldDataRootPath = currentDataRootPath;
+    const sameDataRoot =
+      oldDataRootPath &&
+      path.resolve(oldDataRootPath).toLowerCase() === normalizedTargetPath.toLowerCase();
+    if (sameDataRoot) {
+      return currentDataRootPath;
+    }
+
+    if (oldDataRootPath) {
+      try {
+        await fs.mkdir(normalizedTargetPath, { recursive: true });
+        await copyRecordDataToNewDataRoot(oldDataRootPath, normalizedTargetPath);
+      } catch (copyError) {
+        // 迁移失败立即中止切换：旧目录与新库均不受影响，删除半成品复制内容
+        await fs.rm(normalizedTargetPath, { recursive: true, force: true }).catch(() => {});
+        throw new ValidationError(`数据迁移失败，已中止切换（原目录数据不受影响）: ${copyError.message}`);
+      }
+    }
+
+    try {
+      await openStores(normalizedTargetPath);
+    } catch (openError) {
+      if (oldDataRootPath) {
+        await fs.rm(normalizedTargetPath, { recursive: true, force: true }).catch(() => {});
+      }
+      throw new ValidationError(`目标数据目录不可用: ${openError.message}`);
+    }
+
+    if (oldDataRootPath) {
+      await cleanupMigratedDataRoot(oldDataRootPath);
+    }
+    return normalizedTargetPath;
+  }
+
+  /** 当前数据目录模式：'app-data'（程序目录下 data）| 'standalone'（独立/默认目录，缺省） */
+  function getDataLocationMode() {
+    return settingsCache.dataLocationMode === 'app-data' ? 'app-data' : 'standalone';
+  }
+
+  /** 切换数据目录模式：自动迁移记录数据后立即生效；dataDirectory 记录值保留，切回独立模式时沿用 */
+  async function changeDataLocationMode(newMode) {
+    if (newMode !== 'app-data' && newMode !== 'standalone') {
+      throw new ValidationError(`未知的数据目录模式: ${newMode}`);
+    }
+    if (newMode === getDataLocationMode()) {
+      return currentDataRootPath;
+    }
+    let targetDataRootPath;
+    if (newMode === 'app-data') {
+      targetDataRootPath = appDataDirectoryPath;
+    } else {
+      // 切回独立模式：沿用此前记录的自定义目录，无记录时取默认解析链首选
+      const standaloneCandidateList = resolveDataRootCandidates({
+        settingsDataDirectory: settingsCache.dataDirectory,
+        homeDirectoryPath,
+        defaultDataRootPath
+      });
+      targetDataRootPath = standaloneCandidateList[0].dataRootPath;
+    }
+    await switchDataRootWithMigration(targetDataRootPath);
+    initialized = true;
+    settingsCache = { ...settingsCache, dataLocationMode: newMode };
+    try {
+      await writeSettingsFile(settingsFilePath, settingsCache);
+    } catch (persistSettingError) {
+      warnStorageError('设置文件写入失败（本次模式切换已生效，但重启后不保留）', persistSettingError);
+    }
+    return currentDataRootPath;
+  }
+
   function getDataRootPath() {
     return currentDataRootPath;
+  }
+
+  /** settings.json 记录的自定义数据目录（可能为空 = 未自定义）；与实际生效目录区分，供设置页输入框回填 */
+  function getConfiguredDataDirectory() {
+    const configuredPath = settingsCache.dataDirectory;
+    return configuredPath && typeof configuredPath === 'string' ? configuredPath : '';
+  }
+
+  /** 便携数据目录路径（<程序根>/data），供设置页展示 */
+  function getAppDataDirectoryPath() {
+    return appDataDirectoryPath;
   }
 
   /** 代码默认存储目录：settings.json 记录值优先，否则默认 D:\project（目录选择器起始定位用） */
@@ -335,6 +461,18 @@ export function createPersistenceManager(managerOptions = {}) {
     }
   }
 
+  /** 删除单条任务记录；返回删除条数（0 = 记录不存在） */
+  async function deleteJobRecord(jobId) {
+    if (!initialized) return 0;
+    try {
+      const removedCount = await jobsDatastore.removeAsync({ id: jobId }, {});
+      return removedCount ?? 0;
+    } catch (deleteError) {
+      warnStorageError(`任务记录删除失败(${jobId})`, deleteError);
+      return 0;
+    }
+  }
+
   /** 崩溃恢复：遗留 running → interrupted，finishedAt 取扫描时刻；返回受影响条数 */
   async function markRunningJobsAsInterrupted(interruptedAtIso) {
     if (!initialized) return 0;
@@ -366,6 +504,18 @@ export function createPersistenceManager(managerOptions = {}) {
   async function readJobLogLines(jobId) {
     if (!initialized) return [];
     return readJobLogFile(path.join(jobLogsDirectoryPath, `${jobId}.jsonl`));
+  }
+
+  /** 删除任务日志文件（记录清理时一并清理）；文件不存在视为已删除 */
+  async function deleteJobLogFile(jobId) {
+    if (!initialized) return;
+    // 丢弃可能残留的串行写队列句柄，避免删除后又被补写重建
+    jobLogWriterMap.delete(jobId);
+    try {
+      await fs.rm(path.join(jobLogsDirectoryPath, `${jobId}.jsonl`), { force: true });
+    } catch (deleteError) {
+      warnStorageError(`任务日志文件删除失败(${jobId})`, deleteError);
+    }
   }
 
   /* ── 创建历史（worktree-history.db） ───────────────── */
@@ -480,6 +630,10 @@ export function createPersistenceManager(managerOptions = {}) {
     initialize,
     changeDataRoot,
     getDataRootPath,
+    getConfiguredDataDirectory,
+    getAppDataDirectoryPath,
+    getDataLocationMode,
+    changeDataLocationMode,
     getProjectDirectoryPath,
     changeProjectDirectory,
     getWorkspaceDirectoryPath,
@@ -492,6 +646,8 @@ export function createPersistenceManager(managerOptions = {}) {
     updateJobRecord,
     findJobRecordById,
     listJobRecords,
+    deleteJobRecord,
+    deleteJobLogFile,
     markRunningJobsAsInterrupted,
     appendJobLogLines,
     readJobLogLines,

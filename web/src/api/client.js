@@ -117,16 +117,22 @@ export function updateRequirementTask(taskId, taskPayload) {
   return putJson(`/api/requirement-tasks/${encodeURIComponent(taskId)}`, taskPayload);
 }
 
-export function deleteRequirementTask(taskId) {
-  return requestJson('DELETE', `/api/requirement-tasks/${encodeURIComponent(taskId)}`);
+export function deleteRequirementTask(taskId, force) {
+  const forceQuery = force ? '?force=true' : '';
+  return requestJson('DELETE', `/api/requirement-tasks/${encodeURIComponent(taskId)}${forceQuery}`);
 }
 
 export function restoreRequirementTask(taskId) {
   return postJson(`/api/requirement-tasks/${encodeURIComponent(taskId)}/restore`, {});
 }
 
-export function permanentDeleteRequirementTask(taskId) {
-  return requestJson('DELETE', `/api/requirement-tasks/${encodeURIComponent(taskId)}/permanent`);
+export function permanentDeleteRequirementTask(taskId, force) {
+  const forceQuery = force ? '?force=true' : '';
+  return requestJson('DELETE', `/api/requirement-tasks/${encodeURIComponent(taskId)}/permanent${forceQuery}`);
+}
+
+export function deleteTaskRecord(jobId) {
+  return requestJson('DELETE', `/api/tasks/${encodeURIComponent(jobId)}`);
 }
 
 export function generateRequirementWorkspace(taskId) {
@@ -145,6 +151,13 @@ export function fetchRequirementDependencyCheck(taskId) {
   return getJson(`/api/requirement-tasks/${encodeURIComponent(taskId)}/dependency-check`);
 }
 
-export function startRequirementIndependentInstall(taskId, worktreePath) {
-  return postJson(`/api/requirement-tasks/${encodeURIComponent(taskId)}/install-independent`, { worktreePath });
+export function startRequirementIndependentInstall(taskId, worktreePath, customScript) {
+  return postJson(`/api/requirement-tasks/${encodeURIComponent(taskId)}/install-independent`, {
+    worktreePath,
+    customScript: typeof customScript === 'string' && customScript.trim() !== '' ? customScript.trim() : undefined
+  });
+}
+
+export function restoreSharedDependencies(taskId, worktreePath) {
+  return postJson(`/api/requirement-tasks/${encodeURIComponent(taskId)}/restore-shared`, { worktreePath });
 }

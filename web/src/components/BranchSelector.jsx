@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { SearchableSelect } from './SearchableSelect.jsx';
 import { fetchBranchOverview } from '../api/client.js';
 
 /**
@@ -68,19 +69,20 @@ export function BranchSelector({
 
       {branchMode === 'existing' ? (
         <div>
-          <select
-            className="form-input"
+          <SearchableSelect
             value={branchName}
-            onChange={(changeEvent) => onBranchNameChange(changeEvent.target.value)}
-          >
-            <option value="">请选择分支</option>
-            {branchItemList.map((branchItem) => (
-              <option key={branchItem.name} value={branchItem.name} disabled={Boolean(branchItem.occupiedBy)}>
-                {branchItem.name}
-                {branchItem.occupiedBy ? `（已被占用: ${branchItem.occupiedBy}）` : ''}
-              </option>
-            ))}
-          </select>
+            onChange={onBranchNameChange}
+            placeholder="请选择分支"
+            filterPlaceholder="输入筛选分支..."
+            emptyText="无匹配分支"
+            options={branchItemList.map((branchItem) => ({
+              value: branchItem.name,
+              label: branchItem.occupiedBy
+                ? `${branchItem.name}（已被占用: ${branchItem.occupiedBy}）`
+                : branchItem.name,
+              disabled: Boolean(branchItem.occupiedBy)
+            }))}
+          />
           <div className="form-hint">被其他 worktree 签出的分支已标注且不可选（git 限制：同一分支不能同时签出）</div>
         </div>
       ) : (
@@ -93,32 +95,33 @@ export function BranchSelector({
             onChange={(changeEvent) => onBranchNameChange(changeEvent.target.value)}
           />
           <div className="base-ref-block">
-            <label className="form-label" htmlFor={`base-branch-select-${repoPath}`}>起点分支（新分支基于它创建）</label>
-            <select
-              id={`base-branch-select-${repoPath}`}
-              className="form-input"
-              value={remoteBranchItemList.includes(baseRef) || branchItemList.some((branchItem) => branchItem.name === baseRef) ? baseRef : ''}
-              onChange={(changeEvent) => onBaseRefChange(changeEvent.target.value)}
-            >
-              <option value="">请选择起点分支（或在下方的输入框手动填写 ref）</option>
-              {remoteBranchItemList.length > 0 ? (
-                <optgroup label="远程分支（最新代码）">
-                  {remoteBranchItemList.map((remoteBranchName) => (
-                    <option key={remoteBranchName} value={remoteBranchName}>
-                      {remoteBranchName}
-                    </option>
-                  ))}
-                </optgroup>
-              ) : null}
-              <optgroup label="本地分支">
-                {branchItemList.map((branchItem) => (
-                  <option key={branchItem.name} value={branchItem.name}>
-                    {branchItem.name}
-                    {branchItem.occupiedBy ? `（已被占用: ${branchItem.occupiedBy}）` : ''}
-                  </option>
-                ))}
-              </optgroup>
-            </select>
+            <label className="form-label">起点分支（新分支基于它创建）</label>
+            <SearchableSelect
+              value={
+                remoteBranchItemList.includes(baseRef) ||
+                branchItemList.some((branchItem) => branchItem.name === baseRef)
+                  ? baseRef
+                  : ''
+              }
+              onChange={onBaseRefChange}
+              placeholder="请选择起点分支（或在下方的输入框手动填写 ref）"
+              filterPlaceholder="输入筛选起点分支..."
+              emptyText="无匹配分支"
+              options={[
+                ...remoteBranchItemList.map((remoteBranchName) => ({
+                  value: remoteBranchName,
+                  label: remoteBranchName,
+                  group: '远程分支（最新代码）'
+                })),
+                ...branchItemList.map((branchItem) => ({
+                  value: branchItem.name,
+                  label: branchItem.occupiedBy
+                    ? `${branchItem.name}（已被占用: ${branchItem.occupiedBy}）`
+                    : branchItem.name,
+                  group: '本地分支'
+                }))
+              ]}
+            />
             <input
               className="form-input base-ref-input"
               type="text"

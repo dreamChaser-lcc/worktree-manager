@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { RequirementTaskForm, deriveProjectNameFromPath } from './RequirementTaskForm.jsx';
 import { TaskLogPanel } from './TaskLogPanel.jsx';
+import { DependencyInstallDialog } from './DependencyInstallDialog.jsx';
+import { usePendingActions } from '../utils/usePendingActions.js';
 import {
   fetchRequirementTaskList,
   deleteRequirementTask,
@@ -10,6 +12,7 @@ import {
   fetchRequirementTaskLocate,
   fetchRequirementDependencyCheck,
   startRequirementIndependentInstall,
+  restoreSharedDependencies,
   revealInExplorer,
   openDirectoryInEditor
 } from '../api/client.js';
@@ -117,13 +120,35 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
   const [expandedTaskId, setExpandedTaskId] = useState(null);
   const [confirmDeleteTask, setConfirmDeleteTask] = useState(null);
   const [confirmPermanentTask, setConfirmPermanentTask] = useState(null);
+  // 删除/彻底删除确认弹窗：强制删除勾选（有未提交修改时丢弃修改）与失败详情（弹窗内展示并引导重试）
+  const [deleteForceChecked, setDeleteForceChecked] = useState(false);
+  const [deleteFailedMessage, setDeleteFailedMessage] = useState(null);
+  const [permanentForceChecked, setPermanentForceChecked] = useState(false);
+  const [permanentFailedMessage, setPermanentFailedMessage] = useState(null);
   const [actionMessage, setActionMessage] = useState(null);
+  // 需求任务面板：刷新进行中标记（禁用按钮 + spinner，明确告知刷新动作在执行）
+  const [refreshing, setRefreshing] = useState(false);
   // 展开明细时按需获取的分支定位数据（taskId → locate 响应）
   const [locateDataMap, setLocateDataMap] = useState({});
   // 展开明细时按需获取的依赖检查数据（taskId → dependency-check 响应）
   const [dependencyDataMap, setDependencyDataMap] = useState({});
-  // 各项目已启动的独立安装任务（`${taskId}:${projectIndex}` → jobId）
+  // 各项目已启动的独立安装任务（`${taskId}:${projectIndex}` → { jobId, installMode }）
   const [installJobMap, setInstallJobMap] = useState({});
+  // 独立安装选项弹窗：null | { taskEntry, projectIndex, projectEntry }
+  const [installDialogState, setInstallDialogState] = useState(null);
+  // 安装请求发起中的 key 集合（`${taskId}:${projectIndex}`），用于禁用按钮防连点
+  const [installStartingKeyMap, setInstallStartingKeyMap] = useState({});
+  // 恢复共享进行中（同步长操作：删独立 node_modules + 重建 junction，可能耗时较久）
+  const [sharedRestoreKeyMap, setSharedRestoreKeyMap] = useState({});
+  // 安装任务运行中（启动成功 → 任务落终态），用于依赖行按钮禁用与 loading 反馈
+  const [installRunningKeyMap, setInstallRunningKeyMap] = useState({});
+  // 删除/彻底删除确认弹窗的提交中标记（确认按钮 spinner 与禁用）
+  const [deleteSubmitting, setDeleteSubmitting] = useState(false);
+  const [permanentDeleting, setPermanentDeleting] = useState(false);
+  // 恢复 / 工作区重新生成 / 打开与显示 等异步按钮的 pending 管理
+  const restorePending = usePendingActions();
+  const workspaceRegenPending = usePendingActions();
+  const pathActionPending = usePendingActions();
   // 跨需求分支冲突：同一项目仓库在不同需求中关联了相同分支
   const conflictProjectKeySet = useMemo(() => buildConflictKeySet(taskList), [taskList]);
 
@@ -161,21 +186,23 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
   }
 
   async function handleRegenerateWorkspace(taskId) {
-    try {
-      const regenerateResult = await generateRequirementWorkspace(taskId);
-      const workspaceResult = regenerateResult.workspace || {};
-      let messageText = `工作区文件已生成：${workspaceResult.workspaceFilePath || ''}`;
-      const excludedProjectList = workspaceResult.excludedProjectList || [];
-      if (excludedProjectList.length > 0) {
-        messageText += `（未纳入：${excludedProjectList
-          .map((excludedProject) => `${excludedProject.projectName}(${excludedProject.reason})`)
-          .join('、')}）`;
+    await workspaceRegenPending.run(`ws-regen:${taskId}`, async () => {
+      try {
+        const regenerateResult = await generateRequirementWorkspace(taskId);
+        const workspaceResult = regenerateResult.workspace || {};
+        let messageText = `工作区文件已生成：${workspaceResult.workspaceFilePath || ''}`;
+        const excludedProjectList = workspaceResult.excludedProjectList || [];
+        if (excludedProjectList.length > 0) {
+          messageText += `（未纳入：${excludedProjectList
+            .map((excludedProject) => `${excludedProject.projectName}(${excludedProject.reason})`)
+            .join('、')}）`;
+        }
+        setActionMessage({ type: 'success', text: messageText });
+        refreshTaskList();
+      } catch (regenerateError) {
+        setActionMessage({ type: 'error', text: regenerateError.message });
       }
-      setActionMessage({ type: 'success', text: messageText });
-      refreshTaskList();
-    } catch (regenerateError) {
-      setActionMessage({ type: 'error', text: regenerateError.message });
-    }
+    });
   }
 
   /** 展开/收起明细；展开时实时获取分支定位与依赖检查数据 */
@@ -183,48 +210,128 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
     const nextExpandedTaskId = expandedTaskId === taskEntry.id ? null : taskEntry.id;
     setExpandedTaskId(nextExpandedTaskId);
     if (nextExpandedTaskId) {
-      fetchRequirementTaskLocate(taskEntry.id)
-        .then((locateData) => setLocateDataMap((previousMap) => ({ ...previousMap, [taskEntry.id]: locateData })))
-        .catch((locateError) => setActionMessage({ type: 'error', text: `分支定位失败: ${locateError.message}` }));
-      fetchRequirementDependencyCheck(taskEntry.id)
-        .then((dependencyData) =>
-          setDependencyDataMap((previousMap) => ({ ...previousMap, [taskEntry.id]: dependencyData }))
-        )
-        .catch((dependencyError) => setActionMessage({ type: 'error', text: `依赖检查失败: ${dependencyError.message}` }));
+      loadExpandedTaskData(nextExpandedTaskId);
     }
   }
 
-  /** 对项目 worktree 发起独立安装（共享 junction 会先断开再安装） */
-  async function handleStartIndependentInstall(taskEntry, projectIndex, projectEntry) {
+  /** 拉取指定需求的分支定位与依赖检查数据（展开明细与手动刷新共用）；返回全部完成的 Promise */
+  function loadExpandedTaskData(taskId) {
+    return Promise.all([
+      fetchRequirementTaskLocate(taskId)
+        .then((locateData) => setLocateDataMap((previousMap) => ({ ...previousMap, [taskId]: locateData })))
+        .catch((locateError) => setActionMessage({ type: 'error', text: `分支定位失败: ${locateError.message}` })),
+      fetchRequirementDependencyCheck(taskId)
+        .then((dependencyData) =>
+          setDependencyDataMap((previousMap) => ({ ...previousMap, [taskId]: dependencyData }))
+        )
+        .catch((dependencyError) => setActionMessage({ type: 'error', text: `依赖检查失败: ${dependencyError.message}` }))
+    ]);
+  }
+
+  /** 刷新：需求列表 + 已展开明细的分支定位与依赖检查一并重拉，期间按钮展示 loading；同时清掉上一次操作的提示 */
+  async function handleRefreshAll() {
+    if (refreshing) {
+      return;
+    }
+    setRefreshing(true);
+    setActionMessage(null);
     try {
-      const installResult = await startRequirementIndependentInstall(taskEntry.id, projectEntry.worktreePath);
+      await Promise.all([
+        refreshTaskList(),
+        expandedTaskId ? loadExpandedTaskData(expandedTaskId) : Promise.resolve()
+      ]);
+    } finally {
+      setRefreshing(false);
+    }
+  }
+
+  /** 按 key 增删布尔标记的通用写法（loading/运行态集合用） */
+  function setKeyFlag(mapSetter, actionKey, flagValue) {
+    mapSetter((previousMap) => {
+      const nextMap = { ...previousMap };
+      if (flagValue) {
+        nextMap[actionKey] = true;
+      } else {
+        delete nextMap[actionKey];
+      }
+      return nextMap;
+    });
+  }
+
+  /** 对项目 worktree 发起独立安装（共享 junction 会先断开再安装；customScriptText 非空走自定义脚本） */
+  async function handleStartIndependentInstall(taskEntry, projectIndex, projectEntry, customScriptText) {
+    const installActionKey = `${taskEntry.id}:${projectIndex}`;
+    setInstallStartingKeyMap((previousMap) => ({ ...previousMap, [installActionKey]: true }));
+    try {
+      const installResult = await startRequirementIndependentInstall(
+        taskEntry.id,
+        projectEntry.worktreePath,
+        customScriptText
+      );
       setInstallJobMap((previousMap) => ({
         ...previousMap,
-        [`${taskEntry.id}:${projectIndex}`]: installResult.jobId
+        [installActionKey]: { jobId: installResult.jobId, installMode: installResult.installMode }
       }));
+      // 任务运行中：依赖行按钮进入「安装中...」禁用态，落终态后由 onFinished 解除并刷新
+      setKeyFlag(setInstallRunningKeyMap, installActionKey, true);
+      const installModeText = installResult.installMode === 'custom' ? '自定义脚本安装' : '默认安装';
       setActionMessage({
         type: 'success',
-        text: `独立安装任务已启动（${installResult.packageManager} install），日志见下方；完成后可收起再展开刷新依赖状态。`
+        text: `${installModeText}任务已启动（${installResult.packageManager}${installResult.junctionRemoved ? '，已断开共享链接' : ''}），日志见下方；完成后状态自动刷新。`
       });
+      setInstallDialogState(null);
+      refreshDependencyCheck(taskEntry.id);
     } catch (installError) {
+      // 409 等错误保留弹窗，方便用户看到原因后直接重试或取消
       setActionMessage({ type: 'error', text: installError.message });
+    } finally {
+      setInstallStartingKeyMap((previousMap) => {
+        const nextMap = { ...previousMap };
+        delete nextMap[installActionKey];
+        return nextMap;
+      });
     }
   }
 
   /** 在资源管理器中显示路径（文件定位选中，目录直接打开） */
   async function handleRevealPath(targetPath) {
-    try {
-      await revealInExplorer(targetPath);
-    } catch (revealError) {
-      setActionMessage({ type: 'error', text: revealError.message });
-    }
+    await pathActionPending.run(`reveal:${targetPath}`, async () => {
+      try {
+        await revealInExplorer(targetPath);
+      } catch (revealError) {
+        setActionMessage({ type: 'error', text: revealError.message });
+      }
+    });
   }
 
-  async function handleDeleteConfirmed(taskEntry) {
+  /** 拼装删除失败详情：逐项目给出原因与未提交文件清单，并引导勾选强制删除重试 */
+  function buildDeleteFailedText(deleteError) {
+    const failedList = (deleteError.details && deleteError.details.failedList) || [];
+    const detailLineList = failedList.map((failedItem) => {
+      const uncommittedFileList = failedItem.uncommittedFiles || [];
+      const fileText =
+        uncommittedFileList.length > 0
+          ? `；未提交内容（${uncommittedFileList.length} 处）：${uncommittedFileList
+              .slice(0, 5)
+              .join('、')}${uncommittedFileList.length > 5 ? ` 等` : ''}`
+          : '';
+      return `${failedItem.projectName}：${failedItem.reason}${fileText}`;
+    });
+    return [
+      deleteError.message,
+      ...detailLineList,
+      deleteError.status === 409 ? '处理建议：先到 worktree 里提交或还原上述修改后重试；确认放弃修改可勾选“强制删除”后重试。' : ''
+    ].filter(Boolean).join('\n');
+  }
+
+  async function handleDeleteConfirmed(taskEntry, forceRemoval) {
+    setDeleteSubmitting(true);
     try {
-      const deleteResult = await deleteRequirementTask(taskEntry.id);
+      const deleteResult = await deleteRequirementTask(taskEntry.id, forceRemoval);
       const removedCount = (deleteResult.removedWorktreeList || []).length;
       setConfirmDeleteTask(null);
+      setDeleteForceChecked(false);
+      setDeleteFailedMessage(null);
       setExpandedTaskId(expandedTaskId === taskEntry.id ? null : expandedTaskId);
       setActionMessage({
         type: 'success',
@@ -232,51 +339,94 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
       });
       refreshTaskList();
     } catch (deleteError) {
-      setConfirmDeleteTask(null);
-      const failedList = (deleteError.details && deleteError.details.failedList) || [];
-      const failedReasonText = failedList
-        .map((failedItem) => `${failedItem.projectName}：${failedItem.reason}`)
-        .join('；');
-      setActionMessage({
-        type: 'error',
-        text: `${deleteError.message}${failedReasonText ? ` —— ${failedReasonText}` : ''}`
-      });
+      // 失败时弹窗保留：详情与“强制删除”入口都在弹窗内，避免用户失去重试路径
+      setDeleteFailedMessage(buildDeleteFailedText(deleteError));
       if (deleteError.status === 409) {
         refreshTaskList();
       }
+    } finally {
+      setDeleteSubmitting(false);
     }
   }
 
   async function handleRestore(taskEntry) {
+    await restorePending.run(`restore:${taskEntry.id}`, async () => {
+      try {
+        const restoreResult = await restoreRequirementTask(taskEntry.id);
+        const restoredWorktreeList = restoreResult.restoredWorktreeList || [];
+        const skippedCount = (restoreResult.skippedWorktreeList || []).length;
+        const branchSummaryText = restoredWorktreeList
+          .map((restoredItem) => `${restoredItem.projectName}(${restoredItem.branchName})`)
+          .join('、');
+        const sharedDependencyCount = restoredWorktreeList.filter(
+          (restoredItem) => restoredItem.dependencyAction === 'shared'
+        ).length;
+        const unhandledDependencyList = restoredWorktreeList.filter(
+          (restoredItem) => restoredItem.dependencyAction !== 'shared'
+        );
+        const dependencySummaryText =
+          restoredWorktreeList.length > 0
+            ? `依赖：${sharedDependencyCount} 个已重建共享链接${
+                unhandledDependencyList.length > 0
+                  ? `，${unhandledDependencyList.length} 个未处理（${unhandledDependencyList
+                      .map((restoredItem) => `${restoredItem.projectName}：${restoredItem.dependencyReason}`)
+                      .join('；')}；可在明细中点“独立安装”）`
+                  : ''
+              }`
+            : '';
+        setActionMessage({
+          type: 'success',
+          text: `恢复完成：重建 ${restoredWorktreeList.length} 个 worktree${branchSummaryText ? ` — ${branchSummaryText}` : ''}；${dependencySummaryText}${skippedCount ? `（${skippedCount} 个此前已恢复）` : ''}工作区文件已重新生成。`
+        });
+        refreshTaskList();
+      } catch (restoreError) {
+        const failedList = (restoreError.details && restoreError.details.failedList) || [];
+        const failedReasonText = failedList
+          .map((failedItem) => `${failedItem.projectName}：${failedItem.reason}`)
+          .join('；');
+        setActionMessage({
+          type: 'error',
+          text: `${restoreError.message}${failedReasonText ? ` —— ${failedReasonText}` : ''}`
+        });
+      }
+    });
+  }
+
+  /** 重新拉取指定需求的依赖检查数据（安装/恢复共享后刷新状态） */
+  function refreshDependencyCheck(taskId) {
+    fetchRequirementDependencyCheck(taskId)
+      .then((dependencyData) =>
+        setDependencyDataMap((previousMap) => ({ ...previousMap, [taskId]: dependencyData }))
+      )
+      .catch(() => {});
+  }
+
+  /** 恢复共享：删除独立安装的 node_modules，重建与主仓库的 junction 共享（同步长操作，按钮带 loading） */
+  async function handleRestoreShared(taskEntry, projectIndex, projectEntry) {
+    const restoreActionKey = `${taskEntry.id}:${projectIndex}`;
+    setKeyFlag(setSharedRestoreKeyMap, restoreActionKey, true);
     try {
-      const restoreResult = await restoreRequirementTask(taskEntry.id);
-      const restoredWorktreeList = restoreResult.restoredWorktreeList || [];
-      const skippedCount = (restoreResult.skippedWorktreeList || []).length;
-      const branchSummaryText = restoredWorktreeList
-        .map((restoredItem) => `${restoredItem.projectName}(${restoredItem.branchName})`)
-        .join('、');
+      const restoreResult = await restoreSharedDependencies(taskEntry.id, projectEntry.worktreePath);
       setActionMessage({
         type: 'success',
-        text: `恢复完成：重建 ${restoredWorktreeList.length} 个 worktree${branchSummaryText ? ` — ${branchSummaryText}` : ''}${skippedCount ? `（${skippedCount} 个此前已恢复）` : ''}；工作区文件已重新生成。`
+        text: `已恢复共享主目录依赖${restoreResult.removedIndependentModules ? '（独立安装的 node_modules 已移除）' : ''}。`
       });
-      refreshTaskList();
+      refreshDependencyCheck(taskEntry.id);
     } catch (restoreError) {
-      const failedList = (restoreError.details && restoreError.details.failedList) || [];
-      const failedReasonText = failedList
-        .map((failedItem) => `${failedItem.projectName}：${failedItem.reason}`)
-        .join('；');
-      setActionMessage({
-        type: 'error',
-        text: `${restoreError.message}${failedReasonText ? ` —— ${failedReasonText}` : ''}`
-      });
+      setActionMessage({ type: 'error', text: restoreError.message });
+    } finally {
+      setKeyFlag(setSharedRestoreKeyMap, restoreActionKey, false);
     }
   }
 
-  async function handlePermanentDeleteConfirmed(taskEntry) {
+  async function handlePermanentDeleteConfirmed(taskEntry, forceRemoval) {
+    setPermanentDeleting(true);
     try {
-      const deleteResult = await permanentDeleteRequirementTask(taskEntry.id);
+      const deleteResult = await permanentDeleteRequirementTask(taskEntry.id, forceRemoval);
       const removedCount = (deleteResult.removedWorktreeList || []).length;
       setConfirmPermanentTask(null);
+      setPermanentForceChecked(false);
+      setPermanentFailedMessage(null);
       setExpandedTaskId(expandedTaskId === taskEntry.id ? null : expandedTaskId);
       setActionMessage({
         type: 'success',
@@ -284,21 +434,25 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
       });
       refreshTaskList();
     } catch (deleteError) {
-      setConfirmPermanentTask(null);
-      setActionMessage({ type: 'error', text: deleteError.message });
+      // 失败时弹窗保留：详情与“强制删除”入口都在弹窗内
+      setPermanentFailedMessage(buildDeleteFailedText(deleteError));
       if (deleteError.status === 409) {
         refreshTaskList();
       }
+    } finally {
+      setPermanentDeleting(false);
     }
   }
 
   async function handleOpenWorktree(worktreePath) {
-    try {
-      await openDirectoryInEditor(worktreePath);
-      setActionMessage({ type: 'success', text: `已请求编辑器打开：${worktreePath}` });
-    } catch (openError) {
-      setActionMessage({ type: 'error', text: openError.message });
-    }
+    await pathActionPending.run(`open:${worktreePath}`, async () => {
+      try {
+        await openDirectoryInEditor(worktreePath);
+        setActionMessage({ type: 'success', text: `已请求编辑器打开：${worktreePath}` });
+      } catch (openError) {
+        setActionMessage({ type: 'error', text: openError.message });
+      }
+    });
   }
 
   return (
@@ -311,8 +465,15 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
         >
           新建需求任务
         </button>
-        <button type="button" className="button-secondary" onClick={refreshTaskList}>
-          刷新
+        <button type="button" className="button-secondary" disabled={refreshing} onClick={handleRefreshAll}>
+          {refreshing ? (
+            <span>
+              <span className="button-spinner" />
+              刷新中...
+            </span>
+          ) : (
+            '刷新'
+          )}
         </button>
       </div>
 
@@ -388,14 +549,26 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                           <button
                             type="button"
                             className="button-primary"
+                            disabled={restorePending.isPending(`restore:${taskEntry.id}`)}
                             onClick={() => handleRestore(taskEntry)}
                           >
-                            恢复
+                            {restorePending.isPending(`restore:${taskEntry.id}`) ? (
+                              <span>
+                                <span className="button-spinner" />
+                                恢复中...
+                              </span>
+                            ) : (
+                              '恢复'
+                            )}
                           </button>
                           <button
                             type="button"
                             className="button-danger"
-                            onClick={() => setConfirmPermanentTask(taskEntry)}
+                            onClick={() => {
+                              setConfirmPermanentTask(taskEntry);
+                              setPermanentForceChecked(false);
+                              setPermanentFailedMessage(null);
+                            }}
                           >
                             彻底删除
                           </button>
@@ -412,7 +585,11 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                           <button
                             type="button"
                             className="button-danger"
-                            onClick={() => setConfirmDeleteTask(taskEntry)}
+                            onClick={() => {
+                              setConfirmDeleteTask(taskEntry);
+                              setDeleteForceChecked(false);
+                              setDeleteFailedMessage(null);
+                            }}
                           >
                             删除
                           </button>
@@ -433,23 +610,47 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                               <button
                                 type="button"
                                 className="button-secondary"
+                                disabled={pathActionPending.isPending(`open:${taskEntry.workspaceFilePath}`)}
                                 onClick={() => handleOpenWorktree(taskEntry.workspaceFilePath)}
                               >
-                                打开工作区
+                                {pathActionPending.isPending(`open:${taskEntry.workspaceFilePath}`) ? (
+                                  <span>
+                                    <span className="button-spinner" />
+                                    打开中...
+                                  </span>
+                                ) : (
+                                  '打开工作区'
+                                )}
                               </button>
                               <button
                                 type="button"
                                 className="button-secondary"
+                                disabled={pathActionPending.isPending(`reveal:${taskEntry.workspaceFilePath}`)}
                                 onClick={() => handleRevealPath(taskEntry.workspaceFilePath)}
                               >
-                                显示
+                                {pathActionPending.isPending(`reveal:${taskEntry.workspaceFilePath}`) ? (
+                                  <span>
+                                    <span className="button-spinner" />
+                                    定位中...
+                                  </span>
+                                ) : (
+                                  '显示'
+                                )}
                               </button>
                               <button
                                 type="button"
                                 className="button-secondary"
+                                disabled={workspaceRegenPending.isPending(`ws-regen:${taskEntry.id}`)}
                                 onClick={() => handleRegenerateWorkspace(taskEntry.id)}
                               >
-                                重新生成
+                                {workspaceRegenPending.isPending(`ws-regen:${taskEntry.id}`) ? (
+                                  <span>
+                                    <span className="button-spinner" />
+                                    生成中...
+                                  </span>
+                                ) : (
+                                  '重新生成'
+                                )}
                               </button>
                             </div>
                           </div>
@@ -459,9 +660,17 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                             <button
                               type="button"
                               className="button-secondary workspace-generate-button"
+                              disabled={workspaceRegenPending.isPending(`ws-regen:${taskEntry.id}`)}
                               onClick={() => handleRegenerateWorkspace(taskEntry.id)}
                             >
-                              重新生成
+                              {workspaceRegenPending.isPending(`ws-regen:${taskEntry.id}`) ? (
+                                <span>
+                                  <span className="button-spinner" />
+                                  生成中...
+                                </span>
+                              ) : (
+                                '重新生成'
+                              )}
                             </button>
                           </div>
                         )}
@@ -497,7 +706,10 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                             dependencyData && dependencyData.projectList
                               ? dependencyData.projectList[projectIndex]
                               : null;
-                          const installJobId = installJobMap[`${taskEntry.id}:${projectIndex}`];
+                          const installJobEntry = installJobMap[`${taskEntry.id}:${projectIndex}`];
+                          const installActionKey = `${taskEntry.id}:${projectIndex}`;
+                          const installRunning = Boolean(installRunningKeyMap[installActionKey]);
+                          const sharedRestoring = Boolean(sharedRestoreKeyMap[installActionKey]);
                           const projectConflictKey = `${String(projectEntry.repoPath || '')
                             .replace(/\//g, '\\')
                             .toLowerCase()}|${taskEntry.branchName}`;
@@ -523,9 +735,17 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                                   <button
                                     type="button"
                                     className="button-secondary"
+                                    disabled={pathActionPending.isPending(`reveal:${projectEntry.repoPath}`)}
                                     onClick={() => handleRevealPath(projectEntry.repoPath)}
                                   >
-                                    显示
+                                    {pathActionPending.isPending(`reveal:${projectEntry.repoPath}`) ? (
+                                      <span>
+                                        <span className="button-spinner" />
+                                        定位中...
+                                      </span>
+                                    ) : (
+                                      '显示'
+                                    )}
                                   </button>
                                 ) : null}
                               </div>
@@ -540,16 +760,32 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                                     <button
                                       type="button"
                                       className="button-secondary"
+                                      disabled={pathActionPending.isPending(`open:${projectEntry.worktreePath}`)}
                                       onClick={() => handleOpenWorktree(projectEntry.worktreePath)}
                                     >
-                                      打开
+                                      {pathActionPending.isPending(`open:${projectEntry.worktreePath}`) ? (
+                                        <span>
+                                          <span className="button-spinner" />
+                                          打开中...
+                                        </span>
+                                      ) : (
+                                        '打开'
+                                      )}
                                     </button>
                                     <button
                                       type="button"
                                       className="button-secondary"
+                                      disabled={pathActionPending.isPending(`reveal:${projectEntry.worktreePath}`)}
                                       onClick={() => handleRevealPath(projectEntry.worktreePath)}
                                     >
-                                      显示
+                                      {pathActionPending.isPending(`reveal:${projectEntry.worktreePath}`) ? (
+                                        <span>
+                                          <span className="button-spinner" />
+                                          定位中...
+                                        </span>
+                                      ) : (
+                                        '显示'
+                                      )}
                                     </button>
                                   </>
                                 ) : (
@@ -572,15 +808,39 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                                         ) : dependencyEntry.dependencyMode === 'missing' ? (
                                           <span className="badge-status badge-occupied">未安装</span>
                                         ) : null}
-                                        {projectEntry.worktreePath ? (
+                                        {projectEntry.worktreePath && dependencyEntry.dependencyMode === 'independent' ? (
                                           <button
                                             type="button"
                                             className="button-secondary dependency-install-button"
+                                            disabled={sharedRestoring || installRunning}
+                                            onClick={() => handleRestoreShared(taskEntry, projectIndex, projectEntry)}
+                                          >
+                                            {sharedRestoring ? (
+                                              <span>
+                                                <span className="button-spinner" />
+                                                恢复中...
+                                              </span>
+                                            ) : (
+                                              '恢复共享'
+                                            )}
+                                          </button>
+                                        ) : projectEntry.worktreePath ? (
+                                          <button
+                                            type="button"
+                                            className="button-secondary dependency-install-button"
+                                            disabled={installRunning || sharedRestoring}
                                             onClick={() =>
-                                              handleStartIndependentInstall(taskEntry, projectIndex, projectEntry)
+                                              setInstallDialogState({ taskEntry, projectIndex, projectEntry })
                                             }
                                           >
-                                            独立安装
+                                            {installRunning ? (
+                                              <span>
+                                                <span className="button-spinner" />
+                                                安装中...
+                                              </span>
+                                            ) : (
+                                              '独立安装'
+                                            )}
                                           </button>
                                         ) : null}
                                       </div>
@@ -604,10 +864,19 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                                 </span>
                               </div>
 
-                              {installJobId ? (
+                              {installJobEntry ? (
                                 <TaskLogPanel
-                                  jobId={installJobId}
-                                  title={`独立安装：${projectEntry.projectName}`}
+                                  jobId={installJobEntry.jobId}
+                                  title={
+                                    installJobEntry.installMode === 'custom'
+                                      ? `自定义脚本安装：${projectEntry.projectName}`
+                                      : `独立安装：${projectEntry.projectName}`
+                                  }
+                                  onFinished={() => {
+                                    // 任务落终态：解除「安装中」标记并刷新依赖状态，无需手动刷新
+                                    setKeyFlag(setInstallRunningKeyMap, installActionKey, false);
+                                    refreshDependencyCheck(taskEntry.id);
+                                  }}
                                 />
                               ) : null}
                             </div>
@@ -666,6 +935,7 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                 取消
               </button>
             </div>
+            {deleteFailedMessage ? <div className="alert-error">{deleteFailedMessage}</div> : null}
             <div className="alert-warning">
               <div>执行删除将会做以下事情：</div>
               <div>
@@ -682,16 +952,34 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                 2. <b>git 分支不受影响</b>：本地与远程分支均会保留，删除后可随时点击“恢复”按原路径重建 worktree（目录会重新生成）。
               </div>
             </div>
+            <label className="radio-label">
+              <input
+                type="checkbox"
+                checked={deleteForceChecked}
+                onChange={(changeEvent) => setDeleteForceChecked(changeEvent.target.checked)}
+              />
+              强制删除（worktree 存在未提交修改时直接丢弃，不可恢复；建议先提交或还原）
+            </label>
             <div className="picker-footer">
               <button type="button" className="button-secondary" onClick={() => setConfirmDeleteTask(null)}>
                 取消
               </button>
               <button
                 type="button"
-                className="button-danger"
-                onClick={() => handleDeleteConfirmed(confirmDeleteTask)}
+                className={deleteForceChecked ? 'button-danger' : 'button-primary'}
+                disabled={deleteSubmitting}
+                onClick={() => handleDeleteConfirmed(confirmDeleteTask, deleteForceChecked)}
               >
-                确认删除
+                {deleteSubmitting ? (
+                  <span>
+                    <span className="button-spinner" />
+                    删除中...
+                  </span>
+                ) : deleteForceChecked ? (
+                  '确认强制删除'
+                ) : (
+                  '确认删除'
+                )}
               </button>
             </div>
           </div>
@@ -707,6 +995,7 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                 取消
               </button>
             </div>
+            {permanentFailedMessage ? <div className="alert-error">{permanentFailedMessage}</div> : null}
             <div className="alert-error">
               <div>执行彻底删除将会做以下事情，且<b>无法恢复</b>：</div>
               <div>
@@ -724,6 +1013,14 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                 3. <b>git 分支不受影响</b>：本地与远程分支均会保留（如需连分支一起清理，请用 git 命令自行处理）。
               </div>
             </div>
+            <label className="radio-label">
+              <input
+                type="checkbox"
+                checked={permanentForceChecked}
+                onChange={(changeEvent) => setPermanentForceChecked(changeEvent.target.checked)}
+              />
+              强制删除（worktree 存在未提交修改时直接丢弃，不可恢复；建议先提交或还原）
+            </label>
             <div className="picker-footer">
               <button type="button" className="button-secondary" onClick={() => setConfirmPermanentTask(null)}>
                 取消
@@ -731,13 +1028,49 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
               <button
                 type="button"
                 className="button-danger"
-                onClick={() => handlePermanentDeleteConfirmed(confirmPermanentTask)}
+                disabled={permanentDeleting}
+                onClick={() => handlePermanentDeleteConfirmed(confirmPermanentTask, permanentForceChecked)}
               >
-                确认彻底删除
+                {permanentDeleting ? (
+                  <span>
+                    <span className="button-spinner" />
+                    删除中...
+                  </span>
+                ) : (
+                  '确认彻底删除'
+                )}
               </button>
             </div>
           </div>
         </div>
+      ) : null}
+
+      {installDialogState ? (
+        <DependencyInstallDialog
+          projectName={installDialogState.projectEntry.projectName || '（未命名项目）'}
+          worktreePath={installDialogState.projectEntry.worktreePath}
+          packageManagerName={
+            dependencyDataMap[installDialogState.taskEntry.id] &&
+            dependencyDataMap[installDialogState.taskEntry.id].projectList[installDialogState.projectIndex]
+              ? dependencyDataMap[installDialogState.taskEntry.id].projectList[installDialogState.projectIndex]
+                  .packageManager
+              : null
+          }
+          submitting={Boolean(
+            installStartingKeyMap[
+              `${installDialogState.taskEntry.id}:${installDialogState.projectIndex}`
+            ]
+          )}
+          onCancel={() => setInstallDialogState(null)}
+          onConfirmInstall={(customScriptText) =>
+            handleStartIndependentInstall(
+              installDialogState.taskEntry,
+              installDialogState.projectIndex,
+              installDialogState.projectEntry,
+              customScriptText
+            )
+          }
+        />
       ) : null}
     </div>
   );

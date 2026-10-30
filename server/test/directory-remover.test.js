@@ -2,7 +2,12 @@ import { describe, it, expect, afterAll } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import { removeDirectoryTree } from '../src/core/directory-remover.js';
-import { createWorktree, removeWorktree, listWorktrees } from '../src/core/worktree-manager.js';
+import {
+  createWorktree,
+  removeWorktree,
+  listWorktrees,
+  translateDirectoryRemoveError
+} from '../src/core/worktree-manager.js';
 import { applySharedDependencyLink } from '../src/core/dep-linker.js';
 import { executeGitCommand } from '../src/core/git-executor.js';
 import { createFixtureRepository, commitFileInRepository } from './helpers/fixture-repo.js';
@@ -43,6 +48,27 @@ describe('removeDirectoryTree（junction 感知删除）', () => {
     // 链接目标不受影响
     expect(fs.existsSync(path.join(linkedTargetDirectory, 'keep.txt'))).toBe(true);
     fs.rmSync(linkedTargetDirectory, { recursive: true, force: true });
+  });
+});
+
+describe('translateDirectoryRemoveError（占用类错误友好提示）', () => {
+  it('EBUSY/EPERM/ENOTEMPTY/EACCES 翻译为带处理建议的 409 ConflictError', () => {
+    for (const errorCode of ['EBUSY', 'EPERM', 'ENOTEMPTY', 'EACCES']) {
+      const rawError = Object.assign(new Error(`${errorCode}: resource busy or locked`), { code: errorCode });
+      const friendlyError = translateDirectoryRemoveError(rawError, 'D:\\some\\worktree');
+      expect(friendlyError.name).toBe('ConflictError');
+      expect(friendlyError.httpStatus).toBe(409);
+      // 提示必须可执行：告诉用户关闭占用程序，并保留原始错误便于排查
+      expect(friendlyError.message).toContain('关闭');
+      expect(friendlyError.message).toContain('prune');
+      expect(friendlyError.message).toContain(errorCode);
+      expect(friendlyError.details).toEqual({ targetPath: 'D:\\some\\worktree', errorCode });
+    }
+  });
+
+  it('非占用类错误原样返回，不掩盖真实问题', () => {
+    const rawError = Object.assign(new Error('EIO: i/o error'), { code: 'EIO' });
+    expect(translateDirectoryRemoveError(rawError, 'D:\\x')).toBe(rawError);
   });
 });
 

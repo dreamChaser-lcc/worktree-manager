@@ -7,3 +7,6 @@ dist/
 .screenshots/
 .server-pid.txt
 .setup-demo.cjs
+
+# 便携模式（数据目录 = 程序目录下 data）的运行时业务数据，不入库
+data/

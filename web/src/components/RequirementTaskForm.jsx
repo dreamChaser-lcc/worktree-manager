@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { DirectoryPicker } from './DirectoryPicker.jsx';
 import { WorktreeQuickCreateDialog } from './WorktreeQuickCreateDialog.jsx';
+import { SearchableSelect } from './SearchableSelect.jsx';
 import { fetchWorktreeList, createRequirementTask, updateRequirementTask } from '../api/client.js';
 
 let projectRowSequence = 0;
@@ -318,7 +319,7 @@ export function RequirementTaskForm({
             />
             <div className="form-row">
               <div className="worktree-select-row">
-                <label className="form-label" htmlFor={`worktree-select-${row.rowKey}`}>关联 worktree</label>
+                <label className="form-label">关联 worktree</label>
                 <button
                   type="button"
                   className="button-secondary"
@@ -328,17 +329,17 @@ export function RequirementTaskForm({
                   创建 worktree
                 </button>
               </div>
-              <select
-                id={`worktree-select-${row.rowKey}`}
-                className="form-input worktree-select"
+              <SearchableSelect
                 value={row.worktreePath}
-                onChange={(changeEvent) => updateProjectRow(row.rowKey, { worktreePath: changeEvent.target.value })}
-              >
-                <option value="">{row.optionsLoading ? '加载中...' : '未关联（可稍后创建后再编辑挂载）'}</option>
-                {buildWorktreeSelectOptions(row).map((option) => (
-                  <option key={option.value} value={option.value}>{option.label}</option>
-                ))}
-              </select>
+                onChange={(selectedPath) => updateProjectRow(row.rowKey, { worktreePath: selectedPath })}
+                placeholder={row.optionsLoading ? '加载中...' : '未关联（可稍后创建后再编辑挂载）'}
+                filterPlaceholder="输入筛选分支或路径..."
+                emptyText="无匹配 worktree"
+                options={[
+                  { value: '', label: '未关联（可稍后创建后再编辑挂载）' },
+                  ...buildWorktreeSelectOptions(row)
+                ]}
+              />
             </div>
           </div>
         ))}

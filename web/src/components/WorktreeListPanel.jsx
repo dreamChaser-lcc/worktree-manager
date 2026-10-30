@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { DirectoryPicker } from './DirectoryPicker.jsx';
 import { RecentRepoBar } from './RecentRepoBar.jsx';
+import { usePendingActions } from '../utils/usePendingActions.js';
 import {
   fetchWorktreeList,
   removeWorktree,
@@ -19,6 +20,10 @@ export function WorktreeListPanel({ repoPath, onRepoPathChange, recentRepoList, 
   const [deleteConfirmState, setDeleteConfirmState] = useState(null);
   // 同时删除磁盘目录（安全模式默认开启：链接只断开，不删共享依赖内容）
   const [deleteDirectoryChoice, setDeleteDirectoryChoice] = useState(true);
+  // 删除弹窗提交中标记（确认按钮 spinner 与禁用）
+  const [deleteSubmitting, setDeleteSubmitting] = useState(false);
+  // 刷新 / prune / 单行删除探测 / 打开编辑器 的 pending 管理
+  const listActionPending = usePendingActions();
 
   useEffect(() => {
     setRepositoryValid(false);
@@ -32,13 +37,15 @@ export function WorktreeListPanel({ repoPath, onRepoPathChange, recentRepoList, 
   }, [repoPath]);
 
   async function refreshWorktreeList() {
-    try {
-      const listData = await fetchWorktreeList(repoPath);
-      setWorktreeList(listData.worktrees);
-      setListError(null);
-    } catch (refreshError) {
-      setListError(refreshError.message);
-    }
+    await listActionPending.run('worktree-list-refresh', async () => {
+      try {
+        const listData = await fetchWorktreeList(repoPath);
+        setWorktreeList(listData.worktrees);
+        setListError(null);
+      } catch (refreshError) {
+        setListError(refreshError.message);
+      }
+    });
   }
 
   useEffect(() => {
@@ -50,34 +57,37 @@ export function WorktreeListPanel({ repoPath, onRepoPathChange, recentRepoList, 
 
   async function handleDeleteClick(worktreeEntry) {
     setActionMessage(null);
-    if (worktreeEntry.isDirty) {
-      // 脏 worktree：先请求一次拿到拦截详情（未提交清单）再弹层确认
-      try {
-        await removeWorktree(repoPath, worktreeEntry.path, false, deleteDirectoryChoice);
-        // 未被拦截（列表时点后已变干净）：已直接删除，刷新即可
-        await refreshWorktreeList();
-      } catch (blockedError) {
-        if (blockedError.status === 409) {
-          setDeleteConfirmState({
-            worktreeEntry,
-            uncommittedFiles: (blockedError.details && blockedError.details.uncommittedFiles) || [],
-            unmergedCommitCount:
-              blockedError.details && blockedError.details.unmergedCommitCount !== null
-                ? blockedError.details.unmergedCommitCount
-                : null
-          });
-        } else {
-          setActionMessage({ type: 'error', text: blockedError.message });
+    await listActionPending.run(`delete-probe:${worktreeEntry.path}`, async () => {
+      if (worktreeEntry.isDirty) {
+        // 脏 worktree：先请求一次拿到拦截详情（未提交清单）再弹层确认
+        try {
+          await removeWorktree(repoPath, worktreeEntry.path, false, deleteDirectoryChoice);
+          // 未被拦截（列表时点后已变干净）：已直接删除，刷新即可
+          await refreshWorktreeList();
+        } catch (blockedError) {
+          if (blockedError.status === 409) {
+            setDeleteConfirmState({
+              worktreeEntry,
+              uncommittedFiles: (blockedError.details && blockedError.details.uncommittedFiles) || [],
+              unmergedCommitCount:
+                blockedError.details && blockedError.details.unmergedCommitCount !== null
+                  ? blockedError.details.unmergedCommitCount
+                  : null
+            });
+          } else {
+            setActionMessage({ type: 'error', text: blockedError.message });
+          }
         }
+        return;
       }
-      return;
-    }
 
-    // 干净 worktree：统一确认弹层
-    setDeleteConfirmState({ worktreeEntry, uncommittedFiles: [], unmergedCommitCount: null });
+      // 干净 worktree：统一确认弹层
+      setDeleteConfirmState({ worktreeEntry, uncommittedFiles: [], unmergedCommitCount: null });
+    });
   }
 
   async function performRemove(targetPath, force) {
+    setDeleteSubmitting(true);
     try {
       const removalResult = await removeWorktree(repoPath, targetPath, force, deleteDirectoryChoice);
       setActionMessage({
@@ -89,28 +99,34 @@ export function WorktreeListPanel({ repoPath, onRepoPathChange, recentRepoList, 
       });
     } catch (removeError) {
       setActionMessage({ type: 'error', text: removeError.message });
+    } finally {
+      setDeleteSubmitting(false);
     }
     setDeleteConfirmState(null);
     await refreshWorktreeList();
   }
 
   async function handlePruneClick() {
-    try {
-      const pruneResult = await pruneWorktreeRecords(repoPath);
-      setActionMessage({ type: 'success', text: `prune 完成，清理了 ${pruneResult.prunedCount} 条失效记录。` });
-      await refreshWorktreeList();
-    } catch (pruneError) {
-      setActionMessage({ type: 'error', text: pruneError.message });
-    }
+    await listActionPending.run('worktree-prune', async () => {
+      try {
+        const pruneResult = await pruneWorktreeRecords(repoPath);
+        setActionMessage({ type: 'success', text: `prune 完成，清理了 ${pruneResult.prunedCount} 条失效记录。` });
+        await refreshWorktreeList();
+      } catch (pruneError) {
+        setActionMessage({ type: 'error', text: pruneError.message });
+      }
+    });
   }
 
   async function handleOpenEditorClick(worktreeEntry) {
-    try {
-      await openDirectoryInEditor(worktreeEntry.path);
-      setActionMessage({ type: 'success', text: '已请求编辑器打开该目录。' });
-    } catch (editorError) {
-      setActionMessage({ type: 'error', text: editorError.message });
-    }
+    await listActionPending.run(`open:${worktreeEntry.path}`, async () => {
+      try {
+        await openDirectoryInEditor(worktreeEntry.path);
+        setActionMessage({ type: 'success', text: '已请求编辑器打开该目录。' });
+      } catch (editorError) {
+        setActionMessage({ type: 'error', text: editorError.message });
+      }
+    });
   }
 
   return (
@@ -136,11 +152,35 @@ export function WorktreeListPanel({ repoPath, onRepoPathChange, recentRepoList, 
       {repositoryValid ? (
         <div>
           <div className="list-toolbar">
-            <button type="button" className="button-secondary" onClick={refreshWorktreeList}>
-              刷新
+            <button
+              type="button"
+              className="button-secondary"
+              disabled={listActionPending.isPending('worktree-list-refresh')}
+              onClick={refreshWorktreeList}
+            >
+              {listActionPending.isPending('worktree-list-refresh') ? (
+                <span>
+                  <span className="button-spinner" />
+                  刷新中...
+                </span>
+              ) : (
+                '刷新'
+              )}
             </button>
-            <button type="button" className="button-secondary" onClick={handlePruneClick}>
-              prune 清理失效记录
+            <button
+              type="button"
+              className="button-secondary"
+              disabled={listActionPending.isPending('worktree-prune')}
+              onClick={handlePruneClick}
+            >
+              {listActionPending.isPending('worktree-prune') ? (
+                <span>
+                  <span className="button-spinner" />
+                  清理中...
+                </span>
+              ) : (
+                'prune 清理失效记录'
+              )}
             </button>
           </div>
 
@@ -169,11 +209,35 @@ export function WorktreeListPanel({ repoPath, onRepoPathChange, recentRepoList, 
                   <td>
                     {!worktreeEntry.isMain ? (
                       <div className="cell-actions">
-                        <button type="button" className="button-secondary" onClick={() => handleOpenEditorClick(worktreeEntry)}>
-                          打开
+                        <button
+                          type="button"
+                          className="button-secondary"
+                          disabled={listActionPending.isPending(`open:${worktreeEntry.path}`)}
+                          onClick={() => handleOpenEditorClick(worktreeEntry)}
+                        >
+                          {listActionPending.isPending(`open:${worktreeEntry.path}`) ? (
+                            <span>
+                              <span className="button-spinner" />
+                              打开中...
+                            </span>
+                          ) : (
+                            '打开'
+                          )}
                         </button>
-                        <button type="button" className="button-danger" onClick={() => handleDeleteClick(worktreeEntry)}>
-                          删除
+                        <button
+                          type="button"
+                          className="button-danger"
+                          disabled={listActionPending.isPending(`delete-probe:${worktreeEntry.path}`)}
+                          onClick={() => handleDeleteClick(worktreeEntry)}
+                        >
+                          {listActionPending.isPending(`delete-probe:${worktreeEntry.path}`) ? (
+                            <span>
+                              <span className="button-spinner" />
+                              删除中...
+                            </span>
+                          ) : (
+                            '删除'
+                          )}
                         </button>
                       </div>
                     ) : (
@@ -229,9 +293,19 @@ export function WorktreeListPanel({ repoPath, onRepoPathChange, recentRepoList, 
               <button
                 type="button"
                 className={deleteConfirmState.uncommittedFiles.length > 0 ? 'button-danger' : 'button-primary'}
+                disabled={deleteSubmitting}
                 onClick={() => performRemove(deleteConfirmState.worktreeEntry.path, deleteConfirmState.uncommittedFiles.length > 0)}
               >
-                {deleteConfirmState.uncommittedFiles.length > 0 ? '确认强制删除' : '确认删除'}
+                {deleteSubmitting ? (
+                  <span>
+                    <span className="button-spinner" />
+                    删除中...
+                  </span>
+                ) : deleteConfirmState.uncommittedFiles.length > 0 ? (
+                  '确认强制删除'
+                ) : (
+                  '确认删除'
+                )}
               </button>
             </div>
           </div>

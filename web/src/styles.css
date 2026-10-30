@@ -159,6 +159,34 @@ button {
   cursor: pointer;
 }
 
+/* 按钮内 loading 转圈（刷新等异步动作进行中显示） */
+.button-spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  vertical-align: -2px;
+  margin-right: 6px;
+  -webkit-animation: button-spinner-rotate 0.8s linear infinite;
+  animation: button-spinner-rotate 0.8s linear infinite;
+}
+
+@-webkit-keyframes button-spinner-rotate {
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes button-spinner-rotate {
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
 /* ── 提示与徽标 ───────────────────────── */
 .alert-error {
   background-color: #ffebe9;
@@ -438,6 +466,10 @@ button {
   margin: 0 8px 0 0;
 }
 
+.task-log-header .button-secondary {
+  margin-left: auto;
+}
+
 .badge-running {
   background-color: #fff8c5;
   color: #7d4e00;
@@ -481,10 +513,11 @@ button {
   flex-shrink: 0;
 }
 
-.recent-repo-select {
+.recent-repo-bar .searchable-select {
   width: auto;
   min-width: 320px;
   max-width: 560px;
+  flex: 1 1 auto;
 }
 
 .badge-status {
@@ -754,4 +787,216 @@ button {
   font-size: 13px;
   font-family: inherit;
   resize: vertical;
+}
+
+/* ── 可搜索下拉（SearchableSelect） ────── */
+.searchable-select {
+  position: relative;
+}
+
+.searchable-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  background-color: #ffffff;
+  color: #24292f;
+}
+
+.searchable-select-trigger:disabled {
+  background-color: #f6f8fa;
+  color: #8c959f;
+  cursor: not-allowed;
+}
+
+.searchable-select-trigger-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 8px;
+}
+
+.searchable-select-placeholder {
+  color: #8c959f;
+}
+
+.searchable-select-arrow {
+  flex-shrink: 0;
+  color: #57606a;
+  font-size: 12px;
+}
+
+.searchable-select-dropdown {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 2px);
+  background-color: #ffffff;
+  border: 1px solid #d0d7de;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(140, 149, 159, 0.3);
+  z-index: 120;
+}
+
+.searchable-select-filter {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #d0d7de;
+  border-radius: 4px 4px 0 0;
+  padding: 6px 8px;
+  font-size: 13px;
+  outline: none;
+}
+
+.searchable-select-list {
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.searchable-select-group {
+  padding: 5px 10px 3px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #8c959f;
+  background-color: #f6f8fa;
+}
+
+.searchable-select-option {
+  padding: 6px 10px;
+  font-size: 13px;
+  cursor: pointer;
+  word-break: break-all;
+}
+
+.searchable-select-option-active {
+  background-color: #f6f8fa;
+}
+
+.searchable-select-option-selected {
+  background-color: #ddf4ff;
+  color: #0969da;
+}
+
+.searchable-select-option-disabled {
+  color: #8c959f;
+  cursor: not-allowed;
+  background-color: transparent;
+}
+
+.searchable-select-empty {
+  padding: 10px;
+  font-size: 12px;
+  color: #8c959f;
+}
+
+/* ── 使用指南弹窗 ──────────────────────── */
+.help-entry-button {
+  margin-left: auto;
+}
+
+.help-guide-dialog {
+  width: 880px;
+  max-width: 94%;
+  max-height: 86vh;
+}
+
+.help-guide-body {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.help-guide-nav {
+  width: 168px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  border-right: 1px solid #d0d7de;
+  padding-right: 10px;
+}
+
+.help-guide-nav-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background-color: transparent;
+  border-radius: 4px;
+  padding: 6px 8px;
+  margin-bottom: 4px;
+  font-size: 13px;
+  color: #57606a;
+  cursor: pointer;
+}
+
+.help-guide-nav-item:hover {
+  background-color: #f6f8fa;
+}
+
+.help-guide-nav-item-active {
+  background-color: #ddf4ff;
+  color: #0969da;
+  font-weight: 600;
+}
+
+.help-guide-content {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-y: auto;
+  padding-left: 14px;
+}
+
+.help-guide-title {
+  font-size: 15px;
+  margin: 0 0 10px;
+}
+
+.help-guide-paragraph {
+  margin: 0 0 10px;
+  line-height: 1.7;
+}
+
+.help-guide-list {
+  margin: 0 0 10px;
+  padding-left: 20px;
+  line-height: 1.7;
+}
+
+.help-guide-list li {
+  margin-bottom: 4px;
+}
+
+.help-guide-command {
+  background-color: #0d1117;
+  color: #c9d1d9;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-all;
+  margin: 0 0 10px;
+}
+
+.help-guide-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.help-guide-table th,
+.help-guide-table td {
+  border: 1px solid #d0d7de;
+  padding: 6px 8px;
+  text-align: left;
+  vertical-align: top;
+  word-break: break-all;
+}
+
+.help-guide-table th {
+  background-color: #f6f8fa;
+  white-space: nowrap;
 }

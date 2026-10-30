@@ -1,7 +1,7 @@
 import Router from '@koa/router';
-import { getJob, listMemoryJobs, subscribeJobLog } from '../jobs/job-runner.js';
+import { getJob, listMemoryJobs, removeMemoryJob, subscribeJobLog } from '../jobs/job-runner.js';
 import { persistenceManager } from '../storage/persistence-manager.js';
-import { NotFoundError } from '../core/errors.js';
+import { ConflictError, NotFoundError } from '../core/errors.js';
 
 const SSE_HEARTBEAT_INTERVAL_MS = 15_000;
 
@@ -37,6 +37,26 @@ export function registerTaskRoutes(router) {
       throw new NotFoundError(`任务不存在: ${jobId}`);
     }
     context.body = { ...persistedRecord, logLines: await persistenceManager.readJobLogLines(jobId) };
+  });
+
+  // 删除单条任务记录：仅允许已结束任务（运行中删除会失去追踪）；同时清理持久化记录与日志文件
+  router.delete('/api/tasks/:jobId', async (context) => {
+    const jobId = context.params.jobId;
+    const memoryJob = getJob(jobId);
+    if (memoryJob && memoryJob.status === 'running') {
+      throw new ConflictError('任务仍在执行中，结束后才能删除该记录', {
+        details: { jobId, status: memoryJob.status }
+      });
+    }
+    if (memoryJob) {
+      removeMemoryJob(jobId);
+    }
+    const removedCount = await persistenceManager.deleteJobRecord(jobId);
+    await persistenceManager.deleteJobLogFile(jobId);
+    if (!memoryJob && removedCount === 0) {
+      throw new NotFoundError(`任务不存在: ${jobId}`);
+    }
+    context.body = { deleted: true };
   });
 
   // SSE 日志流：先推历史日志，再推增量，终态后关闭；历史任务推全量后立即落终态关闭（事件格式一致，前端无感知）

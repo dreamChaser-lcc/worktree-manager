@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { SearchableSelect } from './SearchableSelect.jsx';
 import { DirectoryPicker } from './DirectoryPicker.jsx';
 import { RecentRepoBar } from './RecentRepoBar.jsx';
 import { BranchSelector } from './BranchSelector.jsx';
@@ -180,20 +181,21 @@ export function CreateWorktreeForm({
 
       {requirementTaskList.length > 0 ? (
         <div className="form-row">
-          <label className="form-label" htmlFor="requirement-task-select">关联需求任务（可选）</label>
-          <select
-            id="requirement-task-select"
-            className="form-input worktree-select"
+          <label className="form-label">关联需求任务（可选）</label>
+          <SearchableSelect
             value={requirementTaskId}
-            onChange={(changeEvent) => setRequirementTaskId(changeEvent.target.value)}
-          >
-            <option value="">不关联</option>
-            {requirementTaskList.map((taskEntry) => (
-              <option key={taskEntry.id} value={taskEntry.id}>
-                {taskEntry.branchName} — {taskEntry.requirementUrl}
-              </option>
-            ))}
-          </select>
+            onChange={setRequirementTaskId}
+            placeholder="不关联"
+            filterPlaceholder="输入筛选分支或需求链接..."
+            emptyText="无匹配需求任务"
+            options={[
+              { value: '', label: '不关联' },
+              ...requirementTaskList.map((taskEntry) => ({
+                value: taskEntry.id,
+                label: `${taskEntry.branchName} — ${taskEntry.requirementUrl}`
+              }))
+            ]}
+          />
           <div className="form-hint">创建成功后自动把新 worktree 挂到需求中主仓库匹配的项目条目</div>
         </div>
       ) : null}
