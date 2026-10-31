@@ -5,6 +5,7 @@ import { DependencyInstallDialog } from './DependencyInstallDialog.jsx';
 import { usePendingActions } from '../utils/usePendingActions.js';
 import {
   fetchRequirementTaskList,
+  updateRequirementTask,
   deleteRequirementTask,
   restoreRequirementTask,
   permanentDeleteRequirementTask,
@@ -149,6 +150,10 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
   const restorePending = usePendingActions();
   const workspaceRegenPending = usePendingActions();
   const pathActionPending = usePendingActions();
+  // 备注就地编辑：编辑中的任务 id 与草稿文本（列表行内直接改，无需进编辑表单）
+  const [remarkEditingTaskId, setRemarkEditingTaskId] = useState(null);
+  const [remarkEditingText, setRemarkEditingText] = useState('');
+  const [remarkSaving, setRemarkSaving] = useState(false);
   // 跨需求分支冲突：同一项目仓库在不同需求中关联了相同分支
   const conflictProjectKeySet = useMemo(() => buildConflictKeySet(taskList), [taskList]);
 
@@ -455,6 +460,38 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
     });
   }
 
+  /** 备注就地编辑：进入编辑态（其余任务的编辑态自动关闭） */
+  function handleStartRemarkEdit(taskEntry) {
+    setRemarkEditingTaskId(taskEntry.id);
+    setRemarkEditingText(taskEntry.reservedContent || '');
+  }
+
+  /**
+   * 保存备注：复用需求更新接口，携带现有完整字段 + 新备注（generateWorkspace=false 不触发工作区文件重建）。
+   * 保存成功后刷新列表并退出编辑态。
+   */
+  async function handleSaveRemark(taskEntry) {
+    setRemarkSaving(true);
+    try {
+      await updateRequirementTask(taskEntry.id, {
+        requirementName: taskEntry.requirementName || '',
+        requirementUrl: taskEntry.requirementUrl,
+        branchName: taskEntry.branchName,
+        reservedContent: remarkEditingText.trim(),
+        projectList: taskEntry.projectList,
+        generateWorkspace: false
+      });
+      setRemarkEditingTaskId(null);
+      setRemarkEditingText('');
+      setActionMessage({ type: 'success', text: '备注已更新。' });
+      refreshTaskList();
+    } catch (saveError) {
+      setActionMessage({ type: 'error', text: `备注保存失败: ${saveError.message}` });
+    } finally {
+      setRemarkSaving(false);
+    }
+  }
+
   return (
     <div>
       <div className="list-toolbar">
@@ -598,6 +635,65 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                     </div>
                   </td>
                 </tr>
+                <tr className="remark-row">
+                  <td colSpan={5}>
+                    {remarkEditingTaskId === taskEntry.id ? (
+                      <div className="remark-edit-area">
+                        <textarea
+                          className="reserved-textarea"
+                          value={remarkEditingText}
+                          autoFocus
+                          placeholder="填写需求背景、联调约定等（可留空）"
+                          onChange={(changeEvent) => setRemarkEditingText(changeEvent.target.value)}
+                        />
+                        <div className="picker-footer">
+                          <button
+                            type="button"
+                            className="button-secondary"
+                            disabled={remarkSaving}
+                            onClick={() => setRemarkEditingTaskId(null)}
+                          >
+                            取消
+                          </button>
+                          <button
+                            type="button"
+                            className="button-primary"
+                            disabled={remarkSaving}
+                            onClick={() => handleSaveRemark(taskEntry)}
+                          >
+                            {remarkSaving ? '保存中...' : '保存备注'}
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="remark-line">
+                        <span className="detail-line-label">备注</span>
+                        <span
+                          className={
+                            taskEntry.reservedContent ? 'remark-text' : 'remark-text remark-text-empty'
+                          }
+                        >
+                          {taskEntry.reservedContent || '（无备注）'}
+                          <button
+                            type="button"
+                            className="remark-pencil"
+                            title="编辑备注"
+                            onClick={() => handleStartRemarkEdit(taskEntry)}
+                          >
+                            <svg viewBox="0 0 16 16" width="13" height="13" fill="none" aria-hidden="true">
+                              <path
+                                d="M11.33 2.22a1.55 1.55 0 0 1 2.2 2.2L5.2 12.76l-3.03.82.82-3.03 8.34-8.33z"
+                                stroke="currentColor"
+                                strokeWidth="1.3"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                          </button>
+                        </span>
+                      </div>
+                    )}
+                  </td>
+                </tr>
                 {expandedTaskId === taskEntry.id ? (
                   <tr>
                     <td colSpan={5}>
@@ -732,21 +828,38 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                                   {projectEntry.repoPath || <span className="section-empty">未设置</span>}
                                 </span>
                                 {projectEntry.repoPath ? (
-                                  <button
-                                    type="button"
-                                    className="button-secondary"
-                                    disabled={pathActionPending.isPending(`reveal:${projectEntry.repoPath}`)}
-                                    onClick={() => handleRevealPath(projectEntry.repoPath)}
-                                  >
-                                    {pathActionPending.isPending(`reveal:${projectEntry.repoPath}`) ? (
-                                      <span>
-                                        <span className="button-spinner" />
-                                        定位中...
-                                      </span>
-                                    ) : (
-                                      '显示'
-                                    )}
-                                  </button>
+                                  <>
+                                    <button
+                                      type="button"
+                                      className="button-secondary"
+                                      disabled={pathActionPending.isPending(`open:${projectEntry.repoPath}`)}
+                                      onClick={() => handleOpenWorktree(projectEntry.repoPath)}
+                                    >
+                                      {pathActionPending.isPending(`open:${projectEntry.repoPath}`) ? (
+                                        <span>
+                                          <span className="button-spinner" />
+                                          打开中...
+                                        </span>
+                                      ) : (
+                                        '打开'
+                                      )}
+                                    </button>
+                                    <button
+                                      type="button"
+                                      className="button-secondary"
+                                      disabled={pathActionPending.isPending(`reveal:${projectEntry.repoPath}`)}
+                                      onClick={() => handleRevealPath(projectEntry.repoPath)}
+                                    >
+                                      {pathActionPending.isPending(`reveal:${projectEntry.repoPath}`) ? (
+                                        <span>
+                                          <span className="button-spinner" />
+                                          定位中...
+                                        </span>
+                                      ) : (
+                                        '显示'
+                                      )}
+                                    </button>
+                                  </>
                                 ) : null}
                               </div>
 
@@ -910,12 +1023,6 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                             </div>
                           );
                         })}
-                        {taskEntry.reservedContent ? (
-                          <>
-                            <span className="form-label">备注（预留字段）</span>
-                            <div className="form-hint">{taskEntry.reservedContent}</div>
-                          </>
-                        ) : null}
                       </div>
                     </td>
                   </tr>

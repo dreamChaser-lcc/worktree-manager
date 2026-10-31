@@ -241,7 +241,24 @@ export function WorktreeListPanel({ repoPath, onRepoPathChange, recentRepoList, 
                         </button>
                       </div>
                     ) : (
-                      <span className="form-hint">不可删除</span>
+                      <div className="cell-actions">
+                        <button
+                          type="button"
+                          className="button-secondary"
+                          disabled={listActionPending.isPending(`open:${worktreeEntry.path}`)}
+                          onClick={() => handleOpenEditorClick(worktreeEntry)}
+                        >
+                          {listActionPending.isPending(`open:${worktreeEntry.path}`) ? (
+                            <span>
+                              <span className="button-spinner" />
+                              打开中...
+                            </span>
+                          ) : (
+                            '打开'
+                          )}
+                        </button>
+                        <span className="form-hint">不可删除</span>
+                      </div>
                     )}
                   </td>
                 </tr>

@@ -674,6 +674,57 @@ button {
   color: #6e7781;
 }
 
+/* 需求列表备注行：收起/展开均显示，占整行，支持就地编辑 */
+.remark-row td {
+  background-color: #fafbfc;
+  padding: 6px 8px;
+}
+
+.remark-line {
+  display: flex;
+  align-items: flex-start;
+}
+
+.remark-line .remark-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: pre-wrap;
+  word-break: break-all;
+  margin-right: 8px;
+}
+
+.remark-line .remark-text-empty {
+  color: #8c959f;
+}
+
+/* 备注尾部的铅笔编辑入口：带边框的方块图标按钮，可点击感明确，hover 蓝色高亮 */
+.remark-pencil {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  margin-left: 6px;
+  border: 1px solid #d0d7de;
+  border-radius: 4px;
+  background-color: #ffffff;
+  color: #57606a;
+  cursor: pointer;
+  vertical-align: middle;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.remark-pencil:hover {
+  background-color: #ddf4ff;
+  border-color: #0969da;
+  color: #0969da;
+}
+
+.remark-edit-area .picker-footer {
+  margin-top: 8px;
+}
+
 .settings-current-path {
   font-size: 13px;
   color: #24292f;
