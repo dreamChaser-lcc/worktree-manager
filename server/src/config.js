@@ -16,8 +16,11 @@ export const serverConfig = {
   webDistPath: path.resolve(currentFileDir, '../../web/dist'),
   /** 程序根目录（server/src 向上两级），便携数据目录的锚点 */
   appRootPath: path.resolve(currentFileDir, '../..'),
-  /** 便携数据目录：<程序根>/data（数据目录模式 dataLocationMode = 'app-data' 时启用） */
-  appDataDirectoryPath: path.resolve(currentFileDir, '../../data'),
+  /**
+   * 便携数据目录：<程序根>/data（数据目录模式 dataLocationMode = 'app-data' 时启用）。
+   * 桌面壳（Electron）通过 WORKTREE_MANAGER_APP_DATA 注入安装目录下的 data（resources 只读时的可写位置），不设则用本默认值。
+   */
+  appDataDirectoryPath: process.env.WORKTREE_MANAGER_APP_DATA || path.resolve(currentFileDir, '../../data'),
   /** 默认编辑器启动命令，可被请求参数覆盖 */
   defaultEditorCommand: 'code',
   /** 忽略文件复制默认白名单 */

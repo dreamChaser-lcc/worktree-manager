@@ -7,3 +7,4 @@ dist/
 .screenshots/
 .server-pid.txt
 .setup-demo.cjs
+desktop-electron/release/

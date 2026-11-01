@@ -985,10 +985,18 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                                       ? `自定义脚本安装：${projectEntry.projectName}`
                                       : `独立安装：${projectEntry.projectName}`
                                   }
-                                  onFinished={() => {
+                                  onFinished={(finishStatus) => {
                                     // 任务落终态：解除「安装中」标记并刷新依赖状态，无需手动刷新
                                     setKeyFlag(setInstallRunningKeyMap, installActionKey, false);
                                     refreshDependencyCheck(taskEntry.id);
+                                    // 桌面端（Electron 壳注入）发系统原生通知；浏览器模式无此桥接自动跳过
+                                    if (window.desktopBridge && typeof window.desktopBridge.notify === 'function') {
+                                      const installSucceeded = finishStatus === 'success';
+                                      window.desktopBridge.notify(
+                                        installSucceeded ? '依赖安装完成' : '依赖安装失败',
+                                        `${projectEntry.projectName}：${installSucceeded ? '可回到明细查看依赖状态' : '请在日志中排查失败原因'}`
+                                      );
+                                    }
                                   }}
                                 />
                               ) : null}
