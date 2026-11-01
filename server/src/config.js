@@ -12,8 +12,12 @@ export const serverConfig = {
    */
   host: process.env.WORKTREE_MANAGER_HOST || '127.0.0.1',
   port: Number(process.env.WORKTREE_MANAGER_PORT || 5210),
-  /** 前端生产构建产物目录，由 Koa 静态托管 */
-  webDistPath: path.resolve(currentFileDir, '../../web/dist'),
+  /**
+   * 前端生产构建产物目录，由 Koa 静态托管。
+   * 桌面壳（Electron/Tauri）通过 WORKTREE_MANAGER_WEB_DIST 注入实际产物目录——
+   * 编译/打包产物中 import.meta.url 相对推算会失效，与 WORKTREE_MANAGER_APP_DATA 同为最小兼容点。
+   */
+  webDistPath: process.env.WORKTREE_MANAGER_WEB_DIST || path.resolve(currentFileDir, '../../web/dist'),
   /** 程序根目录（server/src 向上两级），便携数据目录的锚点 */
   appRootPath: path.resolve(currentFileDir, '../..'),
   /**

@@ -4,7 +4,7 @@
   "version": "0.2.0",
   "identifier": "com.lcc.worktree-manager-tauri",
   "build": {
-    "frontendDist": "../web/dist"
+    "frontendDist": "../../web/dist"
   },
   "app": {
     "windows": [],
@@ -17,6 +17,8 @@
     "targets": ["nsis"],
     "icon": ["icons/icon.ico"],
     "externalBin": ["binaries/server"],
-    "resources": []
+    "resources": {
+      "../../web/dist": "web-dist"
+    }
   }
 }

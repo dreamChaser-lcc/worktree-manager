@@ -48,9 +48,15 @@ export function createApp() {
   koaApplication.use(apiRouter.routes());
   koaApplication.use(apiRouter.allowedMethods());
 
-  // 前端构建产物存在时静态托管，否则提示先构建
-  if (fs.existsSync(serverConfig.webDistPath)) {
+  // 前端构建产物存在时静态托管，否则提示先构建（桌面壳注入 WORKTREE_MANAGER_WEB_DIST 时打印实际路径便于排查）
+  const webDistExists = fs.existsSync(serverConfig.webDistPath);
+  console.log(
+    `[worktree-manager] 前端静态目录: ${serverConfig.webDistPath} (存在: ${webDistExists})`
+  );
+  if (webDistExists) {
     koaApplication.use(koaStatic(serverConfig.webDistPath));
+  } else {
+    console.warn('[worktree-manager] 前端构建产物不存在，页面将不可用；请先执行 npm run build:web');
   }
 
   return koaApplication;

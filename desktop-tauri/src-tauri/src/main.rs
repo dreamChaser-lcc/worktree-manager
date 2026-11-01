@@ -49,12 +49,20 @@ fn main() {
                 .path()
                 .resource_dir()?
                 .join("data");
+            // 前端静态产物目录：打包态取资源目录 web-dist；开发态（tauri dev）取仓库 web/dist——
+            // bun 编译产物中 import.meta.url 相对推算失效，必须显式注入
+            let web_dist_directory = if cfg!(debug_assertions) {
+                std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../web/dist")
+            } else {
+                app.path().resource_dir()?.join("web-dist")
+            };
             let server_sidecar = app
                 .shell()
                 .sidecar("server")?
                 .env("WORKTREE_MANAGER_PORT", preferred_port.to_string())
                 .env("WORKTREE_MANAGER_HOST", "127.0.0.1")
-                .env("WORKTREE_MANAGER_APP_DATA", portable_data_directory);
+                .env("WORKTREE_MANAGER_APP_DATA", portable_data_directory)
+                .env("WORKTREE_MANAGER_WEB_DIST", web_dist_directory);
             let (_sidecar_receiver, _sidecar_child) = server_sidecar.spawn()?;
 
             if !wait_server_ready(preferred_port, 50) {

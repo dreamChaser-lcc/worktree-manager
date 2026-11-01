@@ -27,6 +27,10 @@ const windowStateFilePath = path.join(app.getPath('userData'), 'desktop-window-s
 const portableDataDirectoryPath = isPackaged
   ? path.join(path.dirname(app.getPath('exe')), 'data')
   : path.join(projectRoot, 'data');
+// ⚠️ 前端静态产物目录：打包态为 resources/web-dist（与 config.js 相对推算结果不同，必须注入）；开发态走默认解析。
+const webDistDirectoryOverride = isPackaged
+  ? path.join(process.resourcesPath, 'web-dist')
+  : null;
 
 let mainWindow = null;
 let tray = null;
@@ -176,6 +180,9 @@ async function startEmbeddedServer() {
   process.env.WORKTREE_MANAGER_PORT = String(serverPort);
   process.env.WORKTREE_MANAGER_HOST = '127.0.0.1';
   process.env.WORKTREE_MANAGER_APP_DATA = portableDataDirectoryPath;
+  if (webDistDirectoryOverride) {
+    process.env.WORKTREE_MANAGER_WEB_DIST = webDistDirectoryOverride;
+  }
 
   await import(require('node:url').pathToFileURL(serverEntryPath).href);
   const healthy = await waitForServerHealthy(serverPort);
