@@ -1,5 +1,7 @@
 # Worktree 管理器
 
+![版本](https://img.shields.io/badge/版本-v0.2.0-0969da) ![平台](https://img.shields.io/badge/平台-Windows_10_/_11-2ea44f) ![运行时](https://img.shields.io/badge/Node.js-%E2%89%A5_18-339933)
+
 多需求并行开发管理工具：把同一个 git 仓库按需"worktree"成多个目录同时开发，以**需求**为维度聚合分支、多项目与 worktree，解决并行开发中最头疼的三件事——**目录怎么开、依赖怎么装、需求怎么管**。
 
 ## 它解决什么问题
@@ -13,10 +15,12 @@
 
 ## 核心亮点
 
-- ⚡ **秒级并行开发目录**：worktree 展开 + 依赖 junction 共享（零磁盘）或独立安装（隔离），创建后立即可开发
-- 📋 **需求任务聚合**：多项目 × 分支 × worktree 一站式管理，保存即生成 `.code-workspace`，一个窗口打开全部项目
-- 🛡 **依赖风险守护**：共享依赖自动核对版本一致性，高风险一眼可见；安装支持自定义脚本、任务互斥、日志实时可查
-- ♻️ **需求完成可恢复**：归档清理磁盘，git 分支保留，恢复时按原分支重建 worktree 并自动接回共享依赖
+![⚡ 秒级并行目录](https://img.shields.io/badge/⚡-秒级并行开发目录-0969da?style=for-the-badge) ![📋 需求聚合](https://img.shields.io/badge/📋-需求任务聚合-2ea44f?style=for-the-badge) ![🛡 依赖守护](https://img.shields.io/badge/🛡-依赖风险守护-d93f3b?style=for-the-badge) ![♻️ 归档可恢复](https://img.shields.io/badge/♻️-归档可恢复-8250df?style=for-the-badge)
+
+- **⚡ 秒级并行开发目录**：worktree 展开 + 依赖 junction 共享（零磁盘）或独立安装（隔离），创建后立即可开发
+- **📋 需求任务聚合**：多项目 × 分支 × worktree 一站式管理，保存即生成 `.code-workspace`，一个窗口打开全部项目
+- **🛡 依赖风险守护**：共享依赖自动核对版本一致性，高风险一眼可见；安装支持自定义脚本、任务互斥、日志实时可查
+- **♻️ 需求完成可恢复**：归档清理磁盘，git 分支保留，恢复时按原分支重建 worktree 并自动接回共享依赖
 
 详细使用步骤见[需求任务工作流](#需求任务工作流核心功能)。
 
