@@ -121,7 +121,7 @@ npm test    # vitest：单测 + 真实临时仓库集成测试（含 API 与 SSE
 ## 后续规划
 
 - **数据一键导入导出**（`openspec/changes/add-data-import-export/`）：把任务记录、创建历史、需求任务、最近主仓库打包为 `.wtm-data.json` 一键导出；导入支持合并去重（默认）与覆盖（先自动备份），用于换机迁移、备份与数据分享。
-- **桌面应用端**（`openspec/changes/add-desktop-app/`）：双版本并行、相互隔离——Electron 版（一期先行，内嵌现有 Koa 服务零改造）与 Tauri 版（sidecar 运行单文件服务），托盘常驻、原生通知、开机自启、Windows 安装包；一期要求已装 Git，「克隆远程仓库」列入后续计划。提案与任务清单见 `proposal.md` / `tasks.md`。
+- **桌面应用端**（`openspec/changes/add-desktop-app/`）：双版本并行、相互隔离——Electron 版（一期先行，内嵌现有 Koa 服务零改造）与 Tauri 版（sidecar 运行单文件服务），托盘常驻、原生通知、开机自启、Windows 安装包；一期要求已装 Git，「克隆远程仓库」列入后续计划。提案与任务清单见 `proposal.md` / `tasks.md`；环境搭建（Rust 装到 D 盘、MSVC 限制）与卸载留档见 [docs/DESKTOP-DEV.md](docs/DESKTOP-DEV.md)。
 
 ## 常见问题
 
