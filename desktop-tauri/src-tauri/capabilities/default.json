@@ -1,0 +1,6 @@
+{
+  "identifier": "default",
+  "description": "主窗口默认权限：页面经 sidecar HTTP 服务加载，前端无需 Tauri API 权限",
+  "windows": ["main"],
+  "permissions": ["core:default"]
+}

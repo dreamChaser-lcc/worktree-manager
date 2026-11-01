@@ -1,0 +1,21 @@
+[package]
+name = "worktree-manager-tauri"
+version = "0.2.0"
+edition = "2021"
+description = "Worktree 管理器桌面端（Tauri 壳）"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["tray-icon", "image-png"] }
+tauri-plugin-shell = "2"
+tauri-plugin-single-instance = "2"
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
+
+[profile.release]
+strip = true
+lto = true

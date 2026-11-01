@@ -76,6 +76,29 @@ function createRoundedSquarePng(size, filePath) {
   ]);
   fs.writeFileSync(filePath, pngBuffer);
   console.log(`[icons] 已生成 ${filePath} (${size}x${size})`);
+  return pngBuffer;
+}
+
+/**
+ * 把单张 PNG 包装为 ICO 容器（Vista+ 支持 PNG 压缩帧）：
+ * ICONDIR(6B) + ICONDIRENTRY(16B) + PNG 原始数据，供 Tauri Windows 打包使用。
+ */
+function createIcoFromPng(pngBuffer, icoFilePath) {
+  const iconDirectoryBuffer = Buffer.alloc(6);
+  iconDirectoryBuffer.writeUInt16LE(0, 0); // reserved
+  iconDirectoryBuffer.writeUInt16LE(1, 2); // type: icon
+  iconDirectoryBuffer.writeUInt16LE(1, 4); // 帧数量
+  const entryBuffer = Buffer.alloc(16);
+  entryBuffer[0] = 0; // width 256 编码为 0
+  entryBuffer[1] = 0; // height 256 编码为 0
+  entryBuffer[2] = 0; // 调色板色数
+  entryBuffer[3] = 0; // 保留
+  entryBuffer.writeUInt16LE(1, 4); // 色平面
+  entryBuffer.writeUInt16LE(32, 6); // 位深
+  entryBuffer.writeUInt32LE(pngBuffer.length, 8);
+  entryBuffer.writeUInt32LE(22, 12); // 数据偏移 = 6 + 16
+  fs.writeFileSync(icoFilePath, Buffer.concat([iconDirectoryBuffer, entryBuffer, pngBuffer]));
+  console.log(`[icons] 已生成 ${icoFilePath} (256x256 png 容器)`);
 }
 
 const desktopDirectory = path.join(__dirname, '..', 'desktop-electron');
@@ -85,4 +108,9 @@ fs.mkdirSync(assetsDirectory, { recursive: true });
 fs.mkdirSync(buildDirectory, { recursive: true });
 
 createRoundedSquarePng(32, path.join(assetsDirectory, 'tray.png'));
-createRoundedSquarePng(256, path.join(buildDirectory, 'icon.png'));
+const appIconPngBuffer = createRoundedSquarePng(256, path.join(buildDirectory, 'icon.png'));
+
+// Tauri 版图标：desktop-tauri/src-tauri/icons/icon.ico
+const tauriIconsDirectory = path.join(__dirname, '..', 'desktop-tauri', 'src-tauri', 'icons');
+fs.mkdirSync(tauriIconsDirectory, { recursive: true });
+createIcoFromPng(appIconPngBuffer, path.join(tauriIconsDirectory, 'icon.ico'));
