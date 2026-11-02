@@ -117,12 +117,31 @@ export async function createWorktree({ repoPath, targetPath, branchMode, branchN
   const branchOccupationMap = await getBranchOccupationMap(repoPath);
 
   if (branchMode === 'existing') {
-    if (branchOccupationMap[branchName]) {
-      throw new ConflictError(`分支 "${branchName}" 已被其他 worktree 签出: ${branchOccupationMap[branchName]}`, {
-        details: { occupiedBy: branchOccupationMap[branchName] }
+    // 占用检查同时覆盖"远程前缀写法"（origin/feature/x → 本地分支 feature/x）
+    const localBranchCandidate = branchName.includes('/') ? branchName.replace(/^[^/]+\//, '') : branchName;
+    const occupiedBy = branchOccupationMap[branchName] || branchOccupationMap[localBranchCandidate];
+    if (occupiedBy) {
+      throw new ConflictError(`分支 "${localBranchCandidate}" 已被其他 worktree 签出: ${occupiedBy}`, {
+        details: { occupiedBy }
       });
     }
-    await executeGitCommand(repoPath, ['worktree', 'add', targetPath, branchName]);
+
+    if (await doesLocalBranchExist(repoPath, branchName)) {
+      await executeGitCommand(repoPath, ['worktree', 'add', targetPath, branchName]);
+    } else {
+      // 本地没有该分支：尝试从远程创建跟踪分支（无需在主目录 pull）
+      const remoteBranchRef = await findRemoteBranchRef(repoPath, branchName);
+      if (!remoteBranchRef) {
+        throw new NotFoundError(`分支 "${branchName}" 在本地与远程均不存在，请先推送或确认分支名`);
+      }
+      const trackedLocalBranchName = remoteBranchRef === branchName
+        ? branchName.replace(/^[^/]+\//, '')
+        : branchName;
+      await executeGitCommand(repoPath, [
+        'worktree', 'add', '--track', '-b', trackedLocalBranchName, targetPath, remoteBranchRef
+      ]);
+      return { path: normalizePathForComparison(targetPath), branch: trackedLocalBranchName, head: (await executeGitCommand(targetPath, ['rev-parse', 'HEAD'])).stdout.trim() };
+    }
   } else if (branchMode === 'new') {
     const branchExists = await doesLocalBranchExist(repoPath, branchName);
     if (branchExists) {
@@ -148,6 +167,41 @@ async function doesLocalBranchExist(repoPath, branchName) {
     { allowNonZeroExit: true }
   );
   return verifyResult.exitCode === 0;
+}
+
+/**
+ * 查找远程分支引用（refs/remotes/<remote>/<branch>），供本地不存在分支时从远程创建跟踪分支。
+ * branchName 带远程前缀（origin/feature/x）时优先按该引用查找；否则按 origin → 其余远程 顺序探测。
+ * 找不到返回 null。
+ */
+async function findRemoteBranchRef(repoPath, branchName) {
+  if (branchName.includes('/')) {
+    const prefixedVerify = await executeGitCommand(
+      repoPath,
+      ['rev-parse', '--verify', '--quiet', `refs/remotes/${branchName}`],
+      { allowNonZeroExit: true }
+    );
+    if (prefixedVerify.exitCode === 0) {
+      return branchName;
+    }
+  }
+  const remoteListResult = await executeGitCommand(repoPath, ['remote']);
+  const remoteNameList = remoteListResult.stdout
+    .split(/\r?\n/)
+    .map((remoteName) => remoteName.trim())
+    .filter(Boolean);
+  for (const remoteName of remoteNameList) {
+    const candidateRef = `${remoteName}/${branchName}`;
+    const candidateVerify = await executeGitCommand(
+      repoPath,
+      ['rev-parse', '--verify', '--quiet', `refs/remotes/${candidateRef}`],
+      { allowNonZeroExit: true }
+    );
+    if (candidateVerify.exitCode === 0) {
+      return candidateRef;
+    }
+  }
+  return null;
 }
 
 /**

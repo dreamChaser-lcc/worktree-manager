@@ -230,9 +230,24 @@ describe('记录类 API（最近主仓库 / 创建历史 / 任务持久化 / 设
       'config', 'branch.feature/from-remote.remote'
     ]);
     expect(remoteConfigResult.stdout.trim()).toBe('origin');
+
+    // 已有分支模式选择远程才有的分支（本地不存在）：自动 --track -b 从远程创建并签出
+    await executeGitCommand(fixtureRepository.repoPath, ['push', 'origin', 'main:refs/heads/feature/remote-only']);
+    const remoteOnlyWorktreePath = path.join(fixtureRepository.parentTempDir, 'wt-remote-only');
+    const remoteOnlyResult = await postJson('/api/worktrees/create', {
+      repoPath: fixtureRepository.repoPath,
+      targetPath: remoteOnlyWorktreePath,
+      branchMode: 'existing',
+      branchName: 'feature/remote-only',
+      dependencyStrategy: 'skip'
+    });
+    expect(remoteOnlyResult.status).toBe(200);
+    expect(fs.existsSync(remoteOnlyWorktreePath)).toBe(true);
+    const headBranchResult = await executeGitCommand(remoteOnlyWorktreePath, ['rev-parse', '--abbrev-ref', 'HEAD']);
+    expect(headBranchResult.stdout.trim()).toBe('feature/remote-only');
   });
 
-  it('设置接口：合法目录修改立即生效，旧目录数据保留', async () => {
+  it('设置接口：合法目录修改立即生效，数据自动迁移', async () => {
     const initialSettings = await getJson('/api/settings');
     expect(initialSettings.status).toBe(200);
     const originalDataDirectory = initialSettings.body.dataDirectory;
@@ -242,12 +257,12 @@ describe('记录类 API（最近主仓库 / 创建历史 / 任务持久化 / 设
     const updateResult = await putJson('/api/settings', { dataDirectory: nextDataDirectory });
     expect(updateResult.status).toBe(200);
     expect(updateResult.body.dataDirectory).toBe(path.resolve(nextDataDirectory));
-    expect(updateResult.body.notice).toContain('不会自动迁移');
+    expect(updateResult.body.notice).toContain('已自动迁移');
 
     const effectiveSettings = await getJson('/api/settings');
     expect(effectiveSettings.body.dataDirectory).toBe(path.resolve(nextDataDirectory));
     expect(fs.existsSync(path.join(nextDataDirectory, 'nedb'))).toBe(true);
-    // 旧目录数据仍在原处
-    expect(fs.existsSync(path.join(originalDataDirectory, 'nedb', 'jobs.db'))).toBe(true);
+    // 自动迁移：数据已搬到新目录，旧目录不再保留 nedb 库
+    expect(fs.existsSync(path.join(originalDataDirectory, 'nedb', 'jobs.db'))).toBe(false);
   });
 });

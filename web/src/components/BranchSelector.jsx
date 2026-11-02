@@ -75,15 +75,39 @@ export function BranchSelector({
             placeholder="请选择分支"
             filterPlaceholder="输入筛选分支..."
             emptyText="无匹配分支"
-            options={branchItemList.map((branchItem) => ({
-              value: branchItem.name,
-              label: branchItem.occupiedBy
-                ? `${branchItem.name}（已被占用: ${branchItem.occupiedBy}）`
-                : branchItem.name,
-              disabled: Boolean(branchItem.occupiedBy)
-            }))}
+            options={[
+              ...branchItemList.map((branchItem) => ({
+                value: branchItem.name,
+                label: branchItem.occupiedBy
+                  ? `${branchItem.name}（已被占用: ${branchItem.occupiedBy}）`
+                  : branchItem.name,
+                disabled: Boolean(branchItem.occupiedBy),
+                group: '本地分支'
+              })),
+              ...remoteBranchItemList
+                .map((remoteBranchName) => {
+                  const localEquivalent = remoteBranchName.replace(/^[^/]+\//, '');
+                  const occupiedBranch = branchItemList.find(
+                    (branchItem) => branchItem.name === localEquivalent && branchItem.occupiedBy
+                  );
+                  return {
+                    value: remoteBranchName,
+                    label: occupiedBranch
+                      ? `${remoteBranchName}（已被占用: ${occupiedBranch.occupiedBy}）`
+                      : `${remoteBranchName}（远程，本地没有）`,
+                    disabled: Boolean(occupiedBranch),
+                    group: '远程分支（本地没有的）'
+                  };
+                })
+                .filter(
+                  (remoteOption) =>
+                    !branchItemList.some(
+                      (branchItem) => branchItem.name === remoteOption.value.replace(/^[^/]+\//, '')
+                    )
+                )
+            ]}
           />
-          <div className="form-hint">被其他 worktree 签出的分支已标注且不可选（git 限制：同一分支不能同时签出）</div>
+          <div className="form-hint">被其他 worktree 签出的分支已标注且不可选（git 限制：同一分支不能同时签出）；远程分支可直接选择，创建时自动建同名本地分支并跟踪远程，无需先在主目录 pull</div>
         </div>
       ) : (
         <div>

@@ -36,6 +36,7 @@ export function DirectoryPicker({
   const [pickerError, setPickerError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [newSubdirectoryName, setNewSubdirectoryName] = useState('');
+  const [directoryFilterText, setDirectoryFilterText] = useState('');
   const initialPathAppliedRef = useRef(false);
 
   // 打开选择器时预填建议的子目录名（如按项目名/需求名建子目录）
@@ -152,6 +153,16 @@ export function DirectoryPicker({
             {pickerError ? <div className="alert-error">{pickerError}</div> : null}
             {loading ? <div className="form-hint">加载中...</div> : null}
 
+            {currentPath ? (
+              <input
+                className="form-input picker-filter-input"
+                type="text"
+                placeholder="输入筛选目录..."
+                value={directoryFilterText}
+                onChange={(changeEvent) => setDirectoryFilterText(changeEvent.target.value)}
+              />
+            ) : null}
+
             <div className="picker-list">
               {!currentPath
                 ? driveList.map((driveItem) => (
@@ -163,18 +174,32 @@ export function DirectoryPicker({
                       {driveItem.name}
                     </div>
                   ))
-                : directoryList.map((directoryItem) => (
-                    <div
-                      key={directoryItem.path}
-                      className="picker-item"
-                      onClick={() => setCurrentPath(directoryItem.path)}
-                    >
-                      {directoryItem.name}
-                    </div>
-                  ))}
-              {currentPath && !loading && directoryList.length === 0 ? (
-                <div className="picker-item picker-item-empty">（无子目录）</div>
-              ) : null}
+                : (() => {
+                    const filterKeyword = directoryFilterText.trim().toLowerCase();
+                    const visibleDirectoryList = filterKeyword
+                      ? directoryList.filter((directoryItem) =>
+                          directoryItem.name.toLowerCase().includes(filterKeyword)
+                        )
+                      : directoryList;
+                    return (
+                      <>
+                        {visibleDirectoryList.map((directoryItem) => (
+                          <div
+                            key={directoryItem.path}
+                            className="picker-item"
+                            onClick={() => setCurrentPath(directoryItem.path)}
+                          >
+                            {directoryItem.name}
+                          </div>
+                        ))}
+                        {!loading && visibleDirectoryList.length === 0
+                          ? directoryList.length === 0
+                            ? <div className="picker-item picker-item-empty">（无子目录）</div>
+                            : <div className="picker-item picker-item-empty">（无匹配目录）</div>
+                          : null}
+                      </>
+                    );
+                  })()}
             </div>
 
             {allowNewSubdirectory && currentPath ? (
