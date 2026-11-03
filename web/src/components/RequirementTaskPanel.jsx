@@ -742,7 +742,7 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                       )}</div>
                   </td>
                 </tr>
-                                <TaskActionsRow
+                <TaskActionsRow
                   taskEntry={taskEntry}
                   activeStatusTab={activeStatusTab}
                   canMoveUp={taskList.findIndex((taskEntryItem) => taskEntryItem.id === taskEntry.id) > 0}
