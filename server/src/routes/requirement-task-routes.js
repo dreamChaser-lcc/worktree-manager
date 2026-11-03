@@ -31,6 +31,31 @@ export function registerRequirementTaskRoutes(router) {
     };
   });
 
+  // 设置阶段标签（待开发/开发中/测试中，传 null 清除）
+  router.post('/api/requirement-tasks/:taskId/stage', async (context) => {
+    const taskId = context.params.taskId;
+    const taskRecord = await persistenceManager.findRequirementTaskById(taskId);
+    if (!taskRecord) {
+      throw new NotFoundError(`需求任务不存在: ${taskId}`);
+    }
+    const stageTag = (context.request.body || {}).stageTag ?? null;
+    if (stageTag !== null && !['待开发', '开发中', '测试中'].includes(stageTag)) {
+      throw new ValidationError('无效的阶段标签');
+    }
+    const updatedRecord = await persistenceManager.setRequirementTaskStage(taskId, stageTag);
+    context.body = { task: updatedRecord, stageTag };
+  });
+
+  // 未发布列表拖拽排序：按传入的 id 顺序持久化 sortOrder
+  router.post('/api/requirement-tasks/reorder', async (context) => {
+    const orderedIdsRaw = (context.request.body || {}).orderedIds;
+    const orderedIds = Array.isArray(orderedIdsRaw) ? orderedIdsRaw.filter((id) => typeof id === 'string') : [];
+    if (orderedIds.length === 0) {
+      throw new ValidationError('缺少 orderedIds');
+    }
+    await persistenceManager.reorderRequirementTasks(orderedIds);
+    context.body = { reordered: orderedIds.length };
+  });
   // 标记/取消发布：publishedAt 有值即"已发布"
   router.post('/api/requirement-tasks/:taskId/publish', async (context) => {
     const taskId = context.params.taskId;
@@ -73,8 +98,14 @@ export function registerRequirementTaskRoutes(router) {
     }
     const requestBody = context.request.body || {};
     const taskInput = normalizeRequirementTaskInput(requestBody);
+    // 编辑保存不冲掉阶段标签：表单不传时保留原值
+    let stageTagValue = existingRecord.stageTag || null;
+    if (requestBody.stageTag !== undefined) {
+      stageTagValue = ['待开发', '开发中', '测试中'].includes(requestBody.stageTag) ? requestBody.stageTag : null;
+    }
     const updatedRecord = await persistenceManager.updateRequirementTaskRecord(taskId, {
       ...taskInput,
+      stageTag: stageTagValue,
       updatedAt: new Date().toISOString()
     });
 

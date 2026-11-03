@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { RequirementTaskForm, deriveProjectNameFromPath } from './RequirementTaskForm.jsx';
 import { TaskLogPanel } from './TaskLogPanel.jsx';
 import { DependencyInstallDialog } from './DependencyInstallDialog.jsx';
+import { TaskActionsRow } from './TaskActionsRow.jsx';
 import { usePendingActions } from '../utils/usePendingActions.js';
 import {
   fetchRequirementTaskList,
@@ -17,7 +18,9 @@ import {
   revealInExplorer,
   openDirectoryInEditor,
   fetchRequirementTaskPage,
-  setRequirementPublished
+  setRequirementPublished,
+  setRequirementStage,
+  reorderRequirementTasks
 } from '../api/client.js';
 
 function formatTimeText(isoText) {
@@ -320,6 +323,37 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
       setActionMessage({ type: 'error', text: publishError.message });
     } finally {
       setPublishPendingId(null);
+    }
+  }
+  /** 上移/下移排序：乐观更新本地顺序，持久化到后端 */
+  function handleMoveTask(taskEntry, direction) {
+    const currentIndex = taskList.findIndex((taskEntryItem) => taskEntryItem.id === taskEntry.id);
+    const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+    if (targetIndex < 0 || targetIndex >= taskList.length) {
+      return;
+    }
+    const reorderedList = [...taskList];
+    const [movedEntry] = reorderedList.splice(currentIndex, 1);
+    reorderedList.splice(targetIndex, 0, movedEntry);
+    setTaskList(reorderedList);
+    reorderRequirementTasks(reorderedList.map((taskEntryItem) => taskEntryItem.id)).catch((reorderError) => {
+      setActionMessage({ type: 'error', text: '排序保存失败: ' + reorderError.message });
+      refreshTaskList();
+    });
+  }
+
+  /** 设置阶段标签 */
+  async function handleSetStage(taskEntry, stageTag) {
+    try {
+      await setRequirementStage(taskEntry.id, stageTag);
+      setTaskList((previousList) =>
+        previousList.map((taskEntryItem) =>
+          taskEntryItem.id === taskEntry.id ? { ...taskEntryItem, stageTag: stageTag ||  null } : taskEntryItem
+        )
+      );
+      setActionMessage({ type: 'success', text: stageTag ? '已标记阶段标签。' : '已清除阶段标签。' });
+    } catch (stageError) {
+      setActionMessage({ type: 'error', text: stageError.message });
     }
   }
   async function handleRefreshAll() {
@@ -733,25 +767,6 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                             >
                               编辑
                             </button>
-                            {activeStatusTab === 'unpublished' ? (
-                              <button
-                                type="button"
-                                className="actions-dropdown-item"
-                                disabled={publishPendingId === taskEntry.id}
-                                onClick={() => handleSetPublished(taskEntry, true)}
-                              >
-                                {publishPendingId === taskEntry.id ? '发布中...' : '标记已发布'}
-                              </button>
-                            ) : (
-                              <button
-                                type="button"
-                                className="actions-dropdown-item"
-                                disabled={publishPendingId === taskEntry.id}
-                                onClick={() => handleSetPublished(taskEntry, false)}
-                              >
-                                {publishPendingId === taskEntry.id ? '操作中...' : '取消发布'}
-                              </button>
-                            )}
                             <button
                               type="button"
                               className="actions-dropdown-item dropdown-item-danger"
@@ -767,6 +782,20 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                       )}</div>
                   </td>
                 </tr>
+                                <TaskActionsRow
+                  taskEntry={taskEntry}
+                  activeStatusTab={activeStatusTab}
+                  canMoveUp={taskList.findIndex((taskEntryItem) => taskEntryItem.id === taskEntry.id) > 0}
+                  canMoveDown={
+                    taskList.findIndex((taskEntryItem) => taskEntryItem.id === taskEntry.id) < taskList.length - 1
+                  }
+                  publishPending={publishPendingId === taskEntry.id}
+                  onMoveUp={() => handleMoveTask(taskEntry, 'up')}
+                  onMoveDown={() => handleMoveTask(taskEntry, 'down')}
+                  onPublish={() => handleSetPublished(taskEntry, true)}
+                  onUnpublish={() => handleSetPublished(taskEntry, false)}
+                  onSetStage={(nextStageTag) => handleSetStage(taskEntry, nextStageTag)}
+                />
                 <tr className="remark-row">
                   <td colSpan={5}>
                     {remarkEditingTaskId === taskEntry.id ? (

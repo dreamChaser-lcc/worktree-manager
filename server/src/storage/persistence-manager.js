@@ -617,6 +617,15 @@ export function createPersistenceManager(managerOptions = {}) {
       recordList = recordList.map(stripInternalId);
       if (status === 'unpublished') {
         recordList = recordList.filter((record) => !record.publishedAt);
+        // 拖拽排序优先（sortOrder 升序），未排序的按更新时间排在其后
+        recordList.sort((firstRecord, secondRecord) => {
+          const firstOrder = typeof firstRecord.sortOrder === 'number' ? firstRecord.sortOrder : Number.MAX_SAFE_INTEGER;
+          const secondOrder = typeof secondRecord.sortOrder === 'number' ? secondRecord.sortOrder : Number.MAX_SAFE_INTEGER;
+          if (firstOrder !== secondOrder) {
+            return firstOrder - secondOrder;
+          }
+          return String(secondRecord.updatedAt || '').localeCompare(String(firstRecord.updatedAt || ''));
+        });
       } else if (status === 'published') {
         recordList = recordList.filter((record) => Boolean(record.publishedAt));
       }
@@ -629,6 +638,26 @@ export function createPersistenceManager(managerOptions = {}) {
       warnStorageError('需求任务列表查询失败', listError);
       return { records: [], total: 0 };
     }
+  }
+
+  /** 设置阶段标签（待开发/开发中/测试中，null 清除） */
+  async function setRequirementTaskStage(taskId, stageTag) {
+    if (!initialized) return null;
+    return updateRequirementTaskRecord(taskId, { stageTag: stageTag || null, updatedAt: new Date().toISOString() });
+  }
+
+  /** 拖拽排序：按 orderedIds 顺序写入 sortOrder（未列出记录 sortOrder 置空排在后面） */
+  async function reorderRequirementTasks(orderedIds) {
+    if (!initialized) return 0;
+    let updatedCount = 0;
+    for (let orderIndex = 0; orderIndex < orderedIds.length; orderIndex += 1) {
+      const updatedRecord = await updateRequirementTaskRecord(orderedIds[orderIndex], {
+        sortOrder: orderIndex,
+        updatedAt: new Date().toISOString()
+      });
+      if (updatedRecord) updatedCount += 1;
+    }
+    return updatedCount;
   }
 
   /** 设置/清除需求任务的发布标记（publishedAt：ISO 时间或 null） */
@@ -679,6 +708,8 @@ export function createPersistenceManager(managerOptions = {}) {
     findRequirementTaskById,
     listRequirementTaskRecords,
     setRequirementTaskPublished,
+    setRequirementTaskStage,
+    reorderRequirementTasks,
     deleteRequirementTaskRecord
   };
 }

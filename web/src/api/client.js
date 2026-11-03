@@ -125,6 +125,16 @@ export function setRequirementPublished(taskId, published) {
   return postJson(`/api/requirement-tasks/${encodeURIComponent(taskId)}/publish`, { published });
 }
 
+/** 设置阶段标签（待开发/开发中/测试中，null 清除） */
+export function setRequirementStage(taskId, stageTag) {
+  return postJson(`/api/requirement-tasks/${encodeURIComponent(taskId)}/stage`, { stageTag });
+}
+
+/** 拖拽排序持久化 */
+export function reorderRequirementTasks(orderedIds) {
+  return postJson('/api/requirement-tasks/reorder', { orderedIds });
+}
+
 export function createRequirementTask(taskPayload) {
   return postJson('/api/requirement-tasks', taskPayload);
 }
