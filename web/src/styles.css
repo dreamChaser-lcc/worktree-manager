@@ -1030,19 +1030,25 @@ button {
   text-decoration: underline;
 }
 
-.detail-expanded-panel {
-  background-color: #f6f8fa;
-  border: 1px solid #d0d7de;
-  border-radius: 6px;
-  padding: 12px;
-  margin-bottom: 12px;
+/* 需求明细弹窗：列表「查看」以弹窗展示工作区文件与关联 worktree（替代原行内展开） */
+.requirement-detail-dialog {
+  width: 900px;
+  max-width: 94%;
+  max-height: 88vh;
 }
 
-.detail-expanded-panel .form-label {
+.requirement-detail-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.requirement-detail-body .form-label {
   margin-top: 10px;
 }
 
-.detail-expanded-panel .form-label:first-child {
+.requirement-detail-body .form-label:first-child {
   margin-top: 0;
 }
 

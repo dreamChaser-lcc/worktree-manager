@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { RequirementTaskForm, deriveProjectNameFromPath } from './RequirementTaskForm.jsx';
-import { TaskLogPanel } from './TaskLogPanel.jsx';
+import { RequirementTaskForm } from './RequirementTaskForm.jsx';
+import { RequirementTaskDetailDialog } from './RequirementTaskDetailDialog.jsx';
 import { DependencyInstallDialog } from './DependencyInstallDialog.jsx';
 import { TaskActionsRow } from './TaskActionsRow.jsx';
 import { usePendingActions } from '../utils/usePendingActions.js';
@@ -68,12 +68,6 @@ function RowActionsMore({ children }) {
   );
 }
 
-/** 路径宽松比较（斜杠/大小写不敏感），用于匹配 worktree 清单条目 */
-function isSameLoosePath(firstPath, secondPath) {
-  const normalizeText = (pathText) => String(pathText || '').replace(/\//g, '\\').toLowerCase();
-  return normalizeText(firstPath) === normalizeText(secondPath);
-}
-
 /**
  * 跨需求分支冲突检测：同一主仓库在多个需求中被关联、且需求分支相同时视为冲突
  * （同一分支只能签出在一个 worktree，重复关联会互相抢占）。返回冲突键集合 `${repoPath}|${branchName}`。
@@ -101,64 +95,6 @@ function buildConflictKeySet(taskList) {
   return conflictKeySet;
 }
 
-/**
- * 渲染"分支位置"单元格：展示关联 worktree 当前实际所在分支，
- * 标注与需求分支是否一致；未关联时回退显示主仓库当前分支；另提示需求分支的签出位置。
- */
-function renderBranchLocationCell(locateEntry, projectEntry, requirementBranchName) {
-  if (!locateEntry) {
-    return <span className="section-empty">查询中...</span>;
-  }
-  if (locateEntry.locateError) {
-    return <span className="history-reason">查询失败：{locateEntry.locateError}</span>;
-  }
-
-  const worktreeList = locateEntry.worktreeList || [];
-  const currentWorktreeEntry = projectEntry.worktreePath
-    ? worktreeList.find((worktreeEntry) => isSameLoosePath(worktreeEntry.path, projectEntry.worktreePath))
-    : null;
-  const mainWorktreeEntry = worktreeList.find((worktreeEntry) => worktreeEntry.isMain);
-  const requirementBranchEntry = worktreeList.find(
-    (worktreeEntry) => worktreeEntry.branch === requirementBranchName
-  );
-
-  if (projectEntry.worktreePath && !currentWorktreeEntry) {
-    return <span className="history-reason">关联已失效（目录不在 worktree 列表中）</span>;
-  }
-
-  return (
-    <div>
-      <div>
-        当前分支：
-        {currentWorktreeEntry ? (
-          <span>
-            {currentWorktreeEntry.branch || '(detached)'}
-            {currentWorktreeEntry.branch === requirementBranchName ? (
-              <span className="badge-status badge-clean">与需求一致</span>
-            ) : (
-              <span className="badge-status badge-dirty">非需求分支</span>
-            )}
-            {currentWorktreeEntry.isDirty ? <span className="badge-status badge-dirty">有未提交修改</span> : null}
-          </span>
-        ) : mainWorktreeEntry ? (
-          <span>
-            {mainWorktreeEntry.branch || '(detached)'}
-            <span className="history-reason">（主仓库，项目未关联 worktree）</span>
-          </span>
-        ) : (
-          <span className="section-empty">未知</span>
-        )}
-      </div>
-      {requirementBranchEntry &&
-      (!currentWorktreeEntry || !isSameLoosePath(requirementBranchEntry.path, currentWorktreeEntry.path)) ? (
-        <div className="form-hint">
-          需求分支 {requirementBranchName} 签出于：{requirementBranchEntry.path}
-        </div>
-      ) : null}
-    </div>
-  );
-}
-
 /** 需求任务面板：以需求为维度维护分支与多项目 worktree 列表，支持查看/编辑/删除/打开/工作区文件 */
 export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, workspaceLayoutEnabled }) {
   const [taskList, setTaskList] = useState([]);
@@ -169,7 +105,8 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
   const pageSize = 20;
   const [totalTasks, setTotalTasks] = useState(0);
   const [formState, setFormState] = useState(null); // null | { mode: 'new' } | { mode: 'edit', record }
-  const [expandedTaskId, setExpandedTaskId] = useState(null);
+  // 需求明细弹窗当前展示的任务 id（null 表示弹窗关闭）
+  const [detailDialogTaskId, setDetailDialogTaskId] = useState(null);
   const [confirmDeleteTask, setConfirmDeleteTask] = useState(null);
   const [confirmPermanentTask, setConfirmPermanentTask] = useState(null);
   // 删除/彻底删除确认弹窗：强制删除勾选（有未提交修改时丢弃修改）与失败详情（弹窗内展示并引导重试）
@@ -180,9 +117,9 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
   const [actionMessage, setActionMessage] = useState(null);
   // 需求任务面板：刷新进行中标记（禁用按钮 + spinner，明确告知刷新动作在执行）
   const [refreshing, setRefreshing] = useState(false);
-  // 展开明细时按需获取的分支定位数据（taskId → locate 响应）
+  // 打开明细弹窗时按需获取的分支定位数据（taskId → locate 响应）
   const [locateDataMap, setLocateDataMap] = useState({});
-  // 展开明细时按需获取的依赖检查数据（taskId → dependency-check 响应）
+  // 打开明细弹窗时按需获取的依赖检查数据（taskId → dependency-check 响应）
   const [dependencyDataMap, setDependencyDataMap] = useState({});
   // 各项目已启动的独立安装任务（`${taskId}:${projectIndex}` → { jobId, installMode }）
   const [installJobMap, setInstallJobMap] = useState({});
@@ -209,6 +146,11 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
   const [remarkSaving, setRemarkSaving] = useState(false);
   // 跨需求分支冲突：同一项目仓库在不同需求中关联了相同分支
   const conflictProjectKeySet = useMemo(() => buildConflictKeySet(taskList), [taskList]);
+  // 明细弹窗当前展示的任务对象（随列表刷新自动取最新数据；任务被移除时弹窗自然关闭）
+  const detailDialogTaskEntry = useMemo(
+    () => taskList.find((taskEntryItem) => taskEntryItem.id === detailDialogTaskId) || null,
+    [taskList, detailDialogTaskId]
+  );
 
   function refreshTaskList() {
     fetchRequirementTaskPage({ status: activeStatusTab, page: currentPage, pageSize })
@@ -264,17 +206,19 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
     });
   }
 
-  /** 展开/收起明细；展开时实时获取分支定位与依赖检查数据 */
-  async function handleToggleExpand(taskEntry) {
-    const nextExpandedTaskId = expandedTaskId === taskEntry.id ? null : taskEntry.id;
-    setExpandedTaskId(nextExpandedTaskId);
-    if (nextExpandedTaskId) {
-      loadExpandedTaskData(nextExpandedTaskId);
-    }
+  /** 打开需求明细弹窗；打开时实时获取分支定位与依赖检查数据 */
+  function handleOpenDetailDialog(taskEntry) {
+    setDetailDialogTaskId(taskEntry.id);
+    loadDetailDialogData(taskEntry.id);
   }
 
-  /** 拉取指定需求的分支定位与依赖检查数据（展开明细与手动刷新共用）；返回全部完成的 Promise */
-  function loadExpandedTaskData(taskId) {
+  /** 关闭需求明细弹窗 */
+  function handleCloseDetailDialog() {
+    setDetailDialogTaskId(null);
+  }
+
+  /** 拉取指定需求的分支定位与依赖检查数据（明细弹窗与手动刷新共用）；返回全部完成的 Promise */
+  function loadDetailDialogData(taskId) {
     return Promise.all([
       fetchRequirementTaskLocate(taskId)
         .then((locateData) => setLocateDataMap((previousMap) => ({ ...previousMap, [taskId]: locateData })))
@@ -287,7 +231,7 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
     ]);
   }
 
-  /** 刷新：需求列表 + 已展开明细的分支定位与依赖检查一并重拉，期间按钮展示 loading；同时清掉上一次操作的提示 */
+  /** 刷新：需求列表 + 明细弹窗的分支定位与依赖检查一并重拉，期间按钮展示 loading；同时清掉上一次操作的提示 */
   /** 复制分支名到剪贴板（http 局域网环境降级 execCommand） */
   async function handleCopyBranchName(branchNameText) {
     try {
@@ -365,7 +309,7 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
     try {
       await Promise.all([
         refreshTaskList(),
-        expandedTaskId ? loadExpandedTaskData(expandedTaskId) : Promise.resolve()
+        detailDialogTaskId ? loadDetailDialogData(detailDialogTaskId) : Promise.resolve()
       ]);
     } finally {
       setRefreshing(false);
@@ -459,7 +403,7 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
       setConfirmDeleteTask(null);
       setDeleteForceChecked(false);
       setDeleteFailedMessage(null);
-      setExpandedTaskId(expandedTaskId === taskEntry.id ? null : expandedTaskId);
+      setDetailDialogTaskId((previousTaskId) => (previousTaskId === taskEntry.id ? null : previousTaskId));
       setActionMessage({
         type: 'success',
         text: `已删除需求任务并移除 ${removedCount} 个关联 worktree（含文件目录）；git 分支（本地与远程）均已保留，可点击“恢复”重建 worktree。`
@@ -528,6 +472,22 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
       .catch(() => {});
   }
 
+  /**
+   * 独立安装任务落终态：解除「安装中」标记并刷新依赖状态（无需手动刷新）；
+   * 桌面端（Electron 壳注入）另发系统原生通知，浏览器模式无此桥接自动跳过。
+   */
+  function handleIndependentInstallFinished(taskEntry, projectIndex, projectEntry, finishStatus) {
+    setKeyFlag(setInstallRunningKeyMap, `${taskEntry.id}:${projectIndex}`, false);
+    refreshDependencyCheck(taskEntry.id);
+    if (window.desktopBridge && typeof window.desktopBridge.notify === 'function') {
+      const installSucceeded = finishStatus === 'success';
+      window.desktopBridge.notify(
+        installSucceeded ? '依赖安装完成' : '依赖安装失败',
+        `${projectEntry.projectName}：${installSucceeded ? '可回到明细查看依赖状态' : '请在日志中排查失败原因'}`
+      );
+    }
+  }
+
   /** 恢复共享：删除独立安装的 node_modules，重建与主仓库的 junction 共享（同步长操作，按钮带 loading） */
   async function handleRestoreShared(taskEntry, projectIndex, projectEntry) {
     const restoreActionKey = `${taskEntry.id}:${projectIndex}`;
@@ -554,7 +514,7 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
       setConfirmPermanentTask(null);
       setPermanentForceChecked(false);
       setPermanentFailedMessage(null);
-      setExpandedTaskId(expandedTaskId === taskEntry.id ? null : expandedTaskId);
+      setDetailDialogTaskId((previousTaskId) => (previousTaskId === taskEntry.id ? null : previousTaskId));
       setActionMessage({
         type: 'success',
         text: `已彻底删除：任务记录与 ${removedCount} 个关联 worktree（含文件目录）均已移除${deleteResult.workspaceFileDeleted ? '，工作区文件一并删除' : ''}；git 分支（本地与远程）保留。`
@@ -732,9 +692,9 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                       <button
                         type="button"
                         className="button-secondary"
-                        onClick={() => handleToggleExpand(taskEntry)}
+                        onClick={() => handleOpenDetailDialog(taskEntry)}
                       >
-                        {expandedTaskId === taskEntry.id ? '收起' : '查看'}
+                        查看
                       </button>
                       {taskEntry.deletedAt ? (
                         <RowActionsMore>
@@ -855,347 +815,6 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                     )}
                   </td>
                 </tr>
-                {expandedTaskId === taskEntry.id ? (
-                  <tr>
-                    <td colSpan={5}>
-                      <div className="detail-expanded-panel">
-                        <span className="form-label">工作区文件</span>
-                        {taskEntry.workspaceFilePath ? (
-                          <div>
-                            <div className="settings-current-path">{taskEntry.workspaceFilePath}</div>
-                            <div className="cell-actions">
-                              <button
-                                type="button"
-                                className="button-secondary"
-                                disabled={pathActionPending.isPending(`open:${taskEntry.workspaceFilePath}`)}
-                                onClick={() => handleOpenWorktree(taskEntry.workspaceFilePath)}
-                              >
-                                {pathActionPending.isPending(`open:${taskEntry.workspaceFilePath}`) ? (
-                                  <span>
-                                    <span className="button-spinner" />
-                                    打开中...
-                                  </span>
-                                ) : (
-                                  '打开工作区'
-                                )}
-                              </button>
-                              <button
-                                type="button"
-                                className="button-secondary"
-                                disabled={pathActionPending.isPending(`reveal:${taskEntry.workspaceFilePath}`)}
-                                onClick={() => handleRevealPath(taskEntry.workspaceFilePath)}
-                              >
-                                {pathActionPending.isPending(`reveal:${taskEntry.workspaceFilePath}`) ? (
-                                  <span>
-                                    <span className="button-spinner" />
-                                    定位中...
-                                  </span>
-                                ) : (
-                                  '显示'
-                                )}
-                              </button>
-                              <button
-                                type="button"
-                                className="button-secondary"
-                                disabled={workspaceRegenPending.isPending(`ws-regen:${taskEntry.id}`)}
-                                onClick={() => handleRegenerateWorkspace(taskEntry.id)}
-                              >
-                                {workspaceRegenPending.isPending(`ws-regen:${taskEntry.id}`) ? (
-                                  <span>
-                                    <span className="button-spinner" />
-                                    生成中...
-                                  </span>
-                                ) : (
-                                  '重新生成'
-                                )}
-                              </button>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="form-hint">
-                            未生成。编辑任务勾选“保存后生成工作区文件”，或点击“重新生成”。
-                            <button
-                              type="button"
-                              className="button-secondary workspace-generate-button"
-                              disabled={workspaceRegenPending.isPending(`ws-regen:${taskEntry.id}`)}
-                              onClick={() => handleRegenerateWorkspace(taskEntry.id)}
-                            >
-                              {workspaceRegenPending.isPending(`ws-regen:${taskEntry.id}`) ? (
-                                <span>
-                                  <span className="button-spinner" />
-                                  生成中...
-                                </span>
-                              ) : (
-                                '重新生成'
-                              )}
-                            </button>
-                          </div>
-                        )}
-
-                        <span className="form-label">涉及项目与关联 worktree</span>
-                        {(() => {
-                          const dependencyData = dependencyDataMap[taskEntry.id];
-                          if (!dependencyData) {
-                            return null;
-                          }
-                          const highRiskList = dependencyData.projectList.filter(
-                            (projectDependency) => projectDependency.riskLevel === 'high'
-                          );
-                          if (highRiskList.length === 0) {
-                            return null;
-                          }
-                          return (
-                            <div className="alert-error">
-                              依赖风险提醒（重点）：{highRiskList
-                                .map((projectDependency) => `${projectDependency.projectName} —— ${projectDependency.riskMessage}`)
-                                .join('；')}
-                              。建议对相关项目执行"独立安装"。
-                            </div>
-                          );
-                        })()}
-                        {taskEntry.projectList.map((projectEntry, projectIndex) => {
-                          const locateEntry =
-                            locateDataMap[taskEntry.id] && locateDataMap[taskEntry.id].projectList
-                              ? locateDataMap[taskEntry.id].projectList[projectIndex]
-                              : null;
-                          const dependencyData = dependencyDataMap[taskEntry.id];
-                          const dependencyEntry =
-                            dependencyData && dependencyData.projectList
-                              ? dependencyData.projectList[projectIndex]
-                              : null;
-                          const installJobEntry = installJobMap[`${taskEntry.id}:${projectIndex}`];
-                          const installActionKey = `${taskEntry.id}:${projectIndex}`;
-                          const installRunning = Boolean(installRunningKeyMap[installActionKey]);
-                          const sharedRestoring = Boolean(sharedRestoreKeyMap[installActionKey]);
-                          const projectConflictKey = `${String(projectEntry.repoPath || '')
-                            .replace(/\//g, '\\')
-                            .toLowerCase()}|${taskEntry.branchName}`;
-                          const hasBranchConflict = conflictProjectKeySet.has(projectConflictKey);
-                          return (
-                            <div key={`${taskEntry.id}-project-${projectIndex}`} className="project-detail-card">
-                              <div className="project-detail-header">
-                                <span className="form-label">{projectEntry.projectName || '（未命名项目）'}</span>
-                                {hasBranchConflict ? (
-                                  <span className="badge-status badge-dirty">分支冲突</span>
-                                ) : null}
-                                {dependencyEntry && dependencyEntry.riskLevel === 'high' ? (
-                                  <span className="badge-status badge-dirty">依赖高风险</span>
-                                ) : null}
-                              </div>
-
-                              <div className="project-detail-line">
-                                <span className="detail-line-label">主仓库</span>
-                                <span className="detail-line-value">
-                                  {projectEntry.repoPath || <span className="section-empty">未设置</span>}
-                                </span>
-                                {projectEntry.repoPath ? (
-                                  <>
-                                    <button
-                                      type="button"
-                                      className="button-secondary"
-                                      disabled={pathActionPending.isPending(`open:${projectEntry.repoPath}`)}
-                                      onClick={() => handleOpenWorktree(projectEntry.repoPath)}
-                                    >
-                                      {pathActionPending.isPending(`open:${projectEntry.repoPath}`) ? (
-                                        <span>
-                                          <span className="button-spinner" />
-                                          打开中...
-                                        </span>
-                                      ) : (
-                                        '打开'
-                                      )}
-                                    </button>
-                                    <button
-                                      type="button"
-                                      className="button-secondary"
-                                      disabled={pathActionPending.isPending(`reveal:${projectEntry.repoPath}`)}
-                                      onClick={() => handleRevealPath(projectEntry.repoPath)}
-                                    >
-                                      {pathActionPending.isPending(`reveal:${projectEntry.repoPath}`) ? (
-                                        <span>
-                                          <span className="button-spinner" />
-                                          定位中...
-                                        </span>
-                                      ) : (
-                                        '显示'
-                                      )}
-                                    </button>
-                                  </>
-                                ) : null}
-                              </div>
-
-                              <div className="project-detail-line">
-                                <span className="detail-line-label">worktree</span>
-                                <span className="detail-line-value">
-                                  {projectEntry.worktreePath || <span className="section-empty">未关联</span>}
-                                </span>
-                                {projectEntry.worktreePath ? (
-                                  <>
-                                    <button
-                                      type="button"
-                                      className="button-secondary"
-                                      disabled={pathActionPending.isPending(`open:${projectEntry.worktreePath}`)}
-                                      onClick={() => handleOpenWorktree(projectEntry.worktreePath)}
-                                    >
-                                      {pathActionPending.isPending(`open:${projectEntry.worktreePath}`) ? (
-                                        <span>
-                                          <span className="button-spinner" />
-                                          打开中...
-                                        </span>
-                                      ) : (
-                                        '打开'
-                                      )}
-                                    </button>
-                                    <button
-                                      type="button"
-                                      className="button-secondary"
-                                      disabled={pathActionPending.isPending(`reveal:${projectEntry.worktreePath}`)}
-                                      onClick={() => handleRevealPath(projectEntry.worktreePath)}
-                                    >
-                                      {pathActionPending.isPending(`reveal:${projectEntry.worktreePath}`) ? (
-                                        <span>
-                                          <span className="button-spinner" />
-                                          定位中...
-                                        </span>
-                                      ) : (
-                                        '显示'
-                                      )}
-                                    </button>
-                                  </>
-                                ) : (
-                                  <span className="form-hint">先创建并挂载</span>
-                                )}
-                              </div>
-
-                              <div className="project-detail-line">
-                                <span className="detail-line-label">依赖</span>
-                                <span className="detail-line-value">
-                                  {dependencyEntry ? (
-                                    <>
-                                      <div className="dependency-status-row">
-                                        {dependencyEntry.riskLevel === 'high' ? (
-                                          <span className="badge-status badge-dirty">高风险</span>
-                                        ) : dependencyEntry.dependencyMode === 'shared' ? (
-                                          <span className="badge-status badge-clean">共享主目录</span>
-                                        ) : dependencyEntry.dependencyMode === 'independent' ? (
-                                          <span className="badge-status badge-main">独立安装</span>
-                                        ) : dependencyEntry.dependencyMode === 'missing' ? (
-                                          <span className="badge-status badge-occupied">未安装</span>
-                                        ) : null}
-                                        {projectEntry.worktreePath && dependencyEntry.dependencyMode === 'independent' ? (
-                                          <button
-                                            type="button"
-                                            className="button-secondary dependency-install-button"
-                                            disabled={sharedRestoring || installRunning}
-                                            onClick={() => handleRestoreShared(taskEntry, projectIndex, projectEntry)}
-                                          >
-                                            {sharedRestoring ? (
-                                              <span>
-                                                <span className="button-spinner" />
-                                                恢复中...
-                                              </span>
-                                            ) : (
-                                              '恢复共享'
-                                            )}
-                                          </button>
-                                        ) : projectEntry.worktreePath ? (
-                                          <button
-                                            type="button"
-                                            className="button-secondary dependency-install-button"
-                                            disabled={installRunning || sharedRestoring}
-                                            onClick={() =>
-                                              setInstallDialogState({ taskEntry, projectIndex, projectEntry })
-                                            }
-                                          >
-                                            {installRunning ? (
-                                              <span>
-                                                <span className="button-spinner" />
-                                                安装中...
-                                              </span>
-                                            ) : (
-                                              '独立安装'
-                                            )}
-                                          </button>
-                                        ) : null}
-                                      </div>
-                                      <div className="form-hint">{dependencyEntry.riskMessage}</div>
-                                    </>
-                                  ) : (
-                                    <span className="section-empty">查询中...</span>
-                                  )}
-                                </span>
-                              </div>
-
-                              <div className="project-detail-line">
-                                <span className="detail-line-label">分支位置</span>
-                                <span className="detail-line-value">
-                                  {renderBranchLocationCell(locateEntry, projectEntry, taskEntry.branchName)}
-                                  {hasBranchConflict ? (
-                                    <div className="conflict-hint">
-                                      注意：分支 {taskEntry.branchName} 同时被其他需求在相同项目上关联，存在冲突，请核对
-                                    </div>
-                                  ) : null}
-                                </span>
-                              </div>
-
-                              {installJobEntry ? (
-                                <TaskLogPanel
-                                  jobId={installJobEntry.jobId}
-                                  title={
-                                    installJobEntry.installMode === 'custom'
-                                      ? `自定义脚本安装：${projectEntry.projectName}`
-                                      : `独立安装：${projectEntry.projectName}`
-                                  }
-                                  onFinished={(finishStatus) => {
-                                    // 任务落终态：解除「安装中」标记并刷新依赖状态，无需手动刷新
-                                    setKeyFlag(setInstallRunningKeyMap, installActionKey, false);
-                                    refreshDependencyCheck(taskEntry.id);
-                                    // 桌面端（Electron 壳注入）发系统原生通知；浏览器模式无此桥接自动跳过
-                                    if (window.desktopBridge && typeof window.desktopBridge.notify === 'function') {
-                                      const installSucceeded = finishStatus === 'success';
-                                      window.desktopBridge.notify(
-                                        installSucceeded ? '依赖安装完成' : '依赖安装失败',
-                                        `${projectEntry.projectName}：${installSucceeded ? '可回到明细查看依赖状态' : '请在日志中排查失败原因'}`
-                                      );
-                                    }
-                                  }}
-                                />
-                              ) : null}
-                            </div>
-                          );
-                        })}
-                        <span className="form-label">涉及项目名称</span>
-                        {taskEntry.projectList.map((projectEntry, projectIndex) => {
-                          const derivedProjectName =
-                            deriveProjectNameFromPath(projectEntry.repoPath || projectEntry.worktreePath) ||
-                            projectEntry.projectName ||
-                            '（未设置）';
-                          const locateEntry = locateDataMap[taskEntry.id];
-                          const projectGitWebUrl =
-                            locateEntry && locateEntry.projectList
-                              ? locateEntry.projectList[projectIndex] &&
-                                locateEntry.projectList[projectIndex].gitWebUrl
-                              : null;
-                          return (
-                            <div key={`${taskEntry.id}-name-${projectIndex}`} className="project-name-line">
-                              <span>{derivedProjectName}</span>
-                              {projectGitWebUrl ? (
-                                <a
-                                  className="project-git-link"
-                                  href={projectGitWebUrl}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                >
-                                  {projectGitWebUrl}
-                                </a>
-                              ) : null}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </td>
-                  </tr>
-                ) : null}
               </React.Fragment>
             ))}
           </tbody>
@@ -1224,6 +843,33 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
             下一页
           </button>
         </div>
+      ) : null}
+
+      {detailDialogTaskEntry ? (
+        <RequirementTaskDetailDialog
+          requirementTask={detailDialogTaskEntry}
+          locateTaskResponse={locateDataMap[detailDialogTaskEntry.id]}
+          dependencyTaskResponse={dependencyDataMap[detailDialogTaskEntry.id]}
+          conflictProjectKeySet={conflictProjectKeySet}
+          installJobEntryMap={installJobMap}
+          installRunningKeyMap={installRunningKeyMap}
+          sharedRestoreKeyMap={sharedRestoreKeyMap}
+          pathActionPending={pathActionPending}
+          workspaceRegenerationPending={workspaceRegenPending}
+          onClose={handleCloseDetailDialog}
+          onOpenDirectory={handleOpenWorktree}
+          onRevealPath={handleRevealPath}
+          onRegenerateWorkspace={handleRegenerateWorkspace}
+          onRestoreShared={(projectIndex, projectEntry) =>
+            handleRestoreShared(detailDialogTaskEntry, projectIndex, projectEntry)
+          }
+          onRequestIndependentInstall={(projectIndex, projectEntry) =>
+            setInstallDialogState({ taskEntry: detailDialogTaskEntry, projectIndex, projectEntry })
+          }
+          onInstallFinished={(projectIndex, projectEntry, finishStatus) =>
+            handleIndependentInstallFinished(detailDialogTaskEntry, projectIndex, projectEntry, finishStatus)
+          }
+        />
       ) : null}
 
       {confirmDeleteTask ? (

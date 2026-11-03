@@ -335,9 +335,9 @@
     "semantic_hash": "7cdc95eae733176e38e048b941c08100"
   },
   "web/src/components/RequirementTaskPanel.jsx": {
-    "mtime": 1793691415.1504433,
-    "ast_hash": "deb0f72730aca7419ad2f769598a5990",
-    "semantic_hash": "deb0f72730aca7419ad2f769598a5990"
+    "mtime": 1793692687.9034245,
+    "ast_hash": "04335679f7838a384a87e6b0eec48fe0",
+    "semantic_hash": ""
   },
   "web/src/components/SearchableSelect.jsx": {
     "mtime": 1793373211.9214673,
@@ -553,5 +553,15 @@
     "mtime": 1793509047.582028,
     "ast_hash": "d67289993204a88a84fa5772168967a6",
     "semantic_hash": "d67289993204a88a84fa5772168967a6"
+  },
+  "web/src/components/RequirementTaskDetailDialog.jsx": {
+    "mtime": 1793692597.1096997,
+    "ast_hash": "cd2fe01a27d4949b1521067e7216964f",
+    "semantic_hash": ""
+  },
+  ".codebuddy/rules/graphify.md": {
+    "mtime": 1793692386.979236,
+    "ast_hash": "25a6aac3b372ea7efd4090e85a5e94dc",
+    "semantic_hash": ""
   }
 }
