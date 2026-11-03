@@ -18,7 +18,29 @@ import { ValidationError, NotFoundError, ConflictError } from '../core/errors.js
  */
 export function registerRequirementTaskRoutes(router) {
   router.get('/api/requirement-tasks', async (context) => {
-    context.body = { tasks: await persistenceManager.listRequirementTaskRecords() };
+    const listResult = await persistenceManager.listRequirementTaskRecords({
+      status: context.query.status || 'all',
+      page: context.query.page,
+      pageSize: context.query.pageSize || 20
+    });
+    context.body = {
+      tasks: listResult.records,
+      total: listResult.total,
+      page: Number(context.query.page) || 1,
+      pageSize: Number(context.query.pageSize) || 20
+    };
+  });
+
+  // 标记/取消发布：publishedAt 有值即"已发布"
+  router.post('/api/requirement-tasks/:taskId/publish', async (context) => {
+    const taskId = context.params.taskId;
+    const taskRecord = await persistenceManager.findRequirementTaskById(taskId);
+    if (!taskRecord) {
+      throw new NotFoundError(`需求任务不存在: ${taskId}`);
+    }
+    const published = (context.request.body || {}).published === true;
+    const updatedRecord = await persistenceManager.setRequirementTaskPublished(taskId, published);
+    context.body = { task: updatedRecord, published };
   });
 
   router.post('/api/requirement-tasks', async (context) => {

@@ -105,8 +105,24 @@ export function updateSettings(settingsPayload) {
   return putJson('/api/settings', settingsPayload);
 }
 
-export function fetchRequirementTaskList() {
-  return getJson('/api/requirement-tasks');
+export function fetchRequirementTaskList(listParams = {}) {
+  const queryText = new URLSearchParams({
+    status: listParams.status || 'all',
+    page: listParams.page || 1,
+    pageSize: listParams.pageSize || 1000
+  }).toString();
+  return getJson(`/api/requirement-tasks?${queryText}`);
+}
+
+/** 需求任务列表分页查询（按发布状态 tab + 页码） */
+export function fetchRequirementTaskPage({ status, page, pageSize }) {
+  const queryText = new URLSearchParams({ status, page, pageSize }).toString();
+  return getJson(`/api/requirement-tasks?${queryText}`);
+}
+
+/** 标记/取消需求任务发布 */
+export function setRequirementPublished(taskId, published) {
+  return postJson(`/api/requirement-tasks/${encodeURIComponent(taskId)}/publish`, { published });
 }
 
 export function createRequirementTask(taskPayload) {

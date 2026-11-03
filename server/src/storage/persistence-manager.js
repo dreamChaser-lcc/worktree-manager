@@ -609,15 +609,33 @@ export function createPersistenceManager(managerOptions = {}) {
     return stripInternalId(await requirementTasksDatastore.findOneAsync({ id: taskId }));
   }
 
-  async function listRequirementTaskRecords() {
+  async function listRequirementTaskRecords(listOptions = {}) {
     if (!initialized) return [];
+    const { status = 'all', page, pageSize } = listOptions;
     try {
-      const recordList = await requirementTasksDatastore.findAsync({}).sort({ updatedAt: -1 }).execAsync();
-      return recordList.map(stripInternalId);
+      let recordList = await requirementTasksDatastore.findAsync({}).sort({ updatedAt: -1 }).execAsync();
+      recordList = recordList.map(stripInternalId);
+      if (status === 'unpublished') {
+        recordList = recordList.filter((record) => !record.publishedAt);
+      } else if (status === 'published') {
+        recordList = recordList.filter((record) => Boolean(record.publishedAt));
+      }
+      const total = recordList.length;
+      const pageNumber = Math.max(1, Number(page) || 1);
+      const pageSizeNumber = Math.max(1, Number(pageSize) || 20);
+      const pagedRecordList = recordList.slice((pageNumber - 1) * pageSizeNumber, pageNumber * pageSizeNumber);
+      return { records: pagedRecordList, total };
     } catch (listError) {
       warnStorageError('需求任务列表查询失败', listError);
-      return [];
+      return { records: [], total: 0 };
     }
+  }
+
+  /** 设置/清除需求任务的发布标记（publishedAt：ISO 时间或 null） */
+  async function setRequirementTaskPublished(taskId, published) {
+    if (!initialized) return null;
+    const publishedAt = published ? new Date().toISOString() : null;
+    return updateRequirementTaskRecord(taskId, { publishedAt, updatedAt: publishedAt });
   }
 
   async function deleteRequirementTaskRecord(taskId) {
@@ -660,6 +678,7 @@ export function createPersistenceManager(managerOptions = {}) {
     updateRequirementTaskRecord,
     findRequirementTaskById,
     listRequirementTaskRecords,
+    setRequirementTaskPublished,
     deleteRequirementTaskRecord
   };
 }

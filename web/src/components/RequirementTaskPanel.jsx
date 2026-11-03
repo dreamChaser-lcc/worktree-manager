@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { RequirementTaskForm, deriveProjectNameFromPath } from './RequirementTaskForm.jsx';
 import { TaskLogPanel } from './TaskLogPanel.jsx';
 import { DependencyInstallDialog } from './DependencyInstallDialog.jsx';
@@ -15,11 +15,54 @@ import {
   startRequirementIndependentInstall,
   restoreSharedDependencies,
   revealInExplorer,
-  openDirectoryInEditor
+  openDirectoryInEditor,
+  fetchRequirementTaskPage,
+  setRequirementPublished
 } from '../api/client.js';
 
 function formatTimeText(isoText) {
   return isoText ? isoText.replace('T', ' ').slice(0, 19) : '—';
+}
+
+/**
+ * 行内"更多"下拉：hover 展开、移出收起。
+ * 菜单用 fixed 定位（JS 计算按钮位置），避免被表格滚动容器（overflow:auto）裁剪；
+ * 底部空间不足时自动向上展开。fixed 元素在无 transform 祖先时不受 overflow 裁剪，
+ * 且 DOM 仍在容器内，鼠标移向菜单不会触发 mouseleave。
+ */
+function RowActionsMore({ children }) {
+  const triggerReference = useRef(null);
+  const [dropdownStyle, setDropdownStyle] = useState(null);
+
+  function updateDropdownPosition() {
+    const triggerRect = triggerReference.current.getBoundingClientRect();
+    const menuHeight = React.Children.count(children) * 33 + 10;
+    let top = triggerRect.bottom;
+    if (top + menuHeight > window.innerHeight - 8) {
+      top = triggerRect.top - menuHeight;
+    }
+    setDropdownStyle({
+      top: Math.max(8, top),
+      left: Math.max(8, triggerRect.right - 140)
+    });
+  }
+
+  return (
+    <div
+      className="actions-more"
+      onMouseEnter={updateDropdownPosition}
+      onMouseLeave={() => setDropdownStyle(null)}
+    >
+      <button ref={triggerReference} type="button" className="button-secondary actions-more-trigger">
+        更多 <span className="actions-more-arrow">▾</span>
+      </button>
+      {dropdownStyle ? (
+        <div className="actions-dropdown" style={dropdownStyle}>
+          {children}
+        </div>
+      ) : null}
+    </div>
+  );
 }
 
 /** 路径宽松比较（斜杠/大小写不敏感），用于匹配 worktree 清单条目 */
@@ -117,6 +160,11 @@ function renderBranchLocationCell(locateEntry, projectEntry, requirementBranchNa
 export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, workspaceLayoutEnabled }) {
   const [taskList, setTaskList] = useState([]);
   const [listError, setListError] = useState(null);
+  // 发布状态 tab 与分页：unpublished（未发布）/ published（已发布），默认未发布
+  const [activeStatusTab, setActiveStatusTab] = useState('unpublished');
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 20;
+  const [totalTasks, setTotalTasks] = useState(0);
   const [formState, setFormState] = useState(null); // null | { mode: 'new' } | { mode: 'edit', record }
   const [expandedTaskId, setExpandedTaskId] = useState(null);
   const [confirmDeleteTask, setConfirmDeleteTask] = useState(null);
@@ -146,6 +194,8 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
   // 删除/彻底删除确认弹窗的提交中标记（确认按钮 spinner 与禁用）
   const [deleteSubmitting, setDeleteSubmitting] = useState(false);
   const [permanentDeleting, setPermanentDeleting] = useState(false);
+  // 发布标记请求中（按任务 id，禁用按钮 + spinner）
+  const [publishPendingId, setPublishPendingId] = useState(null);
   // 恢复 / 工作区重新生成 / 打开与显示 等异步按钮的 pending 管理
   const restorePending = usePendingActions();
   const workspaceRegenPending = usePendingActions();
@@ -157,19 +207,20 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
   // 跨需求分支冲突：同一项目仓库在不同需求中关联了相同分支
   const conflictProjectKeySet = useMemo(() => buildConflictKeySet(taskList), [taskList]);
 
-  async function refreshTaskList() {
-    try {
-      const listData = await fetchRequirementTaskList();
-      setTaskList(listData.tasks || []);
-      setListError(null);
-    } catch (loadError) {
-      setListError(loadError.message);
-    }
+  function refreshTaskList() {
+    fetchRequirementTaskPage({ status: activeStatusTab, page: currentPage, pageSize })
+      .then((listData) => {
+        setTaskList(listData.tasks || []);
+        setTotalTasks(listData.total || 0);
+        setListError(null);
+      })
+      .catch((loadError) => setListError(loadError.message));
   }
 
   useEffect(() => {
     refreshTaskList();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeStatusTab, currentPage]);
 
   function handleSaved(responseData) {
     setFormState(null);
@@ -234,6 +285,43 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
   }
 
   /** 刷新：需求列表 + 已展开明细的分支定位与依赖检查一并重拉，期间按钮展示 loading；同时清掉上一次操作的提示 */
+  /** 复制分支名到剪贴板（http 局域网环境降级 execCommand） */
+  async function handleCopyBranchName(branchNameText) {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(branchNameText);
+      } else {
+        const helperTextArea = document.createElement('textarea');
+        helperTextArea.value = branchNameText;
+        helperTextArea.style.position = 'fixed';
+        helperTextArea.style.opacity = '0';
+        document.body.appendChild(helperTextArea);
+        helperTextArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(helperTextArea);
+      }
+      setActionMessage({ type: 'success', text: '已复制分支名: ' + branchNameText });
+    } catch (copyError) {
+      setActionMessage({ type: 'error', text: '复制失败: ' + copyError.message });
+    }
+  }
+
+  /** 标记/取消发布（切换 publishedAt 标记） */
+  async function handleSetPublished(taskEntry, published) {
+    try {
+      setPublishPendingId(taskEntry.id);
+      await setRequirementPublished(taskEntry.id, published);
+      setActionMessage({
+        type: 'success',
+        text: published ? '已标记为已发布。' : '已取消发布标记。'
+      });
+      refreshTaskList();
+    } catch (publishError) {
+      setActionMessage({ type: 'error', text: publishError.message });
+    } finally {
+      setPublishPendingId(null);
+    }
+  }
   async function handleRefreshAll() {
     if (refreshing) {
       return;
@@ -494,25 +582,42 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
 
   return (
     <div>
-      <div className="list-toolbar">
-        <button
-          type="button"
-          className="button-primary"
-          onClick={() => { setFormState({ mode: 'new' }); setActionMessage(null); }}
-        >
-          新建需求任务
-        </button>
-        <button type="button" className="button-secondary" disabled={refreshing} onClick={handleRefreshAll}>
-          {refreshing ? (
-            <span>
-              <span className="button-spinner" />
-              刷新中...
-            </span>
-          ) : (
-            '刷新'
-          )}
-        </button>
-      </div>
+      <div className="status-tab-row">
+          <button
+            type="button"
+            className={activeStatusTab === 'unpublished' ? 'status-tab status-tab-active' : 'status-tab'}
+            onClick={() => { setActiveStatusTab('unpublished'); setCurrentPage(1); }}
+          >
+            未发布
+          </button>
+          <button
+            type="button"
+            className={activeStatusTab === 'published' ? 'status-tab status-tab-active' : 'status-tab'}
+            onClick={() => { setActiveStatusTab('published'); setCurrentPage(1); }}
+          >
+            已发布
+          </button>
+          <div className="status-tab-actions">
+            <button
+              type="button"
+              className="button-primary"
+              onClick={() => { setFormState({ mode: 'new' }); setActionMessage(null); }}
+            >
+              新建需求任务
+            </button>
+    
+          <button type="button" className="button-secondary" disabled={refreshing} onClick={handleRefreshAll}>
+            {refreshing ? (
+              <span>
+                <span className="button-spinner" />
+                刷新中...
+              </span>
+            ) : (
+              '刷新'
+            )}
+          </button>
+          </div>
+        </div>
 
       {formState ? (
         <div className="picker-overlay">
@@ -548,7 +653,10 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
         <div className="section-empty">暂无需求任务，点击“新建需求任务”创建第一条记录。</div>
       ) : null}
 
+
+
       {taskList.length > 0 ? (
+        <div className="table-scroll">
         <table className="record-table">
           <thead>
             <tr>
@@ -568,8 +676,21 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                       {taskEntry.requirementName || taskEntry.requirementUrl}
                     </a>
                     {taskEntry.deletedAt ? <span className="badge-status badge-occupied">已删除</span> : null}
+                    {taskEntry.publishedAt ? <span className="badge-status badge-main">已发布</span> : null}
                   </td>
-                  <td>{taskEntry.branchName}</td>
+                  <td>
+                    <div className="branch-name-cell">
+                      <span className="branch-name-text">{taskEntry.branchName}</span>
+                      <button
+                        type="button"
+                        className="button-secondary copy-branch-button"
+                        title="复制分支名"
+                        onClick={() => handleCopyBranchName(taskEntry.branchName)}
+                      >
+                        复制
+                      </button>
+                    </div>
+                  </td>
                   <td>{taskEntry.projectList.length}</td>
                   <td>{formatTimeText(taskEntry.updatedAt)}</td>
                   <td>
@@ -582,57 +703,68 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                         {expandedTaskId === taskEntry.id ? '收起' : '查看'}
                       </button>
                       {taskEntry.deletedAt ? (
-                        <>
-                          <button
-                            type="button"
-                            className="button-primary"
-                            disabled={restorePending.isPending(`restore:${taskEntry.id}`)}
-                            onClick={() => handleRestore(taskEntry)}
-                          >
-                            {restorePending.isPending(`restore:${taskEntry.id}`) ? (
-                              <span>
-                                <span className="button-spinner" />
-                                恢复中...
-                              </span>
-                            ) : (
-                              '恢复'
-                            )}
-                          </button>
-                          <button
-                            type="button"
-                            className="button-danger"
-                            onClick={() => {
-                              setConfirmPermanentTask(taskEntry);
-                              setPermanentForceChecked(false);
-                              setPermanentFailedMessage(null);
-                            }}
-                          >
-                            彻底删除
-                          </button>
-                        </>
+                        <RowActionsMore>
+                            <button
+                              type="button"
+                              className="actions-dropdown-item"
+                              disabled={restorePending.isPending(`restore:${taskEntry.id}`)}
+                              onClick={() => handleRestore(taskEntry)}
+                            >
+                              {restorePending.isPending(`restore:${taskEntry.id}`) ? '恢复中...' : '恢复'}
+                            </button>
+                            <button
+                              type="button"
+                              className="actions-dropdown-item dropdown-item-danger"
+                              onClick={() => {
+                                setConfirmPermanentTask(taskEntry);
+                                setPermanentForceChecked(false);
+                                setPermanentFailedMessage(null);
+                              }}
+                            >
+                              彻底删除
+                            </button>
+                        </RowActionsMore>
                       ) : (
-                        <>
-                          <button
-                            type="button"
-                            className="button-secondary"
-                            onClick={() => { setFormState({ mode: 'edit', record: taskEntry }); setActionMessage(null); }}
-                          >
-                            编辑
-                          </button>
-                          <button
-                            type="button"
-                            className="button-danger"
-                            onClick={() => {
-                              setConfirmDeleteTask(taskEntry);
-                              setDeleteForceChecked(false);
-                              setDeleteFailedMessage(null);
-                            }}
-                          >
-                            删除
-                          </button>
-                        </>
-                      )}
-                    </div>
+                        <RowActionsMore>
+                            <button
+                              type="button"
+                              className="actions-dropdown-item"
+                              onClick={() => { setFormState({ mode: 'edit', record: taskEntry }); setActionMessage(null); }}
+                            >
+                              编辑
+                            </button>
+                            {activeStatusTab === 'unpublished' ? (
+                              <button
+                                type="button"
+                                className="actions-dropdown-item"
+                                disabled={publishPendingId === taskEntry.id}
+                                onClick={() => handleSetPublished(taskEntry, true)}
+                              >
+                                {publishPendingId === taskEntry.id ? '发布中...' : '标记已发布'}
+                              </button>
+                            ) : (
+                              <button
+                                type="button"
+                                className="actions-dropdown-item"
+                                disabled={publishPendingId === taskEntry.id}
+                                onClick={() => handleSetPublished(taskEntry, false)}
+                              >
+                                {publishPendingId === taskEntry.id ? '操作中...' : '取消发布'}
+                              </button>
+                            )}
+                            <button
+                              type="button"
+                              className="actions-dropdown-item dropdown-item-danger"
+                              onClick={() => {
+                                setConfirmDeleteTask(taskEntry);
+                                setDeleteForceChecked(false);
+                                setDeleteFailedMessage(null);
+                              }}
+                            >
+                              删除
+                            </button>
+                        </RowActionsMore>
+                      )}</div>
                   </td>
                 </tr>
                 <tr className="remark-row">
@@ -1039,6 +1171,30 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
             ))}
           </tbody>
         </table>
+        </div>
+      ) : null}
+
+      {totalTasks > 0 ? (
+        <div className="pagination-row">
+          <span className="pagination-total">共 {totalTasks} 条</span>
+          <button
+            type="button"
+            className="button-secondary"
+            disabled={currentPage <= 1}
+            onClick={() => setCurrentPage(currentPage - 1)}
+          >
+            上一页
+          </button>
+          <span className="pagination-page">第 {currentPage} 页</span>
+          <button
+            type="button"
+            className="button-secondary"
+            disabled={currentPage * pageSize >= totalTasks}
+            onClick={() => setCurrentPage(currentPage + 1)}
+          >
+            下一页
+          </button>
+        </div>
       ) : null}
 
       {confirmDeleteTask ? (

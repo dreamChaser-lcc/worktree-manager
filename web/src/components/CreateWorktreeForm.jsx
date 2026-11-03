@@ -163,9 +163,13 @@ export function CreateWorktreeForm({
         baseRef={baseRef}
         onBranchModeChange={(selectedMode) => {
           setBranchMode(selectedMode);
-          setBranchName('');
-          // 切到新建分支时预填远程默认起点
-          setBaseRef(selectedMode === 'new' ? defaultBaseRef : '');
+          // 切到新建分支时重新填名称并预填远程默认起点；切到已有分支保留当前分支名（不用重新选）
+          if (selectedMode === 'new') {
+            setBranchName('');
+            setBaseRef(defaultBaseRef || '');
+          } else {
+            setBaseRef('');
+          }
         }}
         onBranchNameChange={setBranchName}
         onBaseRefChange={setBaseRef}
@@ -184,7 +188,14 @@ export function CreateWorktreeForm({
           <label className="form-label">关联需求任务（可选）</label>
           <SearchableSelect
             value={requirementTaskId}
-            onChange={setRequirementTaskId}
+            onChange={(selectedTaskId) => {
+              setRequirementTaskId(selectedTaskId);
+              // 选择需求任务后自动带入其开发分支（已有分支模式下直接回填选中）
+              const matchedTask = requirementTaskList.find((taskEntry) => taskEntry.id === selectedTaskId);
+              if (matchedTask && matchedTask.branchName) {
+                setBranchName(matchedTask.branchName);
+              }
+            }}
             placeholder="不关联"
             filterPlaceholder="输入筛选分支或需求链接..."
             emptyText="无匹配需求任务"

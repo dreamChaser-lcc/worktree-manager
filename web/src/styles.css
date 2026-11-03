@@ -389,6 +389,87 @@ button {
 }
 
 /* ── worktree 列表 ─────────────────────── */
+.status-tab-row {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid #d0d7de;
+  margin-bottom: 12px;
+}
+
+.status-tab {
+  padding: 8px 16px;
+  font-size: 14px;
+  background-color: transparent;
+  color: #57606a;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  cursor: pointer;
+}
+
+.status-tab:hover {
+  color: #24292f;
+}
+
+.status-tab-active {
+  color: #0969da;
+  font-weight: 600;
+  border-bottom-color: #0969da;
+}
+
+.status-tab-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-tab-actions .button-primary,
+.status-tab-actions .button-secondary,
+.status-tab-actions button {
+  padding: 5px 12px;
+  font-size: 13px;
+}
+
+.table-scroll {
+  max-height: 560px;
+  overflow-y: auto;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+}
+
+.table-scroll .record-table {
+  border: none;
+  margin-bottom: 0;
+}
+
+.table-scroll thead th {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background-color: #f6f8fa;
+}
+
+.pagination-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  font-size: 13px;
+  color: #57606a;
+}
+
+.branch-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.copy-branch-button {
+  padding: 2px 8px;
+  font-size: 12px;
+}
+
 .list-toolbar {
   display: flex;
   margin-bottom: 12px;
@@ -423,6 +504,56 @@ button {
 .cell-path {
   word-break: break-all;
   max-width: 320px;
+}
+
+.actions-more {
+  position: relative;
+}
+
+.actions-more-trigger {
+  white-space: nowrap;
+}
+
+.actions-dropdown {
+  position: fixed;
+  z-index: 100;
+  background-color: #ffffff;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(140, 149, 159, 0.25);
+  min-width: 140px;
+  padding: 4px 0;
+  text-align: left;
+}
+
+.actions-more:hover .actions-more-trigger {
+  background-color: #f6f8fa;
+}
+
+.actions-dropdown-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 6px 14px;
+  background-color: transparent;
+  border: none;
+  font-size: 13px;
+  color: #24292f;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.actions-dropdown-item:hover {
+  background-color: #f6f8fa;
+}
+
+.actions-dropdown-item:disabled {
+  color: #8c959f;
+  cursor: not-allowed;
+}
+
+.dropdown-item-danger {
+  color: #cf222e;
 }
 
 .cell-actions {
