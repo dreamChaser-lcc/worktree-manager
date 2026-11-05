@@ -150,8 +150,8 @@
     "semantic_hash": "4ce4aa958655b848f88f5ff31a87c50c"
   },
   "server/src/routes/requirement-task-routes.js": {
-    "mtime": 1793846927.9221308,
-    "ast_hash": "0a3f679b8327d31e0dcc3192c32bc1ae",
+    "mtime": 1793869990.2265697,
+    "ast_hash": "c635a7e28ad1e5e200cecad8a5481ede",
     "semantic_hash": ""
   },
   "server/src/routes/settings-routes.js": {
@@ -185,9 +185,9 @@
     "semantic_hash": "b178367022aa3fbe4d5c9cb4da8eba75"
   },
   "server/src/storage/persistence-manager.js": {
-    "mtime": 1793687224.9352834,
-    "ast_hash": "595d900e289f7cb1b33390e51fe94c29",
-    "semantic_hash": "595d900e289f7cb1b33390e51fe94c29"
+    "mtime": 1793870485.6883109,
+    "ast_hash": "1c79f7f17c47c39814f28b069c069dce",
+    "semantic_hash": ""
   },
   "server/src/storage/settings-store.js": {
     "mtime": 1793337193.805544,
@@ -250,8 +250,8 @@
     "semantic_hash": "0e32d3126b0192abb6db805774dfe934"
   },
   "server/test/requirement-task.test.js": {
-    "mtime": 1793863119.0026567,
-    "ast_hash": "b2a8c5a1ea7577ef06d344f2f2e9fcf9",
+    "mtime": 1793870035.1994781,
+    "ast_hash": "7514dca76afd560bae2943dc2bb5a996",
     "semantic_hash": ""
   },
   "server/test/smoke.test.js": {
@@ -285,9 +285,9 @@
     "semantic_hash": "cf9a090954c73f1c7a01548254335493"
   },
   "web/src/api/client.js": {
-    "mtime": 1793687237.4385123,
-    "ast_hash": "5b74f43f9be773ad7b3cd23ef0ecfec7",
-    "semantic_hash": "5b74f43f9be773ad7b3cd23ef0ecfec7"
+    "mtime": 1793869995.235687,
+    "ast_hash": "4780095b14c56723eca047129f9748ab",
+    "semantic_hash": ""
   },
   "web/src/components/BranchSelector.jsx": {
     "mtime": 1793603991.0138679,
@@ -335,8 +335,8 @@
     "semantic_hash": "7cdc95eae733176e38e048b941c08100"
   },
   "web/src/components/RequirementTaskPanel.jsx": {
-    "mtime": 1793846937.00392,
-    "ast_hash": "8cd86ddf9d556183810c980706e32a3b",
+    "mtime": 1793870480.918384,
+    "ast_hash": "0a2bc4ce4c89c5c5a10e034f76e86b19",
     "semantic_hash": ""
   },
   "web/src/components/SearchableSelect.jsx": {
@@ -375,8 +375,8 @@
     "semantic_hash": ""
   },
   "web/src/help/helpGuideContent.js": {
-    "mtime": 1793863194.6555362,
-    "ast_hash": "1c56dce0f43d4eadd179e560c6f14040",
+    "mtime": 1793870486.2160437,
+    "ast_hash": "38e1ddbc76c6586d242ff51c50b62fbe",
     "semantic_hash": ""
   },
   "web/src/main.jsx": {

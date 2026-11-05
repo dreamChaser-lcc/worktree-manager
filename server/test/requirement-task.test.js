@@ -383,6 +383,39 @@ describe('需求任务删除与恢复', () => {
     expect(createResult.body.task.workspaceFilePath).toBeNull();
   });
 
+  it('列表支持按时间范围筛选：命中当天、超出范围为空、非法日期被忽略', async () => {
+    const createResult = await postJson('/api/requirement-tasks', buildRequirementPayload({
+      branchName: 'feature/time-filter',
+      generateWorkspace: false
+    }));
+    expect(createResult.status).toBe(200);
+    const createdTaskId = createResult.body.task.id;
+
+    // 记录存的是 UTC ISO 字符串、列表也按该字符串展示日期，因此筛选日期同样是 UTC 日期前缀
+    const todayDateText = new Date().toISOString().slice(0, 10);
+    const sameDayResult = await getJson(
+      `/api/requirement-tasks?status=all&page=1&pageSize=20&timeField=createdAt&startDate=${todayDateText}&endDate=${todayDateText}`
+    );
+    expect(sameDayResult.body.tasks.some((task) => task.id === createdTaskId)).toBe(true);
+
+    const futureResult = await getJson(
+      '/api/requirement-tasks?status=all&page=1&pageSize=20&timeField=createdAt&startDate=2999-01-01'
+    );
+    expect(futureResult.body.total).toBe(0);
+
+    const pastResult = await getJson(
+      '/api/requirement-tasks?status=all&page=1&pageSize=20&timeField=updatedAt&endDate=2000-01-01'
+    );
+    expect(pastResult.body.total).toBe(0);
+
+    // 非法日期格式视为未传，不筛选也不报错
+    const invalidDateResult = await getJson(
+      '/api/requirement-tasks?status=all&page=1&pageSize=20&startDate=not-a-date'
+    );
+    expect(invalidDateResult.status).toBe(200);
+    expect(invalidDateResult.body.total).toBeGreaterThan(0);
+  });
+
   it('手动重新生成工作区文件', async () => {
     const createResult = await postJson('/api/requirement-tasks', buildRequirementPayload({
       branchName: 'feature/ws-regen',

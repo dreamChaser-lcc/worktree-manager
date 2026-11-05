@@ -27,6 +27,28 @@ function formatTimeText(isoText) {
   return isoText ? isoText.replace('T', ' ').slice(0, 19) : '—';
 }
 
+/** 列表时间筛选默认值：默认按创建时间、不限日期 */
+const DEFAULT_TIME_FILTER = { timeField: 'createdAt', startDate: '', endDate: '' };
+
+/** 时间筛选是否偏离默认值（用于提示当前列表处于筛选态） */
+function hasActiveTimeFilter(timeFilter) {
+  return Boolean(timeFilter.startDate) || Boolean(timeFilter.endDate);
+}
+
+/** 由 YYYY-MM 推出该月最后一天的日期文本（YYYY-MM-DD），供「快捷月份」一键填充范围 */
+function resolveMonthEndDateText(monthText) {
+  const [yearText, monthNumberText] = monthText.split('-');
+  const lastDayNumber = new Date(Number(yearText), Number(monthNumberText), 0).getDate();
+  return `${monthText}-${String(lastDayNumber).padStart(2, '0')}`;
+}
+
+/** 把已应用的时间筛选描述成一行文案（如「创建时间 2026-11-01 ~ 2026-11-30」） */
+function describeTimeFilter(timeFilter) {
+  const fieldText = timeFilter.timeField === 'createdAt' ? '创建时间' : '更新时间';
+  const rangeText = [timeFilter.startDate, timeFilter.endDate].filter(Boolean).join(' ~ ');
+  return `${fieldText} ${rangeText}`;
+}
+
 /**
  * 行内"更多"下拉：hover 展开、移出收起。
  * 菜单用 fixed 定位（JS 计算按钮位置），避免被表格滚动容器（overflow:auto）裁剪；
@@ -117,6 +139,12 @@ function buildRestoreIgnoredCopyText(restoredWorktreeList) {
 export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, workspaceLayoutEnabled }) {
   const [taskList, setTaskList] = useState([]);
   const [listError, setListError] = useState(null);
+  // 列表时间筛选：draft 为输入中的条件，applied 为实际参与请求的条件（点「查询」才生效）
+  const [timeFilterDraft, setTimeFilterDraft] = useState({ ...DEFAULT_TIME_FILTER });
+  const [timeFilterApplied, setTimeFilterApplied] = useState({ ...DEFAULT_TIME_FILTER });
+  // 查询条件面板默认收起（避免长期占位），点「筛选」展开；快捷月份（YYYY-MM）仅用于一键填充日期范围
+  const [filterPanelExpanded, setFilterPanelExpanded] = useState(false);
+  const [quickMonthText, setQuickMonthText] = useState('');
   // 发布状态 tab 与分页：unpublished（未发布）/ published（已发布），默认未发布
   const [activeStatusTab, setActiveStatusTab] = useState('unpublished');
   const [currentPage, setCurrentPage] = useState(1);
@@ -171,7 +199,14 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
   );
 
   function refreshTaskList() {
-    fetchRequirementTaskPage({ status: activeStatusTab, page: currentPage, pageSize })
+    fetchRequirementTaskPage({
+      status: activeStatusTab,
+      page: currentPage,
+      pageSize,
+      timeField: timeFilterApplied.timeField,
+      startDate: timeFilterApplied.startDate,
+      endDate: timeFilterApplied.endDate
+    })
       .then((listData) => {
         setTaskList(listData.tasks || []);
         setTotalTasks(listData.total || 0);
@@ -183,7 +218,43 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
   useEffect(() => {
     refreshTaskList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeStatusTab, currentPage]);
+  }, [activeStatusTab, currentPage, timeFilterApplied]);
+
+  /** 应用时间筛选：回到第 1 页并按新条件重新查询，随后收起筛选面板给列表腾位置 */
+  function handleApplyTimeFilter() {
+    setCurrentPage(1);
+    setTimeFilterApplied({ ...timeFilterDraft });
+    setFilterPanelExpanded(false);
+  }
+
+  /** 重置时间筛选：清空字段、日期与快捷月份后重新查询 */
+  function handleResetTimeFilter() {
+    setTimeFilterDraft({ ...DEFAULT_TIME_FILTER });
+    setQuickMonthText('');
+    setCurrentPage(1);
+    setTimeFilterApplied({ ...DEFAULT_TIME_FILTER });
+  }
+
+  /** 更新时间筛选草稿的单个字段（timeField / startDate / endDate）；手改日期时清掉快捷月份，避免两处显示不一致 */
+  function handleTimeFilterDraftChange(fieldName, fieldValue) {
+    if (fieldName === 'startDate' || fieldName === 'endDate') {
+      setQuickMonthText('');
+    }
+    setTimeFilterDraft((previousFilter) => ({ ...previousFilter, [fieldName]: fieldValue }));
+  }
+
+  /** 快捷月份：选中某月即把范围填成该月首末日（仍需点「查询」才生效） */
+  function handleQuickMonthChange(monthText) {
+    setQuickMonthText(monthText);
+    if (!monthText) {
+      return;
+    }
+    setTimeFilterDraft((previousFilter) => ({
+      ...previousFilter,
+      startDate: `${monthText}-01`,
+      endDate: resolveMonthEndDateText(monthText)
+    }));
+  }
 
   function handleSaved(responseData) {
     setFormState(null);
@@ -250,14 +321,14 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
   }
 
   /** 刷新：需求列表 + 明细弹窗的分支定位与依赖检查一并重拉，期间按钮展示 loading；同时清掉上一次操作的提示 */
-  /** 复制分支名到剪贴板（http 局域网环境降级 execCommand） */
-  async function handleCopyBranchName(branchNameText) {
+  /** 复制文本到剪贴板（http 局域网环境降级 execCommand）；labelText 用于成功提示（分支名/需求名称） */
+  async function handleCopyText(copyText, labelText) {
     try {
       if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(branchNameText);
+        await navigator.clipboard.writeText(copyText);
       } else {
         const helperTextArea = document.createElement('textarea');
-        helperTextArea.value = branchNameText;
+        helperTextArea.value = copyText;
         helperTextArea.style.position = 'fixed';
         helperTextArea.style.opacity = '0';
         document.body.appendChild(helperTextArea);
@@ -265,7 +336,7 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
         document.execCommand('copy');
         document.body.removeChild(helperTextArea);
       }
-      setActionMessage({ type: 'success', text: '已复制分支名: ' + branchNameText });
+      setActionMessage({ type: 'success', text: `已复制${labelText}: ${copyText}` });
     } catch (copyError) {
       setActionMessage({ type: 'error', text: '复制失败: ' + copyError.message });
     }
@@ -629,8 +700,75 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
               '刷新'
             )}
           </button>
+          <button
+            type="button"
+            className={
+              hasActiveTimeFilter(timeFilterApplied)
+                ? 'button-secondary filter-toggle-button filter-toggle-active'
+                : 'button-secondary filter-toggle-button'
+            }
+            onClick={() => setFilterPanelExpanded((previousExpanded) => !previousExpanded)}
+          >
+            {filterPanelExpanded ? '收起筛选' : '筛选'}
+          </button>
           </div>
         </div>
+
+      {filterPanelExpanded ? (
+        <div className="list-filter-row">
+          <label className="filter-field">
+            <span className="filter-label">时间字段</span>
+            <select
+              className="form-input filter-control"
+              value={timeFilterDraft.timeField}
+              onChange={(changeEvent) => handleTimeFilterDraftChange('timeField', changeEvent.target.value)}
+            >
+              <option value="createdAt">创建时间</option>
+              <option value="updatedAt">更新时间</option>
+            </select>
+          </label>
+          <label className="filter-field">
+            <span className="filter-label">快捷月份</span>
+            <input
+              type="month"
+              className="form-input filter-control"
+              value={quickMonthText}
+              onChange={(changeEvent) => handleQuickMonthChange(changeEvent.target.value)}
+            />
+          </label>
+          <label className="filter-field">
+            <span className="filter-label">开始日期</span>
+            <input
+              type="date"
+              className="form-input filter-control"
+              value={timeFilterDraft.startDate}
+              onChange={(changeEvent) => handleTimeFilterDraftChange('startDate', changeEvent.target.value)}
+            />
+          </label>
+          <label className="filter-field">
+            <span className="filter-label">结束日期</span>
+            <input
+              type="date"
+              className="form-input filter-control"
+              value={timeFilterDraft.endDate}
+              onChange={(changeEvent) => handleTimeFilterDraftChange('endDate', changeEvent.target.value)}
+            />
+          </label>
+          <button type="button" className="button-primary" onClick={handleApplyTimeFilter}>
+            查询
+          </button>
+          <button type="button" className="button-secondary" onClick={handleResetTimeFilter}>
+            重置
+          </button>
+        </div>
+      ) : hasActiveTimeFilter(timeFilterApplied) ? (
+        <div className="filter-collapsed-hint">
+          当前筛选：{describeTimeFilter(timeFilterApplied)}
+          <button type="button" className="text-link-button" onClick={handleResetTimeFilter}>
+            清除
+          </button>
+        </div>
+      ) : null}
 
       {formState ? (
         <div className="picker-overlay">
@@ -676,7 +814,7 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
               <th>需求链接</th>
               <th>开发分支</th>
               <th>项目数</th>
-              <th>更新时间</th>
+              <th>时间（更新/创建）</th>
               <th>操作</th>
             </tr>
           </thead>
@@ -685,9 +823,21 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
               <React.Fragment key={taskEntry.id}>
                 <tr className={taskEntry.deletedAt ? 'requirement-deleted-row' : ''}>
                   <td className="requirement-link-cell">
-                    <a href={taskEntry.requirementUrl} target="_blank" rel="noreferrer">
-                      {taskEntry.requirementName || taskEntry.requirementUrl}
-                    </a>
+                    <div className="requirement-name-row">
+                      <a href={taskEntry.requirementUrl} target="_blank" rel="noreferrer">
+                        {taskEntry.requirementName || taskEntry.requirementUrl}
+                      </a>
+                      <button
+                        type="button"
+                        className="button-secondary copy-text-button"
+                        title="复制需求名称"
+                        onClick={() =>
+                          handleCopyText(taskEntry.requirementName || taskEntry.requirementUrl, '需求名称')
+                        }
+                      >
+                        复制
+                      </button>
+                    </div>
                     {taskEntry.deletedAt ? <span className="badge-status badge-occupied">已删除</span> : null}
                     {taskEntry.publishedAt ? <span className="badge-status badge-main">已发布</span> : null}
                   </td>
@@ -696,16 +846,25 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                       <span className="branch-name-text">{taskEntry.branchName}</span>
                       <button
                         type="button"
-                        className="button-secondary copy-branch-button"
+                        className="button-secondary copy-text-button"
                         title="复制分支名"
-                        onClick={() => handleCopyBranchName(taskEntry.branchName)}
+                        onClick={() => handleCopyText(taskEntry.branchName, '分支名')}
                       >
                         复制
                       </button>
                     </div>
                   </td>
                   <td>{taskEntry.projectList.length}</td>
-                  <td>{formatTimeText(taskEntry.updatedAt)}</td>
+                  <td className="time-cell">
+                    <div className="time-line">
+                      <span className="time-label">更新</span>
+                      <span className="time-value">{formatTimeText(taskEntry.updatedAt)}</span>
+                    </div>
+                    <div className="time-line">
+                      <span className="time-label">创建</span>
+                      <span className="time-value">{formatTimeText(taskEntry.createdAt)}</span>
+                    </div>
+                  </td>
                   <td>
                     <div className="cell-actions">
                       <button

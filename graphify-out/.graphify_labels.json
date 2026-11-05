@@ -59,5 +59,10 @@
   "57": "README 主文档",
   "58": "Tauri 桌面端说明",
   "59": "图文使用教程",
-  "61": "HelpGuideDialog.jsx"
+  "60": "TaskActionsRow.jsx",
+  "61": "HelpGuideDialog.jsx",
+  "62": "client.js",
+  "63": "App.jsx",
+  "64": "WorktreeListPanel.jsx",
+  "65": "RequirementTaskDetailDialog.jsx"
 }

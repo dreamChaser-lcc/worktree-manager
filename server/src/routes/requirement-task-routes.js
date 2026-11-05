@@ -22,7 +22,10 @@ export function registerRequirementTaskRoutes(router) {
     const listResult = await persistenceManager.listRequirementTaskRecords({
       status: context.query.status || 'all',
       page: context.query.page,
-      pageSize: context.query.pageSize || 20
+      pageSize: context.query.pageSize || 20,
+      timeField: context.query.timeField,
+      startDate: readDateQuery(context.query.startDate),
+      endDate: readDateQuery(context.query.endDate)
     });
     context.body = {
       tasks: listResult.records,
@@ -565,6 +568,12 @@ export function registerRequirementTaskRoutes(router) {
 
     context.body = { task: updatedRecord, restoredWorktreeList, skippedWorktreeList, workspace: workspaceResult };
   });
+}
+
+/** 读取 YYYY-MM-DD 日期查询参数：格式不合法视为未传（忽略该条件，不报错） */
+function readDateQuery(dateQueryText) {
+  const dateText = String(dateQueryText || '').trim();
+  return /^\d{4}-\d{2}-\d{2}$/.test(dateText) ? dateText : undefined;
 }
 
 /**

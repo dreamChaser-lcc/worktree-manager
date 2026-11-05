@@ -114,10 +114,19 @@ export function fetchRequirementTaskList(listParams = {}) {
   return getJson(`/api/requirement-tasks?${queryText}`);
 }
 
-/** 需求任务列表分页查询（按发布状态 tab + 页码） */
-export function fetchRequirementTaskPage({ status, page, pageSize }) {
-  const queryText = new URLSearchParams({ status, page, pageSize }).toString();
-  return getJson(`/api/requirement-tasks?${queryText}`);
+/** 需求任务列表分页查询（按发布状态 tab + 页码 + 可选时间范围：timeField 取 createdAt/updatedAt） */
+export function fetchRequirementTaskPage({ status, page, pageSize, timeField, startDate, endDate }) {
+  const queryParams = new URLSearchParams({ status, page, pageSize });
+  if (timeField) {
+    queryParams.set('timeField', timeField);
+  }
+  if (startDate) {
+    queryParams.set('startDate', startDate);
+  }
+  if (endDate) {
+    queryParams.set('endDate', endDate);
+  }
+  return getJson(`/api/requirement-tasks?${queryParams.toString()}`);
 }
 
 /** 标记/取消需求任务发布 */

@@ -54,6 +54,31 @@ export function createPersistenceManager(managerOptions = {}) {
     return publicDocument;
   }
 
+  /**
+   * 按日期前缀过滤需求任务记录（起止日期均为 YYYY-MM-DD，含端点，可只给单边）。
+   * 记录存的是 ISO 时间字符串，列表展示也取其日期前缀，因此按字符串比较即与展示一致。
+   * 时间字段默认按创建时间（与前端默认一致），仅显式传 updatedAt 时按更新时间。
+   */
+  function filterRequirementTaskByDateRange(recordList, { timeField, startDate, endDate }) {
+    if (!startDate && !endDate) {
+      return recordList;
+    }
+    const effectiveTimeField = timeField === 'updatedAt' ? 'updatedAt' : 'createdAt';
+    return recordList.filter((record) => {
+      const recordDateText = String(record[effectiveTimeField] || '').slice(0, 10);
+      if (!recordDateText) {
+        return false;
+      }
+      if (startDate && recordDateText < startDate) {
+        return false;
+      }
+      if (endDate && recordDateText > endDate) {
+        return false;
+      }
+      return true;
+    });
+  }
+
   /** 文件被占用（双实例/杀毒扫描等瞬时锁）时判断是否值得重试 */
   function isTransientFileError(error) {
     const errorCode = error && error.code;
@@ -611,7 +636,7 @@ export function createPersistenceManager(managerOptions = {}) {
 
   async function listRequirementTaskRecords(listOptions = {}) {
     if (!initialized) return [];
-    const { status = 'all', page, pageSize } = listOptions;
+    const { status = 'all', page, pageSize, timeField, startDate, endDate } = listOptions;
     try {
       let recordList = await requirementTasksDatastore.findAsync({}).sort({ updatedAt: -1 }).execAsync();
       recordList = recordList.map(stripInternalId);
@@ -629,6 +654,8 @@ export function createPersistenceManager(managerOptions = {}) {
       } else if (status === 'published') {
         recordList = recordList.filter((record) => Boolean(record.publishedAt));
       }
+      // 时间范围过滤（在分页之前，保证 total 与筛选结果一致）
+      recordList = filterRequirementTaskByDateRange(recordList, { timeField, startDate, endDate });
       const total = recordList.length;
       const pageNumber = Math.max(1, Number(page) || 1);
       const pageSizeNumber = Math.max(1, Number(pageSize) || 20);

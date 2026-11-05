@@ -2250,7 +2250,7 @@
       "source_location": "L123",
       "_origin": "ast",
       "id": "server_src_jobs_job_runner_startprocessjob",
-      "community": 2,
+      "community": 1,
       "norm_label": "startprocessjob()"
     },
     {
@@ -2384,10 +2384,20 @@
       "norm_label": "registerrequirementtaskroutes()"
     },
     {
-      "label": "copyIgnoredSafely()",
+      "label": "readDateQuery()",
       "file_type": "code",
       "source_file": "server/src/routes/requirement-task-routes.js",
       "source_location": "L574",
+      "_origin": "ast",
+      "id": "server_src_routes_requirement_task_routes_readdatequery",
+      "community": 1,
+      "norm_label": "readdatequery()"
+    },
+    {
+      "label": "copyIgnoredSafely()",
+      "file_type": "code",
+      "source_file": "server/src/routes/requirement-task-routes.js",
+      "source_location": "L583",
       "_origin": "ast",
       "id": "server_src_routes_requirement_task_routes_copyignoredsafely",
       "community": 12,
@@ -2397,7 +2407,7 @@
       "label": "isRunningInstallForWorktree()",
       "file_type": "code",
       "source_file": "server/src/routes/requirement-task-routes.js",
-      "source_location": "L588",
+      "source_location": "L597",
       "_origin": "ast",
       "id": "server_src_routes_requirement_task_routes_isrunninginstallforworktree",
       "community": 1,
@@ -2407,7 +2417,7 @@
       "label": "removeTaskWorktrees()",
       "file_type": "code",
       "source_file": "server/src/routes/requirement-task-routes.js",
-      "source_location": "L601",
+      "source_location": "L610",
       "_origin": "ast",
       "id": "server_src_routes_requirement_task_routes_removetaskworktrees",
       "community": 1,
@@ -2417,7 +2427,7 @@
       "label": "generateAndAttachWorkspace()",
       "file_type": "code",
       "source_file": "server/src/routes/requirement-task-routes.js",
-      "source_location": "L667",
+      "source_location": "L676",
       "_origin": "ast",
       "id": "server_src_routes_requirement_task_routes_generateandattachworkspace",
       "community": 7,
@@ -2427,7 +2437,7 @@
       "label": "readProjectRemoteUrl()",
       "file_type": "code",
       "source_file": "server/src/routes/requirement-task-routes.js",
-      "source_location": "L678",
+      "source_location": "L687",
       "_origin": "ast",
       "id": "server_src_routes_requirement_task_routes_readprojectremoteurl",
       "community": 1,
@@ -2437,7 +2447,7 @@
       "label": "convertRemoteUrlToWebUrl()",
       "file_type": "code",
       "source_file": "server/src/routes/requirement-task-routes.js",
-      "source_location": "L702",
+      "source_location": "L711",
       "_origin": "ast",
       "id": "server_src_routes_requirement_task_routes_convertremoteurltoweburl",
       "community": 7,
@@ -2447,7 +2457,7 @@
       "label": "normalizeRequirementTaskInput()",
       "file_type": "code",
       "source_file": "server/src/routes/requirement-task-routes.js",
-      "source_location": "L718",
+      "source_location": "L727",
       "_origin": "ast",
       "id": "server_src_routes_requirement_task_routes_normalizerequirementtaskinput",
       "community": 1,
@@ -2457,7 +2467,7 @@
       "label": "requireNonEmptyText()",
       "file_type": "code",
       "source_file": "server/src/routes/requirement-task-routes.js",
-      "source_location": "L747",
+      "source_location": "L756",
       "_origin": "ast",
       "id": "server_src_routes_requirement_task_routes_requirenonemptytext",
       "community": 1,
@@ -2717,7 +2727,7 @@
       "label": "persistenceManager",
       "file_type": "code",
       "source_file": "server/src/storage/persistence-manager.js",
-      "source_location": "L718",
+      "source_location": "L745",
       "_origin": "ast",
       "id": "server_src_storage_persistence_manager_persistencemanager",
       "community": 2,
@@ -3197,7 +3207,7 @@
       "label": "createWorktreeDirectory()",
       "file_type": "code",
       "source_file": "server/test/requirement-task.test.js",
-      "source_location": "L604",
+      "source_location": "L637",
       "_origin": "ast",
       "id": "server_test_requirement_task_test_createworktreedirectory",
       "community": 7,
@@ -3207,7 +3217,7 @@
       "label": "buildGeneratorRecord()",
       "file_type": "code",
       "source_file": "server/test/requirement-task.test.js",
-      "source_location": "L609",
+      "source_location": "L642",
       "_origin": "ast",
       "id": "server_test_requirement_task_test_buildgeneratorrecord",
       "community": 7,
@@ -3217,7 +3227,7 @@
       "label": "readWorkspaceDocument()",
       "file_type": "code",
       "source_file": "server/test/requirement-task.test.js",
-      "source_location": "L620",
+      "source_location": "L653",
       "_origin": "ast",
       "id": "server_test_requirement_task_test_readworkspacedocument",
       "community": 7,
@@ -3460,7 +3470,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "web_src_app",
-      "community": 0,
+      "community": 63,
       "norm_label": "app.jsx"
     },
     {
@@ -3470,7 +3480,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "web_src_app_app",
-      "community": 0,
+      "community": 63,
       "norm_label": "app()"
     },
     {
@@ -3480,7 +3490,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "web_src_api_client",
-      "community": 0,
+      "community": 62,
       "norm_label": "client.js"
     },
     {
@@ -3490,7 +3500,7 @@
       "source_location": "L2",
       "_origin": "ast",
       "id": "web_src_api_client_requestjson",
-      "community": 0,
+      "community": 62,
       "norm_label": "requestjson()"
     },
     {
@@ -3500,7 +3510,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "web_src_api_client_getjson",
-      "community": 0,
+      "community": 63,
       "norm_label": "getjson()"
     },
     {
@@ -3510,7 +3520,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "web_src_api_client_postjson",
-      "community": 0,
+      "community": 62,
       "norm_label": "postjson()"
     },
     {
@@ -3520,7 +3530,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "web_src_api_client_putjson",
-      "community": 0,
+      "community": 62,
       "norm_label": "putjson()"
     },
     {
@@ -3530,7 +3540,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "web_src_api_client_deleterequest",
-      "community": 0,
+      "community": 62,
       "norm_label": "deleterequest()"
     },
     {
@@ -3560,7 +3570,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "web_src_api_client_fetchrepositorycheck",
-      "community": 0,
+      "community": 64,
       "norm_label": "fetchrepositorycheck()"
     },
     {
@@ -3570,7 +3580,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "web_src_api_client_fetchbranchoverview",
-      "community": 0,
+      "community": 63,
       "norm_label": "fetchbranchoverview()"
     },
     {
@@ -3590,7 +3600,7 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "web_src_api_client_createworktree",
-      "community": 0,
+      "community": 62,
       "norm_label": "createworktree()"
     },
     {
@@ -3610,7 +3620,7 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "web_src_api_client_removeworktree",
-      "community": 0,
+      "community": 62,
       "norm_label": "removeworktree()"
     },
     {
@@ -3620,7 +3630,7 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "web_src_api_client_pruneworktreerecords",
-      "community": 0,
+      "community": 62,
       "norm_label": "pruneworktreerecords()"
     },
     {
@@ -3630,7 +3640,7 @@
       "source_location": "L72",
       "_origin": "ast",
       "id": "web_src_api_client_opendirectoryineditor",
-      "community": 0,
+      "community": 62,
       "norm_label": "opendirectoryineditor()"
     },
     {
@@ -3640,7 +3650,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "web_src_api_client_fetchrecentrepositories",
-      "community": 0,
+      "community": 63,
       "norm_label": "fetchrecentrepositories()"
     },
     {
@@ -3650,7 +3660,7 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "web_src_api_client_fetchtasklist",
-      "community": 0,
+      "community": 64,
       "norm_label": "fetchtasklist()"
     },
     {
@@ -3660,7 +3670,7 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "web_src_api_client_fetchtaskdetail",
-      "community": 0,
+      "community": 64,
       "norm_label": "fetchtaskdetail()"
     },
     {
@@ -3670,7 +3680,7 @@
       "source_location": "L88",
       "_origin": "ast",
       "id": "web_src_api_client_fetchworktreehistory",
-      "community": 0,
+      "community": 63,
       "norm_label": "fetchworktreehistory()"
     },
     {
@@ -3680,7 +3690,7 @@
       "source_location": "L92",
       "_origin": "ast",
       "id": "web_src_api_client_clearworktreehistory",
-      "community": 0,
+      "community": 62,
       "norm_label": "clearworktreehistory()"
     },
     {
@@ -3690,7 +3700,7 @@
       "source_location": "L96",
       "_origin": "ast",
       "id": "web_src_api_client_fetchsettings",
-      "community": 0,
+      "community": 63,
       "norm_label": "fetchsettings()"
     },
     {
@@ -3700,7 +3710,7 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "web_src_api_client_fetchinstallededitors",
-      "community": 0,
+      "community": 63,
       "norm_label": "fetchinstallededitors()"
     },
     {
@@ -3710,7 +3720,7 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "web_src_api_client_updatesettings",
-      "community": 0,
+      "community": 62,
       "norm_label": "updatesettings()"
     },
     {
@@ -3720,7 +3730,7 @@
       "source_location": "L108",
       "_origin": "ast",
       "id": "web_src_api_client_fetchrequirementtasklist",
-      "community": 0,
+      "community": 63,
       "norm_label": "fetchrequirementtasklist()"
     },
     {
@@ -3730,157 +3740,157 @@
       "source_location": "L118",
       "_origin": "ast",
       "id": "web_src_api_client_fetchrequirementtaskpage",
-      "community": 0,
+      "community": 63,
       "norm_label": "fetchrequirementtaskpage()"
     },
     {
       "label": "setRequirementPublished()",
       "file_type": "code",
       "source_file": "web/src/api/client.js",
-      "source_location": "L124",
+      "source_location": "L133",
       "_origin": "ast",
       "id": "web_src_api_client_setrequirementpublished",
-      "community": 0,
+      "community": 62,
       "norm_label": "setrequirementpublished()"
     },
     {
       "label": "setRequirementStage()",
       "file_type": "code",
       "source_file": "web/src/api/client.js",
-      "source_location": "L129",
+      "source_location": "L138",
       "_origin": "ast",
       "id": "web_src_api_client_setrequirementstage",
-      "community": 0,
+      "community": 62,
       "norm_label": "setrequirementstage()"
     },
     {
       "label": "reorderRequirementTasks()",
       "file_type": "code",
       "source_file": "web/src/api/client.js",
-      "source_location": "L134",
+      "source_location": "L143",
       "_origin": "ast",
       "id": "web_src_api_client_reorderrequirementtasks",
-      "community": 0,
+      "community": 62,
       "norm_label": "reorderrequirementtasks()"
     },
     {
       "label": "createRequirementTask()",
       "file_type": "code",
       "source_file": "web/src/api/client.js",
-      "source_location": "L138",
+      "source_location": "L147",
       "_origin": "ast",
       "id": "web_src_api_client_createrequirementtask",
-      "community": 0,
+      "community": 62,
       "norm_label": "createrequirementtask()"
     },
     {
       "label": "updateRequirementTask()",
       "file_type": "code",
       "source_file": "web/src/api/client.js",
-      "source_location": "L142",
+      "source_location": "L151",
       "_origin": "ast",
       "id": "web_src_api_client_updaterequirementtask",
-      "community": 0,
+      "community": 62,
       "norm_label": "updaterequirementtask()"
     },
     {
       "label": "deleteRequirementTask()",
       "file_type": "code",
       "source_file": "web/src/api/client.js",
-      "source_location": "L146",
+      "source_location": "L155",
       "_origin": "ast",
       "id": "web_src_api_client_deleterequirementtask",
-      "community": 0,
+      "community": 62,
       "norm_label": "deleterequirementtask()"
     },
     {
       "label": "restoreRequirementTask()",
       "file_type": "code",
       "source_file": "web/src/api/client.js",
-      "source_location": "L151",
+      "source_location": "L160",
       "_origin": "ast",
       "id": "web_src_api_client_restorerequirementtask",
-      "community": 0,
+      "community": 62,
       "norm_label": "restorerequirementtask()"
     },
     {
       "label": "permanentDeleteRequirementTask()",
       "file_type": "code",
       "source_file": "web/src/api/client.js",
-      "source_location": "L155",
+      "source_location": "L164",
       "_origin": "ast",
       "id": "web_src_api_client_permanentdeleterequirementtask",
-      "community": 0,
+      "community": 62,
       "norm_label": "permanentdeleterequirementtask()"
     },
     {
       "label": "deleteTaskRecord()",
       "file_type": "code",
       "source_file": "web/src/api/client.js",
-      "source_location": "L160",
+      "source_location": "L169",
       "_origin": "ast",
       "id": "web_src_api_client_deletetaskrecord",
-      "community": 0,
+      "community": 62,
       "norm_label": "deletetaskrecord()"
     },
     {
       "label": "generateRequirementWorkspace()",
       "file_type": "code",
       "source_file": "web/src/api/client.js",
-      "source_location": "L164",
+      "source_location": "L173",
       "_origin": "ast",
       "id": "web_src_api_client_generaterequirementworkspace",
-      "community": 0,
+      "community": 62,
       "norm_label": "generaterequirementworkspace()"
     },
     {
       "label": "fetchRequirementTaskLocate()",
       "file_type": "code",
       "source_file": "web/src/api/client.js",
-      "source_location": "L168",
+      "source_location": "L177",
       "_origin": "ast",
       "id": "web_src_api_client_fetchrequirementtasklocate",
-      "community": 0,
+      "community": 63,
       "norm_label": "fetchrequirementtasklocate()"
     },
     {
       "label": "revealInExplorer()",
       "file_type": "code",
       "source_file": "web/src/api/client.js",
-      "source_location": "L172",
+      "source_location": "L181",
       "_origin": "ast",
       "id": "web_src_api_client_revealinexplorer",
-      "community": 0,
+      "community": 62,
       "norm_label": "revealinexplorer()"
     },
     {
       "label": "fetchRequirementDependencyCheck()",
       "file_type": "code",
       "source_file": "web/src/api/client.js",
-      "source_location": "L176",
+      "source_location": "L185",
       "_origin": "ast",
       "id": "web_src_api_client_fetchrequirementdependencycheck",
-      "community": 0,
+      "community": 63,
       "norm_label": "fetchrequirementdependencycheck()"
     },
     {
       "label": "startRequirementIndependentInstall()",
       "file_type": "code",
       "source_file": "web/src/api/client.js",
-      "source_location": "L180",
+      "source_location": "L189",
       "_origin": "ast",
       "id": "web_src_api_client_startrequirementindependentinstall",
-      "community": 0,
+      "community": 62,
       "norm_label": "startrequirementindependentinstall()"
     },
     {
       "label": "restoreSharedDependencies()",
       "file_type": "code",
       "source_file": "web/src/api/client.js",
-      "source_location": "L187",
+      "source_location": "L196",
       "_origin": "ast",
       "id": "web_src_api_client_restoreshareddependencies",
-      "community": 0,
+      "community": 62,
       "norm_label": "restoreshareddependencies()"
     },
     {
@@ -3940,7 +3950,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "web_src_components_creationhistorypanel",
-      "community": 0,
+      "community": 63,
       "norm_label": "creationhistorypanel.jsx"
     },
     {
@@ -3950,7 +3960,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "web_src_components_creationhistorypanel_formattimetext",
-      "community": 0,
+      "community": 63,
       "norm_label": "formattimetext()"
     },
     {
@@ -3960,7 +3970,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "web_src_components_creationhistorypanel_creationhistorypanel",
-      "community": 0,
+      "community": 63,
       "norm_label": "creationhistorypanel()"
     },
     {
@@ -3970,7 +3980,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "web_src_components_dependencyinstalldialog",
-      "community": 0,
+      "community": 60,
       "norm_label": "dependencyinstalldialog.jsx"
     },
     {
@@ -3980,7 +3990,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "web_src_components_dependencyinstalldialog_dependencyinstalldialog",
-      "community": 0,
+      "community": 60,
       "norm_label": "dependencyinstalldialog()"
     },
     {
@@ -4090,7 +4100,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "web_src_components_requirementtaskdetaildialog",
-      "community": 0,
+      "community": 65,
       "norm_label": "requirementtaskdetaildialog.jsx"
     },
     {
@@ -4100,7 +4110,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "web_src_components_requirementtaskdetaildialog_issameloosepath",
-      "community": 0,
+      "community": 65,
       "norm_label": "issameloosepath()"
     },
     {
@@ -4110,7 +4120,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "web_src_components_requirementtaskdetaildialog_renderbranchlocationinfo",
-      "community": 0,
+      "community": 65,
       "norm_label": "renderbranchlocationinfo()"
     },
     {
@@ -4120,7 +4130,7 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "web_src_components_requirementtaskdetaildialog_requirementtaskdetaildialog",
-      "community": 0,
+      "community": 65,
       "norm_label": "requirementtaskdetaildialog()"
     },
     {
@@ -4200,7 +4210,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "web_src_components_requirementtaskpanel",
-      "community": 0,
+      "community": 60,
       "norm_label": "requirementtaskpanel.jsx"
     },
     {
@@ -4210,47 +4220,87 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "web_src_components_requirementtaskpanel_formattimetext",
-      "community": 0,
+      "community": 60,
       "norm_label": "formattimetext()"
+    },
+    {
+      "label": "DEFAULT_TIME_FILTER",
+      "file_type": "code",
+      "source_file": "web/src/components/RequirementTaskPanel.jsx",
+      "source_location": "L31",
+      "_origin": "ast",
+      "id": "web_src_components_requirementtaskpanel_default_time_filter",
+      "community": 60,
+      "norm_label": "default_time_filter"
+    },
+    {
+      "label": "hasActiveTimeFilter()",
+      "file_type": "code",
+      "source_file": "web/src/components/RequirementTaskPanel.jsx",
+      "source_location": "L34",
+      "_origin": "ast",
+      "id": "web_src_components_requirementtaskpanel_hasactivetimefilter",
+      "community": 60,
+      "norm_label": "hasactivetimefilter()"
+    },
+    {
+      "label": "resolveMonthEndDateText()",
+      "file_type": "code",
+      "source_file": "web/src/components/RequirementTaskPanel.jsx",
+      "source_location": "L39",
+      "_origin": "ast",
+      "id": "web_src_components_requirementtaskpanel_resolvemonthenddatetext",
+      "community": 60,
+      "norm_label": "resolvemonthenddatetext()"
+    },
+    {
+      "label": "describeTimeFilter()",
+      "file_type": "code",
+      "source_file": "web/src/components/RequirementTaskPanel.jsx",
+      "source_location": "L46",
+      "_origin": "ast",
+      "id": "web_src_components_requirementtaskpanel_describetimefilter",
+      "community": 60,
+      "norm_label": "describetimefilter()"
     },
     {
       "label": "RowActionsMore()",
       "file_type": "code",
       "source_file": "web/src/components/RequirementTaskPanel.jsx",
-      "source_location": "L36",
+      "source_location": "L58",
       "_origin": "ast",
       "id": "web_src_components_requirementtaskpanel_rowactionsmore",
-      "community": 0,
+      "community": 60,
       "norm_label": "rowactionsmore()"
     },
     {
       "label": "buildConflictKeySet()",
       "file_type": "code",
       "source_file": "web/src/components/RequirementTaskPanel.jsx",
-      "source_location": "L75",
+      "source_location": "L97",
       "_origin": "ast",
       "id": "web_src_components_requirementtaskpanel_buildconflictkeyset",
-      "community": 0,
+      "community": 60,
       "norm_label": "buildconflictkeyset()"
     },
     {
       "label": "buildRestoreIgnoredCopyText()",
       "file_type": "code",
       "source_file": "web/src/components/RequirementTaskPanel.jsx",
-      "source_location": "L99",
+      "source_location": "L121",
       "_origin": "ast",
       "id": "web_src_components_requirementtaskpanel_buildrestoreignoredcopytext",
-      "community": 0,
+      "community": 60,
       "norm_label": "buildrestoreignoredcopytext()"
     },
     {
       "label": "RequirementTaskPanel()",
       "file_type": "code",
       "source_file": "web/src/components/RequirementTaskPanel.jsx",
-      "source_location": "L117",
+      "source_location": "L139",
       "_origin": "ast",
       "id": "web_src_components_requirementtaskpanel_requirementtaskpanel",
-      "community": 0,
+      "community": 60,
       "norm_label": "requirementtaskpanel()"
     },
     {
@@ -4280,7 +4330,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "web_src_components_settingspanel",
-      "community": 0,
+      "community": 63,
       "norm_label": "settingspanel.jsx"
     },
     {
@@ -4290,7 +4340,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "web_src_components_settingspanel_settingspanel",
-      "community": 0,
+      "community": 63,
       "norm_label": "settingspanel()"
     },
     {
@@ -4300,7 +4350,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "web_src_components_taskactionsrow",
-      "community": 0,
+      "community": 60,
       "norm_label": "taskactionsrow.jsx"
     },
     {
@@ -4310,7 +4360,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "web_src_components_taskactionsrow_stage_options",
-      "community": 0,
+      "community": 60,
       "norm_label": "stage_options"
     },
     {
@@ -4320,7 +4370,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "web_src_components_taskactionsrow_stagetagmenu",
-      "community": 0,
+      "community": 60,
       "norm_label": "stagetagmenu()"
     },
     {
@@ -4330,7 +4380,7 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "web_src_components_taskactionsrow_stage_class_map",
-      "community": 0,
+      "community": 60,
       "norm_label": "stage_class_map"
     },
     {
@@ -4340,7 +4390,7 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "web_src_components_taskactionsrow_taskactionsrow",
-      "community": 0,
+      "community": 60,
       "norm_label": "taskactionsrow()"
     },
     {
@@ -4350,7 +4400,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "web_src_components_taskhistorypanel",
-      "community": 0,
+      "community": 64,
       "norm_label": "taskhistorypanel.jsx"
     },
     {
@@ -4360,7 +4410,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "web_src_components_taskhistorypanel_task_status_label_map",
-      "community": 0,
+      "community": 64,
       "norm_label": "task_status_label_map"
     },
     {
@@ -4370,7 +4420,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "web_src_components_taskhistorypanel_taskbadgeclassname",
-      "community": 0,
+      "community": 64,
       "norm_label": "taskbadgeclassname()"
     },
     {
@@ -4380,7 +4430,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "web_src_components_taskhistorypanel_formattimetext",
-      "community": 0,
+      "community": 64,
       "norm_label": "formattimetext()"
     },
     {
@@ -4390,7 +4440,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "web_src_components_taskhistorypanel_taskhistorypanel",
-      "community": 0,
+      "community": 64,
       "norm_label": "taskhistorypanel()"
     },
     {
@@ -4400,7 +4450,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "web_src_components_tasklogpanel",
-      "community": 0,
+      "community": 65,
       "norm_label": "tasklogpanel.jsx"
     },
     {
@@ -4410,7 +4460,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "web_src_components_tasklogpanel_tasklogpanel",
-      "community": 0,
+      "community": 65,
       "norm_label": "tasklogpanel()"
     },
     {
@@ -4420,7 +4470,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "web_src_components_worktreelistpanel",
-      "community": 0,
+      "community": 64,
       "norm_label": "worktreelistpanel.jsx"
     },
     {
@@ -4430,7 +4480,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "web_src_components_worktreelistpanel_worktreelistpanel",
-      "community": 0,
+      "community": 64,
       "norm_label": "worktreelistpanel()"
     },
     {
@@ -4480,7 +4530,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "web_src_main",
-      "community": 0,
+      "community": 63,
       "norm_label": "main.jsx"
     },
     {
@@ -4490,7 +4540,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "web_src_utils_usependingactions",
-      "community": 0,
+      "community": 64,
       "norm_label": "usependingactions.js"
     },
     {
@@ -4500,7 +4550,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "web_src_utils_usependingactions_usependingactions",
-      "community": 0,
+      "community": 64,
       "norm_label": "usependingactions()"
     },
     {
@@ -11038,7 +11088,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "server/src/routes/requirement-task-routes.js",
-      "source_location": "L680",
+      "source_location": "L689",
       "weight": 1.0,
       "source": "server_src_routes_requirement_task_routes_readprojectremoteurl",
       "target": "server_src_core_git_executor_executegitcommand",
@@ -11297,7 +11347,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "server/src/routes/requirement-task-routes.js",
-      "source_location": "L576",
+      "source_location": "L585",
       "weight": 1.0,
       "source": "server_src_routes_requirement_task_routes_copyignoredsafely",
       "target": "server_src_core_ignore_file_copier_copyignoredfiles",
@@ -11737,7 +11787,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "server/src/routes/requirement-task-routes.js",
-      "source_location": "L668",
+      "source_location": "L677",
       "weight": 1.0,
       "source": "server_src_routes_requirement_task_routes_generateandattachworkspace",
       "target": "server_src_core_workspace_file_generator_generateworkspacefilefortask",
@@ -12031,7 +12081,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "server/src/routes/requirement-task-routes.js",
-      "source_location": "L594",
+      "source_location": "L603",
       "weight": 1.0,
       "source": "server_src_routes_requirement_task_routes_isrunninginstallforworktree",
       "target": "server_src_core_worktree_manager_normalizepathforcomparison",
@@ -12042,7 +12092,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "server/src/routes/requirement-task-routes.js",
-      "source_location": "L617",
+      "source_location": "L626",
       "weight": 1.0,
       "source": "server_src_routes_requirement_task_routes_removetaskworktrees",
       "target": "server_src_core_worktree_manager_normalizepathforcomparison",
@@ -12097,7 +12147,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "server/src/routes/requirement-task-routes.js",
-      "source_location": "L615",
+      "source_location": "L624",
       "weight": 1.0,
       "source": "server_src_routes_requirement_task_routes_removetaskworktrees",
       "target": "server_src_core_worktree_manager_listworktrees",
@@ -12350,7 +12400,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "server/src/routes/requirement-task-routes.js",
-      "source_location": "L627",
+      "source_location": "L636",
       "weight": 1.0,
       "source": "server_src_routes_requirement_task_routes_removetaskworktrees",
       "target": "server_src_core_worktree_manager_removeworktree",
@@ -12967,7 +13017,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "server/src/routes/requirement-task-routes.js",
-      "source_location": "L702",
+      "source_location": "L711",
       "weight": 1.0,
       "source": "server_src_routes_requirement_task_routes",
       "target": "server_src_routes_requirement_task_routes_convertremoteurltoweburl",
@@ -12977,7 +13027,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "server/src/routes/requirement-task-routes.js",
-      "source_location": "L574",
+      "source_location": "L583",
       "weight": 1.0,
       "source": "server_src_routes_requirement_task_routes",
       "target": "server_src_routes_requirement_task_routes_copyignoredsafely",
@@ -12987,7 +13037,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "server/src/routes/requirement-task-routes.js",
-      "source_location": "L667",
+      "source_location": "L676",
       "weight": 1.0,
       "source": "server_src_routes_requirement_task_routes",
       "target": "server_src_routes_requirement_task_routes_generateandattachworkspace",
@@ -12997,7 +13047,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "server/src/routes/requirement-task-routes.js",
-      "source_location": "L588",
+      "source_location": "L597",
       "weight": 1.0,
       "source": "server_src_routes_requirement_task_routes",
       "target": "server_src_routes_requirement_task_routes_isrunninginstallforworktree",
@@ -13007,7 +13057,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "server/src/routes/requirement-task-routes.js",
-      "source_location": "L718",
+      "source_location": "L727",
       "weight": 1.0,
       "source": "server_src_routes_requirement_task_routes",
       "target": "server_src_routes_requirement_task_routes_normalizerequirementtaskinput",
@@ -13017,7 +13067,17 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "server/src/routes/requirement-task-routes.js",
-      "source_location": "L678",
+      "source_location": "L574",
+      "weight": 1.0,
+      "source": "server_src_routes_requirement_task_routes",
+      "target": "server_src_routes_requirement_task_routes_readdatequery",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server/src/routes/requirement-task-routes.js",
+      "source_location": "L687",
       "weight": 1.0,
       "source": "server_src_routes_requirement_task_routes",
       "target": "server_src_routes_requirement_task_routes_readprojectremoteurl",
@@ -13037,7 +13097,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "server/src/routes/requirement-task-routes.js",
-      "source_location": "L601",
+      "source_location": "L610",
       "weight": 1.0,
       "source": "server_src_routes_requirement_task_routes",
       "target": "server_src_routes_requirement_task_routes_removetaskworktrees",
@@ -13047,7 +13107,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "server/src/routes/requirement-task-routes.js",
-      "source_location": "L747",
+      "source_location": "L756",
       "weight": 1.0,
       "source": "server_src_routes_requirement_task_routes",
       "target": "server_src_routes_requirement_task_routes_requirenonemptytext",
@@ -13102,7 +13162,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "server/src/routes/requirement-task-routes.js",
-      "source_location": "L720",
+      "source_location": "L729",
       "weight": 1.0,
       "source": "server_src_routes_requirement_task_routes_normalizerequirementtaskinput",
       "target": "server_src_routes_requirement_task_routes_requirenonemptytext",
@@ -13490,7 +13550,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "server/src/storage/persistence-manager.js",
-      "source_location": "L718",
+      "source_location": "L745",
       "weight": 1.0,
       "source": "server_src_storage_persistence_manager",
       "target": "server_src_storage_persistence_manager_persistencemanager",
@@ -14275,7 +14335,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "server/test/requirement-task.test.js",
-      "source_location": "L609",
+      "source_location": "L642",
       "weight": 1.0,
       "source": "server_test_requirement_task_test",
       "target": "server_test_requirement_task_test_buildgeneratorrecord",
@@ -14295,7 +14355,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "server/test/requirement-task.test.js",
-      "source_location": "L604",
+      "source_location": "L637",
       "weight": 1.0,
       "source": "server_test_requirement_task_test",
       "target": "server_test_requirement_task_test_createworktreedirectory",
@@ -14335,7 +14395,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "server/test/requirement-task.test.js",
-      "source_location": "L620",
+      "source_location": "L653",
       "weight": 1.0,
       "source": "server_test_requirement_task_test",
       "target": "server_test_requirement_task_test_readworkspacedocument",
@@ -14818,7 +14878,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L138",
+      "source_location": "L147",
       "weight": 1.0,
       "source": "web_src_api_client",
       "target": "web_src_api_client_createrequirementtask",
@@ -14848,7 +14908,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L146",
+      "source_location": "L155",
       "weight": 1.0,
       "source": "web_src_api_client",
       "target": "web_src_api_client_deleterequirementtask",
@@ -14858,7 +14918,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L160",
+      "source_location": "L169",
       "weight": 1.0,
       "source": "web_src_api_client",
       "target": "web_src_api_client_deletetaskrecord",
@@ -14938,7 +14998,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L176",
+      "source_location": "L185",
       "weight": 1.0,
       "source": "web_src_api_client",
       "target": "web_src_api_client_fetchrequirementdependencycheck",
@@ -14958,7 +15018,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L168",
+      "source_location": "L177",
       "weight": 1.0,
       "source": "web_src_api_client",
       "target": "web_src_api_client_fetchrequirementtasklocate",
@@ -15028,7 +15088,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L164",
+      "source_location": "L173",
       "weight": 1.0,
       "source": "web_src_api_client",
       "target": "web_src_api_client_generaterequirementworkspace",
@@ -15058,7 +15118,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L155",
+      "source_location": "L164",
       "weight": 1.0,
       "source": "web_src_api_client",
       "target": "web_src_api_client_permanentdeleterequirementtask",
@@ -15108,7 +15168,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L134",
+      "source_location": "L143",
       "weight": 1.0,
       "source": "web_src_api_client",
       "target": "web_src_api_client_reorderrequirementtasks",
@@ -15128,7 +15188,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L151",
+      "source_location": "L160",
       "weight": 1.0,
       "source": "web_src_api_client",
       "target": "web_src_api_client_restorerequirementtask",
@@ -15138,7 +15198,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L187",
+      "source_location": "L196",
       "weight": 1.0,
       "source": "web_src_api_client",
       "target": "web_src_api_client_restoreshareddependencies",
@@ -15148,7 +15208,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L172",
+      "source_location": "L181",
       "weight": 1.0,
       "source": "web_src_api_client",
       "target": "web_src_api_client_revealinexplorer",
@@ -15158,7 +15218,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L124",
+      "source_location": "L133",
       "weight": 1.0,
       "source": "web_src_api_client",
       "target": "web_src_api_client_setrequirementpublished",
@@ -15168,7 +15228,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L129",
+      "source_location": "L138",
       "weight": 1.0,
       "source": "web_src_api_client",
       "target": "web_src_api_client_setrequirementstage",
@@ -15178,7 +15238,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L180",
+      "source_location": "L189",
       "weight": 1.0,
       "source": "web_src_api_client",
       "target": "web_src_api_client_startrequirementindependentinstall",
@@ -15188,7 +15248,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L142",
+      "source_location": "L151",
       "weight": 1.0,
       "source": "web_src_api_client",
       "target": "web_src_api_client_updaterequirementtask",
@@ -15341,7 +15401,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L148",
+      "source_location": "L157",
       "weight": 1.0,
       "source": "web_src_api_client_deleterequirementtask",
       "target": "web_src_api_client_requestjson",
@@ -15352,7 +15412,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L161",
+      "source_location": "L170",
       "weight": 1.0,
       "source": "web_src_api_client_deletetaskrecord",
       "target": "web_src_api_client_requestjson",
@@ -15374,7 +15434,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L157",
+      "source_location": "L166",
       "weight": 1.0,
       "source": "web_src_api_client_permanentdeleterequirementtask",
       "target": "web_src_api_client_requestjson",
@@ -15484,7 +15544,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L177",
+      "source_location": "L186",
       "weight": 1.0,
       "source": "web_src_api_client_fetchrequirementdependencycheck",
       "target": "web_src_api_client_getjson",
@@ -15506,7 +15566,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L169",
+      "source_location": "L178",
       "weight": 1.0,
       "source": "web_src_api_client_fetchrequirementtasklocate",
       "target": "web_src_api_client_getjson",
@@ -15517,7 +15577,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L120",
+      "source_location": "L129",
       "weight": 1.0,
       "source": "web_src_api_client_fetchrequirementtaskpage",
       "target": "web_src_api_client_getjson",
@@ -15583,7 +15643,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L139",
+      "source_location": "L148",
       "weight": 1.0,
       "source": "web_src_api_client_createrequirementtask",
       "target": "web_src_api_client_postjson",
@@ -15605,7 +15665,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L165",
+      "source_location": "L174",
       "weight": 1.0,
       "source": "web_src_api_client_generaterequirementworkspace",
       "target": "web_src_api_client_postjson",
@@ -15638,7 +15698,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L135",
+      "source_location": "L144",
       "weight": 1.0,
       "source": "web_src_api_client_reorderrequirementtasks",
       "target": "web_src_api_client_postjson",
@@ -15649,7 +15709,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L152",
+      "source_location": "L161",
       "weight": 1.0,
       "source": "web_src_api_client_restorerequirementtask",
       "target": "web_src_api_client_postjson",
@@ -15660,7 +15720,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L188",
+      "source_location": "L197",
       "weight": 1.0,
       "source": "web_src_api_client_restoreshareddependencies",
       "target": "web_src_api_client_postjson",
@@ -15671,7 +15731,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L173",
+      "source_location": "L182",
       "weight": 1.0,
       "source": "web_src_api_client_revealinexplorer",
       "target": "web_src_api_client_postjson",
@@ -15682,7 +15742,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L125",
+      "source_location": "L134",
       "weight": 1.0,
       "source": "web_src_api_client_setrequirementpublished",
       "target": "web_src_api_client_postjson",
@@ -15693,7 +15753,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L130",
+      "source_location": "L139",
       "weight": 1.0,
       "source": "web_src_api_client_setrequirementstage",
       "target": "web_src_api_client_postjson",
@@ -15704,7 +15764,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L181",
+      "source_location": "L190",
       "weight": 1.0,
       "source": "web_src_api_client_startrequirementindependentinstall",
       "target": "web_src_api_client_postjson",
@@ -15715,7 +15775,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "web/src/api/client.js",
-      "source_location": "L143",
+      "source_location": "L152",
       "weight": 1.0,
       "source": "web_src_api_client_updaterequirementtask",
       "target": "web_src_api_client_putjson",
@@ -17035,7 +17095,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "web/src/components/RequirementTaskPanel.jsx",
-      "source_location": "L75",
+      "source_location": "L97",
       "weight": 1.0,
       "source": "web_src_components_requirementtaskpanel",
       "target": "web_src_components_requirementtaskpanel_buildconflictkeyset",
@@ -17045,10 +17105,30 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "web/src/components/RequirementTaskPanel.jsx",
-      "source_location": "L99",
+      "source_location": "L121",
       "weight": 1.0,
       "source": "web_src_components_requirementtaskpanel",
       "target": "web_src_components_requirementtaskpanel_buildrestoreignoredcopytext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "web/src/components/RequirementTaskPanel.jsx",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "web_src_components_requirementtaskpanel",
+      "target": "web_src_components_requirementtaskpanel_default_time_filter",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "web/src/components/RequirementTaskPanel.jsx",
+      "source_location": "L46",
+      "weight": 1.0,
+      "source": "web_src_components_requirementtaskpanel",
+      "target": "web_src_components_requirementtaskpanel_describetimefilter",
       "confidence_score": 1.0
     },
     {
@@ -17065,7 +17145,17 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "web/src/components/RequirementTaskPanel.jsx",
-      "source_location": "L117",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "web_src_components_requirementtaskpanel",
+      "target": "web_src_components_requirementtaskpanel_hasactivetimefilter",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "web/src/components/RequirementTaskPanel.jsx",
+      "source_location": "L139",
       "weight": 1.0,
       "source": "web_src_components_requirementtaskpanel",
       "target": "web_src_components_requirementtaskpanel_requirementtaskpanel",
@@ -17075,7 +17165,17 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "web/src/components/RequirementTaskPanel.jsx",
-      "source_location": "L36",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "web_src_components_requirementtaskpanel",
+      "target": "web_src_components_requirementtaskpanel_resolvemonthenddatetext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "web/src/components/RequirementTaskPanel.jsx",
+      "source_location": "L58",
       "weight": 1.0,
       "source": "web_src_components_requirementtaskpanel",
       "target": "web_src_components_requirementtaskpanel_rowactionsmore",
@@ -17129,9 +17229,31 @@
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
+      "source_file": "web/src/components/RequirementTaskPanel.jsx",
+      "source_location": "L706",
+      "weight": 1.0,
+      "source": "web_src_components_requirementtaskpanel_requirementtaskpanel",
+      "target": "web_src_components_requirementtaskpanel_hasactivetimefilter",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "web/src/components/RequirementTaskPanel.jsx",
+      "source_location": "L766",
+      "weight": 1.0,
+      "source": "web_src_components_requirementtaskpanel_requirementtaskpanel",
+      "target": "web_src_components_requirementtaskpanel_describetimefilter",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "web/src/components/RequirementTaskPanel.jsx",
-      "source_location": "L158",
+      "source_location": "L186",
       "weight": 1.0,
       "source": "web_src_components_requirementtaskpanel_requirementtaskpanel",
       "target": "web_src_utils_usependingactions_usependingactions"
@@ -19947,5 +20069,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "2f0d209947a7b8821f8ad89da2aad9eb47184b7b"
+  "built_at_commit": "66c522d7e4db3f099b91338cbc0383f1df55f364"
 }

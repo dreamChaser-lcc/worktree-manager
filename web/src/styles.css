@@ -590,7 +590,8 @@ button {
   gap: 6px;
 }
 
-.copy-branch-button {
+/* 列表内的小号「复制」按钮（需求名称、分支名共用） */
+.copy-text-button {
   padding: 2px 8px;
   font-size: 12px;
 }
@@ -1028,6 +1029,98 @@ button {
 
 .requirement-link-cell a:hover {
   text-decoration: underline;
+}
+
+/* 需求名称与「复制」按钮同行：名称可换行、按钮不收缩 */
+.requirement-name-row {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 2px;
+}
+
+.requirement-name-row a {
+  flex: 1 1 auto;
+  margin-right: 6px;
+}
+
+.requirement-name-row .copy-text-button {
+  flex-shrink: 0;
+}
+
+/* 需求任务列表：时间筛选行（时间字段 + 起止日期 + 查询/重置） */
+.list-filter-row {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  margin-right: 10px;
+}
+
+.filter-label {
+  font-size: 12px;
+  color: #57606a;
+  margin-bottom: 4px;
+}
+
+.filter-control {
+  width: 150px;
+}
+
+.list-filter-row .button-primary {
+  margin-left: 2px;
+}
+
+.list-filter-row .button-secondary {
+  margin-left: 8px;
+}
+
+/* 「筛选」切换按钮的生效态提示：当前列表正处于时间筛选 */
+.filter-toggle-active {
+  color: #0969da;
+  border-color: #0969da;
+}
+
+/* 筛选面板收起但条件仍在生效时的一行提示 */
+.filter-collapsed-hint {
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: #57606a;
+}
+
+.text-link-button {
+  margin-left: 8px;
+  padding: 0;
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: #0969da;
+  cursor: pointer;
+}
+
+.text-link-button:hover {
+  text-decoration: underline;
+}
+
+/* 需求任务列表：更新时间 / 创建时间两行展示 */
+.time-cell {
+  white-space: nowrap;
+}
+
+.time-line {
+  line-height: 1.7;
+}
+
+.time-label {
+  display: inline-block;
+  width: 30px;
+  margin-right: 4px;
+  font-size: 12px;
+  color: #8c959f;
 }
 
 /* 需求明细弹窗：列表「查看」以弹窗展示工作区文件与关联 worktree（替代原行内展开） */
