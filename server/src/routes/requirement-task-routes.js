@@ -7,6 +7,7 @@ import { generateWorkspaceFileForTask } from '../core/workspace-file-generator.j
 import { listWorktrees, removeWorktree, createWorktree, normalizePathForComparison } from '../core/worktree-manager.js';
 import { executeGitCommand } from '../core/git-executor.js';
 import { detectPackageManager, applySharedDependencyLink } from '../core/dep-linker.js';
+import { copyIgnoredFiles } from '../core/ignore-file-copier.js';
 import { checkWorktreeDependencyStatus } from '../core/dependency-risk-checker.js';
 import { startProcessJob, findRunningJob } from '../jobs/job-runner.js';
 import { ValidationError, NotFoundError, ConflictError } from '../core/errors.js';
@@ -502,6 +503,12 @@ export function registerRequirementTaskRoutes(router) {
           branchMode: 'existing',
           branchName: recreateBranchName
         });
+        // 忽略文件/目录复制：与创建流程保持一致的默认白名单（.env 等本地配置、.husky 钩子目录），
+        // 失败只记录原因、不阻断恢复
+        const ignoredCopyResult = copyIgnoredSafely({
+          repoPath: projectEntry.repoPath,
+          worktreePath: projectEntry.worktreePath
+        });
         // 依赖处理：主仓库已有 node_modules 时自动重建共享链接（junction 秒级、零磁盘，与创建流程默认策略一致）；
         // 主仓库未装依赖/跨卷等场景不阻断恢复，记下原因由用户按需「独立安装」
         let dependencyAction = 'skipped';
@@ -521,7 +528,9 @@ export function registerRequirementTaskRoutes(router) {
           worktreePath: projectEntry.worktreePath,
           branchName: recreateBranchName,
           dependencyAction,
-          dependencyReason
+          dependencyReason,
+          ignoredCopyText: ignoredCopyResult.copiedText,
+          ignoredCopyErrorText: ignoredCopyResult.errorText
         });
       } catch (restoreError) {
         failedList.push({
@@ -556,6 +565,23 @@ export function registerRequirementTaskRoutes(router) {
 
     context.body = { task: updatedRecord, restoredWorktreeList, skippedWorktreeList, workspace: workspaceResult };
   });
+}
+
+/**
+ * 尽力而为地复制主仓库的忽略文件与目录（.env 等本地配置、.husky 钩子目录）到 worktree。
+ * 返回可直接拼进提示文案的清单文本（目录名带尾斜杠）；异常不抛出，仅回传错误原因。
+ */
+function copyIgnoredSafely({ repoPath, worktreePath }) {
+  try {
+    const ignoredCopyResult = copyIgnoredFiles({ repoPath, worktreePath });
+    const copiedItemTextList = [
+      ...ignoredCopyResult.copiedFiles,
+      ...ignoredCopyResult.copiedDirectories.map((directoryName) => `${directoryName}/`)
+    ];
+    return { copiedText: copiedItemTextList.join('、'), errorText: null };
+  } catch (copyError) {
+    return { copiedText: '', errorText: copyError.message };
+  }
 }
 
 /** 判断运行中任务是否为指定 worktree 的安装任务（路径规范化后比较，规避斜杠/大小写差异漏判） */

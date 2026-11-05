@@ -8,6 +8,16 @@ import { TaskLogPanel } from './TaskLogPanel.jsx';
 import { buildRequirementDirectoryPath, deriveProjectNameFromPath } from './RequirementTaskForm.jsx';
 import { createWorktree, fetchRepositoryCheck, fetchRequirementTaskList, fetchDefaultBaseRef } from '../api/client.js';
 
+/** 汇总忽略内容复制结果：目录名补尾斜杠与文件区分（如 .husky/），全部未命中时给出提示文案 */
+function describeIgnoredCopyResult(ignoreFileCopyResult) {
+  const copiedFileNameList = ignoreFileCopyResult.copiedFiles || [];
+  const copiedDirectoryTextList = (ignoreFileCopyResult.copiedDirectories || []).map(
+    (directoryName) => `${directoryName}/`
+  );
+  const copiedItemTextList = [...copiedFileNameList, ...copiedDirectoryTextList];
+  return copiedItemTextList.length > 0 ? copiedItemTextList.join('、') : '（白名单无命中）';
+}
+
 /** 创建 Worktree 表单：目录选择 → 分支 → 依赖策略 → 可选后置动作；主仓库目录由应用层共享 */
 export function CreateWorktreeForm({
   repoPath,
@@ -219,7 +229,7 @@ export function CreateWorktreeForm({
             checked={shouldCopyIgnoredFiles}
             onChange={(changeEvent) => setShouldCopyIgnoredFiles(changeEvent.target.checked)}
           />
-          复制被忽略文件（.env、.env.local、*.local）
+          复制被忽略文件与目录（.env、.env.local、*.local、.husky）
         </label>
         <label className="radio-label">
           <input
@@ -257,7 +267,7 @@ export function CreateWorktreeForm({
           ) : null}
           {createResult.ignoreFileCopyResult && !createResult.ignoreFileCopyResult.skipped ? (
             <div className="alert-success">
-              已复制忽略文件：{createResult.ignoreFileCopyResult.copiedFiles.join('、') || '（白名单无命中）'}
+              已复制忽略内容：{describeIgnoredCopyResult(createResult.ignoreFileCopyResult)}
             </div>
           ) : null}
           {createResult.warnings && createResult.warnings.length > 0 ? (

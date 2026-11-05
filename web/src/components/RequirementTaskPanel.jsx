@@ -95,6 +95,24 @@ function buildConflictKeySet(taskList) {
   return conflictKeySet;
 }
 
+/** 汇总恢复时忽略文件/目录的复制结果：成功项列清单、失败项列原因，均无时不占位 */
+function buildRestoreIgnoredCopyText(restoredWorktreeList) {
+  const copiedTextList = restoredWorktreeList
+    .filter((restoredItem) => restoredItem.ignoredCopyText)
+    .map((restoredItem) => `${restoredItem.projectName}：${restoredItem.ignoredCopyText}`);
+  const failedTextList = restoredWorktreeList
+    .filter((restoredItem) => restoredItem.ignoredCopyErrorText)
+    .map((restoredItem) => `${restoredItem.projectName}：${restoredItem.ignoredCopyErrorText}`);
+  const summaryPartList = [];
+  if (copiedTextList.length > 0) {
+    summaryPartList.push(`忽略内容已复制（${copiedTextList.join('；')}）`);
+  }
+  if (failedTextList.length > 0) {
+    summaryPartList.push(`忽略内容复制失败（${failedTextList.join('；')}）`);
+  }
+  return summaryPartList.join('；');
+}
+
 /** 需求任务面板：以需求为维度维护分支与多项目 worktree 列表，支持查看/编辑/删除/打开/工作区文件 */
 export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, workspaceLayoutEnabled }) {
   const [taskList, setTaskList] = useState([]);
@@ -445,9 +463,10 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                   : ''
               }`
             : '';
+        const ignoredCopySummaryText = buildRestoreIgnoredCopyText(restoredWorktreeList);
         setActionMessage({
           type: 'success',
-          text: `恢复完成：重建 ${restoredWorktreeList.length} 个 worktree${branchSummaryText ? ` — ${branchSummaryText}` : ''}；${dependencySummaryText}${skippedCount ? `（${skippedCount} 个此前已恢复）` : ''}工作区文件已重新生成。`
+          text: `恢复完成：重建 ${restoredWorktreeList.length} 个 worktree${branchSummaryText ? ` — ${branchSummaryText}` : ''}；${dependencySummaryText}${ignoredCopySummaryText ? `；${ignoredCopySummaryText}` : ''}${skippedCount ? `（${skippedCount} 个此前已恢复）` : ''}工作区文件已重新生成。`
         });
         refreshTaskList();
       } catch (restoreError) {

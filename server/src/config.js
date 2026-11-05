@@ -29,6 +29,11 @@ export const serverConfig = {
   defaultEditorCommand: 'code',
   /** 忽略文件复制默认白名单 */
   defaultIgnoreFilePatterns: ['.env', '.env.local', '*.local'],
+  /**
+   * 忽略目录复制默认白名单：命中目录整棵递归复制到新 worktree，目标已存在时覆盖。
+   * `.husky` 含 gitignore 的钩子运行时目录（v9 起为 `.husky/_`），worktree 不复制会导致提交钩子失效。
+   */
+  defaultIgnoreDirectoryNames: ['.husky'],
   /** git 命令默认超时（毫秒） */
   gitCommandTimeoutMs: 60_000
 };

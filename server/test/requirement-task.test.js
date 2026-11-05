@@ -209,6 +209,11 @@ describe('需求任务删除与恢复', () => {
     }));
     const createdTask = createTaskResult.body.task;
 
+    // 主仓库预置 .husky：恢复重建目录时应一并复制过去（含 gitignore 的运行时子目录）
+    fs.mkdirSync(path.join(fixtureRepository.repoPath, '.husky', '_'), { recursive: true });
+    fs.writeFileSync(path.join(fixtureRepository.repoPath, '.husky', 'pre-commit'), '#!/bin/sh\nnpm test\n', 'utf8');
+    fs.writeFileSync(path.join(fixtureRepository.repoPath, '.husky', '_', 'husky.sh'), '#!/bin/sh\n', 'utf8');
+
     // 通过关联需求创建 worktree（新建分支 feature/del-restore）
     const worktreeTargetPath = path.join(fixtureRepository.parentTempDir, 'req-delete-wt');
     const createWorktreeResult = await postJson('/api/worktrees/create', {
@@ -237,6 +242,9 @@ describe('需求任务删除与恢复', () => {
     expect(restoreResult.status).toBe(200);
     expect(restoreResult.body.restoredWorktreeList.length).toBe(1);
     expect(fs.existsSync(worktreeTargetPath)).toBe(true);
+    // 恢复时按创建流程的默认白名单复制忽略内容：.husky 整棵目录随重建目录一起可用
+    expect(restoreResult.body.restoredWorktreeList[0].ignoredCopyText).toBe('.husky/');
+    expect(fs.existsSync(path.join(worktreeTargetPath, '.husky', '_', 'husky.sh'))).toBe(true);
     expect(restoreResult.body.task.deletedAt).toBeNull();
     const listResult = await getJson('/api/requirement-tasks');
     const restoredTask = listResult.body.tasks.find((task) => task.id === createdTask.id);

@@ -1,16 +1,16 @@
-# Graph Report - worktree-manager  (2026-11-03)
+# Graph Report - worktree-manager  (2026-11-05)
 
 ## Corpus Check
-- 105 files · ~47,822 words
+- 105 files · ~48,202 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 743 nodes · 1174 edges · 61 communities (41 shown, 20 thin omitted)
+- 748 nodes · 1185 edges · 61 communities (40 shown, 21 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `ccd8a53f`
+- Built from commit: `cb3990c2`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -73,7 +73,7 @@
 - [[_COMMUNITY_README 主文档|README 主文档]]
 - [[_COMMUNITY_Tauri 桌面端说明|Tauri 桌面端说明]]
 - [[_COMMUNITY_图文使用教程|图文使用教程]]
-- [[_COMMUNITY_TaskActionsRow.jsx|TaskActionsRow.jsx]]
+- [[_COMMUNITY_HelpGuideDialog.jsx|HelpGuideDialog.jsx]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `executeGitCommand()` - 27 edges
@@ -88,29 +88,29 @@
 10. `listWorktrees()` - 11 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `executeCreationFlow()` --calls--> `detectPackageManager()`  [EXTRACTED]
-  server/src/routes/worktree-routes.js → server/src/core/dep-linker.js
-- `applySharedDependencyLink()` --calls--> `assertSameVolume()`  [EXTRACTED]
-  server/src/core/dep-linker.js → server/src/core/validators.js
+- `executeCreationFlow()` --calls--> `openDirectoryInEditor()`  [EXTRACTED]
+  server/src/routes/worktree-routes.js → server/src/core/editor-opener.js
 - `readProjectRemoteUrl()` --calls--> `executeGitCommand()`  [EXTRACTED]
   server/src/routes/requirement-task-routes.js → server/src/core/git-executor.js
-- `executeCreationFlow()` --calls--> `executeGitCommand()`  [EXTRACTED]
-  server/src/routes/worktree-routes.js → server/src/core/git-executor.js
+- `copyIgnoredSafely()` --calls--> `copyIgnoredFiles()`  [EXTRACTED]
+  server/src/routes/requirement-task-routes.js → server/src/core/ignore-file-copier.js
+- `executeCreationFlow()` --calls--> `copyIgnoredFiles()`  [EXTRACTED]
+  server/src/routes/worktree-routes.js → server/src/core/ignore-file-copier.js
 - `generateAndAttachWorkspace()` --calls--> `generateWorkspaceFileForTask()`  [EXTRACTED]
   server/src/routes/requirement-task-routes.js → server/src/core/workspace-file-generator.js
 
 ## Import Cycles
 - None detected.
 
-## Communities (61 total, 20 thin omitted)
+## Communities (61 total, 21 thin omitted)
 
 ### Community 0 - "前端 API 与界面"
 Cohesion: 0.05
-Nodes (68): clearWorktreeHistory(), createRequirementTask(), createWorktree(), deleteRequest(), deleteRequirementTask(), deleteTaskRecord(), fetchBranchOverview(), fetchDefaultBaseRef() (+60 more)
+Nodes (70): clearWorktreeHistory(), createRequirementTask(), createWorktree(), deleteRequest(), deleteRequirementTask(), deleteTaskRecord(), fetchBranchOverview(), fetchDefaultBaseRef() (+62 more)
 
 ### Community 1 - "依赖共享与策略"
-Cohesion: 0.08
-Nodes (50): detectPackageManager(), LOCK_FILE_DETECTION_RULES, recommendDependencyStrategy(), startIndependentInstall(), checkWorktreeDependencyStatus(), diffDependencyMaps(), readPackageDependencies(), removeDirectoryTree() (+42 more)
+Cohesion: 0.07
+Nodes (57): applySharedDependencyLink(), detectPackageManager(), LOCK_FILE_DETECTION_RULES, recommendDependencyStrategy(), startIndependentInstall(), checkWorktreeDependencyStatus(), diffDependencyMaps(), readPackageDependencies() (+49 more)
 
 ### Community 2 - "服务端启动与配置"
 Cohesion: 0.06
@@ -149,8 +149,8 @@ Cohesion: 0.18
 Nodes (11): appIconPngBuffer, assetsDirectory, buildChunk(), buildDirectory, crc32(), createRoundedSquarePng(), desktopDirectory, fs (+3 more)
 
 ### Community 12 - "编辑器启动"
-Cohesion: 0.15
-Nodes (17): currentFileDir, serverConfig, applySharedDependencyLink(), buildEditorSpawnCommand(), locateCommandCandidates(), openDirectoryInEditor(), resolveBatchFileTarget(), resolveEditorExecutable() (+9 more)
+Cohesion: 0.19
+Nodes (13): currentFileDir, serverConfig, buildEditorSpawnCommand(), locateCommandCandidates(), openDirectoryInEditor(), resolveBatchFileTarget(), resolveEditorExecutable(), compileSingleLevelWildcard() (+5 more)
 
 ### Community 13 - "开发脚本"
 Cohesion: 0.40
@@ -256,14 +256,10 @@ Nodes (3): 图谱速览（God Nodes）, 查代码优先使用 graphify 知识图
 Cohesion: 0.17
 Nodes (11): worktree（server/src/routes/worktree-routes.js）, 分支（server/src/routes/branch-routes.js）, 前后端接口映射表, 变更影响面速查, 后台任务（server/src/routes/task-routes.js）, 探活（server/src/routes/health-routes.js）, 文件系统（server/src/routes/filesystem-routes.js）, 记录类（server/src/routes/record-routes.js） (+3 more)
 
-### Community 60 - "TaskActionsRow.jsx"
-Cohesion: 0.40
-Nodes (3): STAGE_CLASS_MAP, STAGE_OPTIONS, TaskActionsRow()
-
 ## Knowledge Gaps
 - **324 isolated node(s):** `{ app, BrowserWindow, Tray, Menu, Notification, nativeImage, ipcMain }`, `path`, `fs`, `net`, `serverEntryPath` (+319 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **20 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **21 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
@@ -271,13 +267,13 @@ _Questions this graph is uniquely positioned to answer:_
 - **Why does `worktree-manager` connect `服务端依赖栈` to `依赖共享与策略`?**
   _High betweenness centrality (0.013) - this node is a cross-community bridge._
 - **Why does `worktree-manager` connect `前端依赖栈` to `依赖共享与策略`?**
-  _High betweenness centrality (0.010) - this node is a cross-community bridge._
+  _High betweenness centrality (0.011) - this node is a cross-community bridge._
 - **What connects `{ app, BrowserWindow, Tray, Menu, Notification, nativeImage, ipcMain }`, `path`, `fs` to the rest of the system?**
   _324 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `前端 API 与界面` be split into smaller, more focused modules?**
-  _Cohesion score 0.05322953923837576 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.050693069306930696 - nodes in this community are weakly interconnected._
 - **Should `依赖共享与策略` be split into smaller, more focused modules?**
-  _Cohesion score 0.07723855092276145 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07003475006682705 - nodes in this community are weakly interconnected._
 - **Should `服务端启动与配置` be split into smaller, more focused modules?**
   _Cohesion score 0.0553116769095698 - nodes in this community are weakly interconnected._
 - **Should `Electron 打包配置` be split into smaller, more focused modules?**

@@ -71,7 +71,7 @@ npm run dev              # 一键开发：当前终端同时跑后端热重启 +
 | worktree 列表 | 路径、分支、HEAD、脏状态、主 worktree 标识 |
 | 删除 | 未提交修改需强制确认（列出具体文件清单）、未合并提交数提示、主 worktree 禁删；目录被编辑器/终端占用时给出"关闭占用程序后重试"的友好提示 |
 | prune | 清理目录已不存在的失效 worktree 记录 |
-| 后置动作 | 复制被忽略文件（.env、.env.local、*.local 白名单，可配置）；用编辑器打开新目录 |
+| 后置动作 | 复制被忽略文件（.env、.env.local、*.local 白名单，可配置）与忽略目录（.husky 整棵递归复制，目标已有内容时覆盖，保证提交钩子在 worktree 内可用）；用编辑器打开新目录 |
 | 任务记录 | 依赖安装等后台任务的状态（执行中/成功/失败/已中断）、完整日志可回看；SSE 实时推送 |
 | 创建历史 | worktree 创建成功/失败均留痕并记录原因 |
 | 主仓库记忆 | 页面打开自动回填最后使用的主仓库，"最近主仓库"下拉一键切换（保留 10 条） |
@@ -103,7 +103,7 @@ server/                 Koa 后端（仅监听本机）
     worktree-manager    worktree 创建/列表/删除/prune
     dep-linker          依赖策略：检测/推荐/junction/独立安装
     dependency-risk-checker  worktree 依赖状态与共享风险检查
-    ignore-file-copier  忽略文件白名单复制
+    ignore-file-copier  忽略文件/目录白名单复制
     editor-opener       编辑器打开
   src/routes/           REST API 路由
   src/jobs/             任务执行器（内存运行态 + 持久化留存 + SSE 日志流）

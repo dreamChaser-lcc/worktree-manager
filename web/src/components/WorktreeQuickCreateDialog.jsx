@@ -138,7 +138,7 @@ export function WorktreeQuickCreateDialog({
                   checked={shouldCopyIgnoredFiles}
                   onChange={(changeEvent) => setShouldCopyIgnoredFiles(changeEvent.target.checked)}
                 />
-                复制被忽略文件（.env、.env.local、*.local）
+                复制被忽略文件与目录（.env、.env.local、*.local、.husky）
               </label>
             </div>
 
