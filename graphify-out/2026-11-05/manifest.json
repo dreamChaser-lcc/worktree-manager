@@ -150,9 +150,9 @@
     "semantic_hash": "4ce4aa958655b848f88f5ff31a87c50c"
   },
   "server/src/routes/requirement-task-routes.js": {
-    "mtime": 1793687202.945148,
-    "ast_hash": "4bc9265f4333dae8fe230f61051daaa9",
-    "semantic_hash": "4bc9265f4333dae8fe230f61051daaa9"
+    "mtime": 1793846927.9221308,
+    "ast_hash": "0a3f679b8327d31e0dcc3192c32bc1ae",
+    "semantic_hash": ""
   },
   "server/src/routes/settings-routes.js": {
     "mtime": 1793374707.6058252,
@@ -250,9 +250,9 @@
     "semantic_hash": "0e32d3126b0192abb6db805774dfe934"
   },
   "server/test/requirement-task.test.js": {
-    "mtime": 1793373710.0392594,
-    "ast_hash": "42a4b97e6268fc6f59b069f985a3c57e",
-    "semantic_hash": "42a4b97e6268fc6f59b069f985a3c57e"
+    "mtime": 1793847004.9979944,
+    "ast_hash": "b1ae0222e8b8c0d51479c59a6753199c",
+    "semantic_hash": ""
   },
   "server/test/smoke.test.js": {
     "mtime": 1793331736.0235302,
@@ -335,8 +335,8 @@
     "semantic_hash": "7cdc95eae733176e38e048b941c08100"
   },
   "web/src/components/RequirementTaskPanel.jsx": {
-    "mtime": 1793692886.5654163,
-    "ast_hash": "39fe07970806584b5b3b1facc8261713",
+    "mtime": 1793846937.00392,
+    "ast_hash": "8cd86ddf9d556183810c980706e32a3b",
     "semantic_hash": ""
   },
   "web/src/components/SearchableSelect.jsx": {

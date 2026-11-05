@@ -1,16 +1,16 @@
 # Graph Report - worktree-manager  (2026-11-05)
 
 ## Corpus Check
-- 105 files · ~48,202 words
+- 105 files · ~48,309 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 748 nodes · 1185 edges · 61 communities (40 shown, 21 thin omitted)
+- 749 nodes · 1187 edges · 61 communities (40 shown, 21 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `cb3990c2`
+- Built from commit: `2f0d2099`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -110,11 +110,11 @@ Nodes (70): clearWorktreeHistory(), createRequirementTask(), createWorktree(), d
 
 ### Community 1 - "依赖共享与策略"
 Cohesion: 0.07
-Nodes (57): applySharedDependencyLink(), detectPackageManager(), LOCK_FILE_DETECTION_RULES, recommendDependencyStrategy(), startIndependentInstall(), checkWorktreeDependencyStatus(), diffDependencyMaps(), readPackageDependencies() (+49 more)
+Nodes (55): applySharedDependencyLink(), detectPackageManager(), LOCK_FILE_DETECTION_RULES, recommendDependencyStrategy(), startIndependentInstall(), checkWorktreeDependencyStatus(), diffDependencyMaps(), readPackageDependencies() (+47 more)
 
 ### Community 2 - "服务端启动与配置"
-Cohesion: 0.06
-Nodes (42): createApp(), AppError, appendJobLog(), createJob(), findRunningJob(), finishJob(), getJob(), jobMap (+34 more)
+Cohesion: 0.05
+Nodes (43): createApp(), AppError, appendJobLog(), createJob(), findRunningJob(), finishJob(), getJob(), jobMap (+35 more)
 
 ### Community 3 - "桌面端壳与 sidecar"
 Cohesion: 0.17
@@ -129,8 +129,8 @@ Cohesion: 0.11
 Nodes (18): dependencies, koa, koa-bodyparser, @koa/router, koa-static, @seald-io/nedb, worktree-manager, devDependencies (+10 more)
 
 ### Community 7 - "工作区文件生成"
-Cohesion: 0.18
-Nodes (11): buildWorkspaceFileContent(), generateWorkspaceFileForTask(), isExistingDirectory(), sanitizeWorkspaceFileName(), convertRemoteUrlToWebUrl(), generateAndAttachWorkspace(), getJson(), postJson() (+3 more)
+Cohesion: 0.17
+Nodes (12): buildExcludedProjectReason(), buildWorkspaceFileContent(), generateWorkspaceFileForTask(), isExistingDirectory(), sanitizeWorkspaceFileName(), convertRemoteUrlToWebUrl(), generateAndAttachWorkspace(), getJson() (+4 more)
 
 ### Community 8 - "Tauri 配置"
 Cohesion: 0.11
@@ -149,8 +149,8 @@ Cohesion: 0.18
 Nodes (11): appIconPngBuffer, assetsDirectory, buildChunk(), buildDirectory, crc32(), createRoundedSquarePng(), desktopDirectory, fs (+3 more)
 
 ### Community 12 - "编辑器启动"
-Cohesion: 0.19
-Nodes (13): currentFileDir, serverConfig, buildEditorSpawnCommand(), locateCommandCandidates(), openDirectoryInEditor(), resolveBatchFileTarget(), resolveEditorExecutable(), compileSingleLevelWildcard() (+5 more)
+Cohesion: 0.17
+Nodes (14): currentFileDir, serverConfig, buildEditorSpawnCommand(), locateCommandCandidates(), openDirectoryInEditor(), resolveBatchFileTarget(), resolveEditorExecutable(), compileSingleLevelWildcard() (+6 more)
 
 ### Community 13 - "开发脚本"
 Cohesion: 0.40
@@ -273,8 +273,8 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `前端 API 与界面` be split into smaller, more focused modules?**
   _Cohesion score 0.050693069306930696 - nodes in this community are weakly interconnected._
 - **Should `依赖共享与策略` be split into smaller, more focused modules?**
-  _Cohesion score 0.07003475006682705 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07343660355708548 - nodes in this community are weakly interconnected._
 - **Should `服务端启动与配置` be split into smaller, more focused modules?**
-  _Cohesion score 0.0553116769095698 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.054987212276214836 - nodes in this community are weakly interconnected._
 - **Should `Electron 打包配置` be split into smaller, more focused modules?**
   _Cohesion score 0.06896551724137931 - nodes in this community are weakly interconnected._

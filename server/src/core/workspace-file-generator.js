@@ -5,7 +5,8 @@ import path from 'node:path';
 /**
  * 需求任务工作区文件（.code-workspace）生成器。
  * 文件内容为 JSONC：头部注释标识由 worktree-manager 生成并注明需求/分支/任务 id，
- * folders 为各项目已关联 worktree 的绝对路径（仅收录真实存在的目录）。
+ * folders 为各项目纳入工作区的目录：已关联 worktree 用 worktree 目录，
+ * 仅关联项目（尚未建 worktree）或 worktree 目录缺失时回退主仓库目录；仅收录真实存在的目录。
  */
 export function sanitizeWorkspaceFileName(branchName) {
   const safeName =
@@ -38,10 +39,20 @@ function isExistingDirectory(candidatePath) {
   }
 }
 
+/** 排除原因文案：区分"未关联 worktree"与"路径不存在"，便于用户知道该补哪一步 */
+function buildExcludedProjectReason(projectEntry) {
+  const hasRepoPath = Boolean(projectEntry.repoPath);
+  if (!projectEntry.worktreePath) {
+    return hasRepoPath ? '主仓库目录不存在' : '未设置主仓库路径';
+  }
+  return hasRepoPath ? 'worktree 与主仓库目录均不存在' : 'worktree 目录不存在且未设置主仓库路径';
+}
+
 /**
  * 依据需求记录生成工作区文件：
- * - 收录各项目已关联且真实存在的 worktree 目录（绝对路径、去重）
- * - 未关联或目录缺失的项目记入 excludedProjectList（不阻断生成）
+ * - 已关联且真实存在的 worktree 目录优先收录；仅关联项目（未建 worktree）或 worktree 目录缺失时，
+ *   回退主仓库目录，保证"只关联了主仓库的项目"也能进工作区（绝对路径、按路径去重）
+ * - 主仓库路径也未配置或目录不存在时记入 excludedProjectList（不阻断生成）
  * 聚合目录模式（options.groupWorktreesByRequirement）下，文件与各 worktree 同放
  * <工作区目录>\<需求名称>\，folders 使用相对路径（整个需求目录可整体移动）。
  */
@@ -59,23 +70,30 @@ export async function generateWorkspaceFileForTask(requirementRecord, workspaceD
   const excludedProjectList = [];
   const seenPathSet = new Set();
   for (const projectEntry of requirementRecord.projectList || []) {
-    const worktreePath = projectEntry.worktreePath;
-    if (worktreePath && isExistingDirectory(worktreePath) && !seenPathSet.has(worktreePath)) {
-      seenPathSet.add(worktreePath);
-      includedPathList.push(worktreePath);
-    } else {
+    const worktreeDirectoryAvailable =
+      Boolean(projectEntry.worktreePath) && isExistingDirectory(projectEntry.worktreePath);
+    // 优先用已关联且存在的 worktree；否则回退主仓库目录（"仅关联项目、暂不建 worktree"也能进工作区）
+    const folderPath = worktreeDirectoryAvailable ? projectEntry.worktreePath : projectEntry.repoPath;
+    if (!folderPath || !isExistingDirectory(folderPath)) {
       excludedProjectList.push({
         projectName: projectEntry.projectName,
-        reason: !worktreePath ? '未关联 worktree' : 'worktree 目录不存在'
+        reason: buildExcludedProjectReason(projectEntry)
       });
+      continue;
     }
+    if (seenPathSet.has(folderPath)) {
+      excludedProjectList.push({ projectName: projectEntry.projectName, reason: '目录与其他项目重复' });
+      continue;
+    }
+    seenPathSet.add(folderPath);
+    includedPathList.push(folderPath);
   }
 
-  // 需求目录内的 worktree 用相对路径（整个需求目录可整体移动）；目录外的用绝对路径
-  const folderEntryList = includedPathList.map((worktreePath) => {
-    const relativePath = path.relative(layoutDirectoryPath, worktreePath);
+  // 需求目录内的目录用相对路径（整个需求目录可整体移动）；目录外的用绝对路径
+  const folderEntryList = includedPathList.map((folderPath) => {
+    const relativePath = path.relative(layoutDirectoryPath, folderPath);
     const isInsideLayoutDirectory = relativePath !== '' && !relativePath.startsWith('..');
-    return { path: isInsideLayoutDirectory ? relativePath : worktreePath };
+    return { path: isInsideLayoutDirectory ? relativePath : folderPath };
   });
 
   const workspaceFilePath = path.join(

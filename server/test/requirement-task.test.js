@@ -334,10 +334,15 @@ describe('需求任务删除与恢复', () => {
   });
 
   it('默认保存后生成 .code-workspace：路径回填、文件含标识注释与已关联目录', async () => {
+    // 仅关联主仓库、未建 worktree 的项目目录（应回退主仓库路径纳入工作区）
+    const repoOnlyDirectoryPath = path.join(fixtureRepository.parentTempDir, 'repo-only-project');
+    fs.mkdirSync(repoOnlyDirectoryPath, { recursive: true });
+
     const createResult = await postJson('/api/requirement-tasks', buildRequirementPayload({
       branchName: 'feature/ws-demo',
       projectList: [
         { projectName: 'fixture-main', repoPath: fixtureRepository.repoPath, worktreePath: fixtureRepository.repoPath },
+        { projectName: 'repo-only', repoPath: repoOnlyDirectoryPath, worktreePath: null },
         { projectName: 'not-ready', repoPath: 'D:\\repos\\not-ready', worktreePath: null }
       ]
     }));
@@ -350,10 +355,11 @@ describe('需求任务删除与恢复', () => {
     expect(fs.existsSync(workspaceFilePath)).toBe(true);
     expect(createResult.body.task.workspaceFilePath).toBe(workspaceFilePath);
 
-    // 未关联 worktree 的项目被排除并说明原因
+    // 仅关联项目（未建 worktree）回退主仓库目录纳入；主仓库路径不存在时记入排除清单并说明原因
     expect(workspaceResult.includedPathList).toContain(fixtureRepository.repoPath);
+    expect(workspaceResult.includedPathList).toContain(repoOnlyDirectoryPath);
     expect(workspaceResult.excludedProjectList).toEqual([
-      { projectName: 'not-ready', reason: '未关联 worktree' }
+      { projectName: 'not-ready', reason: '主仓库目录不存在' }
     ]);
 
     const fileContent = fs.readFileSync(workspaceFilePath, 'utf8');
@@ -363,6 +369,7 @@ describe('需求任务删除与恢复', () => {
     const jsonText = fileContent.split('\n').filter((lineText) => !lineText.trim().startsWith('//')).join('\n');
     const workspaceDocument = JSON.parse(jsonText);
     expect(workspaceDocument.folders.map((folder) => folder.path)).toContain(fixtureRepository.repoPath);
+    expect(workspaceDocument.folders.map((folder) => folder.path)).toContain(repoOnlyDirectoryPath);
     expect(workspaceDocument.settings).toEqual({});
   });
 
@@ -664,12 +671,15 @@ describe('工作区文件生成器（聚合目录模式）', () => {
   it('目录外的 worktree 用绝对路径，缺失的项目记入排除清单', async () => {
     const workspaceDirectoryPath = path.join(generatorTestRootDirectory, 'mixed-workspaces');
     const outsideWorktreePath = path.join(generatorTestRootDirectory, 'outside-tree');
+    const repoOnlyDirectoryPath = path.join(generatorTestRootDirectory, 'repo-only-project');
     createWorktreeDirectory(outsideWorktreePath);
+    createWorktreeDirectory(repoOnlyDirectoryPath);
 
     const result = await generateWorkspaceFileForTask(
       buildGeneratorRecord({
         projectList: [
           { projectName: 'outside', repoPath: 'D:\\repos\\x', worktreePath: outsideWorktreePath },
+          { projectName: 'repo-only', repoPath: repoOnlyDirectoryPath, worktreePath: null },
           { projectName: 'missing', repoPath: 'D:\\repos\\y', worktreePath: null }
         ]
       }),
@@ -678,9 +688,9 @@ describe('工作区文件生成器（聚合目录模式）', () => {
     );
 
     expect(result.excludedProjectList).toEqual([
-      { projectName: 'missing', reason: '未关联 worktree' }
+      { projectName: 'missing', reason: '主仓库目录不存在' }
     ]);
     const workspaceDocument = readWorkspaceDocument(result.workspaceFilePath);
-    expect(workspaceDocument.folders).toEqual([{ path: outsideWorktreePath }]);
+    expect(workspaceDocument.folders).toEqual([{ path: outsideWorktreePath }, { path: repoOnlyDirectoryPath }]);
   });
 });

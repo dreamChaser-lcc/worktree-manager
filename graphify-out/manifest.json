@@ -115,9 +115,9 @@
     "semantic_hash": "fc1e621e48789965c6344b3121d937e8"
   },
   "server/src/core/workspace-file-generator.js": {
-    "mtime": 1793352714.6198115,
-    "ast_hash": "0d14a0a1e7825f6bb8e39a2836279fba",
-    "semantic_hash": "0d14a0a1e7825f6bb8e39a2836279fba"
+    "mtime": 1793863097.999033,
+    "ast_hash": "ba1dc25c42b326a8aa447db44d4136ce",
+    "semantic_hash": ""
   },
   "server/src/core/worktree-manager.js": {
     "mtime": 1793604118.472659,
@@ -250,8 +250,8 @@
     "semantic_hash": "0e32d3126b0192abb6db805774dfe934"
   },
   "server/test/requirement-task.test.js": {
-    "mtime": 1793847004.9979944,
-    "ast_hash": "b1ae0222e8b8c0d51479c59a6753199c",
+    "mtime": 1793863119.0026567,
+    "ast_hash": "b2a8c5a1ea7577ef06d344f2f2e9fcf9",
     "semantic_hash": ""
   },
   "server/test/smoke.test.js": {
@@ -375,9 +375,9 @@
     "semantic_hash": ""
   },
   "web/src/help/helpGuideContent.js": {
-    "mtime": 1793368767.502542,
-    "ast_hash": "87556e391d7029583e53bc072e4fa246",
-    "semantic_hash": "87556e391d7029583e53bc072e4fa246"
+    "mtime": 1793863194.6555362,
+    "ast_hash": "1c56dce0f43d4eadd179e560c6f14040",
+    "semantic_hash": ""
   },
   "web/src/main.jsx": {
     "mtime": 1793331681.064978,
@@ -395,8 +395,8 @@
     "semantic_hash": "659fff84c90c16b0cdd059b8c3ec7fcd"
   },
   "README.md": {
-    "mtime": 1793846817.0995097,
-    "ast_hash": "1dfc3da767ebf29b392f7b6e6e60500a",
+    "mtime": 1793863186.4255848,
+    "ast_hash": "64515fce3b8b99dd6e42980dbed0cbb5",
     "semantic_hash": ""
   },
   "desktop-tauri/README.md": {

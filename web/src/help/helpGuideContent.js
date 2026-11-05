@@ -18,7 +18,7 @@ export const helpGuideSections = [
         items: [
           '第一步：新建需求任务 —— 粘贴需求链接与标题、填写开发分支、添加涉及项目',
           '第二步：为项目创建 worktree —— 表单内一键创建（路径自动按需求目录预填），或关联已有 worktree',
-          '第三步：保存 —— 默认自动生成 .code-workspace 工作区文件，聚合各项目已关联的 worktree',
+          '第三步：保存 —— 默认自动生成 .code-workspace 工作区文件：已关联 worktree 的项目用 worktree 目录，仅关联项目的用主仓库目录',
           '第四步：打开工作区开始开发 —— 多项目一个窗口；依赖有风险就执行「独立安装」',
           '第五步：日常开发 —— 随时查看各项目分支位置、与需求分支是否一致',
           '第六步：需求完成 —— 删除需求任务（worktree 与目录一并清理，git 分支保留，可随时恢复）'
@@ -57,7 +57,7 @@ export const helpGuideSections = [
         type: 'list',
         items: [
           '「添加项目」可增行（一个需求常涉及前后端多个项目），多于一行的项目卡右上角有「移除项目」',
-          '勾选「保存后生成工作区文件」（默认勾选）时，保存后会在工作区文件目录生成 .code-workspace，聚合各项目已关联的 worktree',
+          '勾选「保存后生成工作区文件」（默认勾选）时，保存后会在工作区文件目录生成 .code-workspace：已关联 worktree 的项目收录 worktree 目录，仅关联项目（暂未建 worktree）收录主仓库目录',
           '保存校验：需求链接、分支名称、每个项目的名称与主仓库路径必填'
         ]
       }
@@ -151,7 +151,7 @@ export const helpGuideSections = [
     blocks: [
       {
         type: 'paragraph',
-        text: '需求列表点「查看」展开明细，包含工作区文件、项目卡片、项目名称与 git 链接、备注：'
+        text: '需求列表点「查看」打开明细弹窗，包含工作区文件、项目卡片、项目名称与 git 链接、备注：'
       },
       {
         type: 'list',
