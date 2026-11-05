@@ -335,8 +335,8 @@
     "semantic_hash": "7cdc95eae733176e38e048b941c08100"
   },
   "web/src/components/RequirementTaskPanel.jsx": {
-    "mtime": 1793692687.9034245,
-    "ast_hash": "04335679f7838a384a87e6b0eec48fe0",
+    "mtime": 1793692886.5654163,
+    "ast_hash": "39fe07970806584b5b3b1facc8261713",
     "semantic_hash": ""
   },
   "web/src/components/SearchableSelect.jsx": {
@@ -562,6 +562,11 @@
   ".codebuddy/rules/graphify.md": {
     "mtime": 1793692386.979236,
     "ast_hash": "25a6aac3b372ea7efd4090e85a5e94dc",
+    "semantic_hash": ""
+  },
+  "docs/API-MAP.md": {
+    "mtime": 1793693774.5020237,
+    "ast_hash": "87591e907bd1a2c08c19ee0d1b541479",
     "semantic_hash": ""
   }
 }

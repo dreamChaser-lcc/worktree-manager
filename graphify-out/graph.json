@@ -1490,7 +1490,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "server_src_core_dep_linker_applyshareddependencylink",
-      "community": 1,
+      "community": 12,
       "norm_label": "applyshareddependencylink()"
     },
     {
@@ -2220,7 +2220,7 @@
       "source_location": "L123",
       "_origin": "ast",
       "id": "server_src_jobs_job_runner_startprocessjob",
-      "community": 2,
+      "community": 12,
       "norm_label": "startprocessjob()"
     },
     {
@@ -2510,7 +2510,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_src_routes_worktree_routes",
-      "community": 1,
+      "community": 12,
       "norm_label": "worktree-routes.js"
     },
     {
@@ -2530,7 +2530,7 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "server_src_routes_worktree_routes_requirestring",
-      "community": 1,
+      "community": 12,
       "norm_label": "requirestring()"
     },
     {
@@ -2540,7 +2540,7 @@
       "source_location": "L120",
       "_origin": "ast",
       "id": "server_src_routes_worktree_routes_executecreationflow",
-      "community": 1,
+      "community": 12,
       "norm_label": "executecreationflow()"
     },
     {
@@ -2550,7 +2550,7 @@
       "source_location": "L270",
       "_origin": "ast",
       "id": "server_src_routes_worktree_routes_normalizelocalpath",
-      "community": 1,
+      "community": 12,
       "norm_label": "normalizelocalpath()"
     },
     {
@@ -2560,7 +2560,7 @@
       "source_location": "L280",
       "_origin": "ast",
       "id": "server_src_routes_worktree_routes_attachworktreetorequirementtask",
-      "community": 1,
+      "community": 12,
       "norm_label": "attachworktreetorequirementtask()"
     },
     {
@@ -2570,7 +2570,7 @@
       "source_location": "L311",
       "_origin": "ast",
       "id": "server_src_routes_worktree_routes_recordcreationhistory",
-      "community": 1,
+      "community": 12,
       "norm_label": "recordcreationhistory()"
     },
     {
@@ -4000,7 +4000,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "web_src_components_helpguidedialog",
-      "community": 42,
+      "community": 0,
       "norm_label": "helpguidedialog.jsx"
     },
     {
@@ -4010,7 +4010,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "web_src_components_helpguidedialog_helpguidedialog",
-      "community": 42,
+      "community": 0,
       "norm_label": "helpguidedialog()"
     },
     {
@@ -4240,7 +4240,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "web_src_components_taskactionsrow",
-      "community": 0,
+      "community": 60,
       "norm_label": "taskactionsrow.jsx"
     },
     {
@@ -4250,7 +4250,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "web_src_components_taskactionsrow_stage_options",
-      "community": 0,
+      "community": 60,
       "norm_label": "stage_options"
     },
     {
@@ -4260,7 +4260,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "web_src_components_taskactionsrow_stagetagmenu",
-      "community": 0,
+      "community": 60,
       "norm_label": "stagetagmenu()"
     },
     {
@@ -4270,7 +4270,7 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "web_src_components_taskactionsrow_stage_class_map",
-      "community": 0,
+      "community": 60,
       "norm_label": "stage_class_map"
     },
     {
@@ -4280,7 +4280,7 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "web_src_components_taskactionsrow_taskactionsrow",
-      "community": 0,
+      "community": 60,
       "norm_label": "taskactionsrow()"
     },
     {
@@ -4400,7 +4400,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "web_src_help_helpguidecontent",
-      "community": 42,
+      "community": 0,
       "norm_label": "helpguidecontent.js"
     },
     {
@@ -4410,7 +4410,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "web_src_help_helpguidecontent_helpguidesections",
-      "community": 42,
+      "community": 0,
       "norm_label": "helpguidesections"
     },
     {
@@ -4692,6 +4692,126 @@
       "id": "desktop_tauri_readme_\u5df2\u77e5\u9650\u5236_\u5f85\u9a8c\u8bc1\u9879\u89c1_openspec_\u4efb\u52a1_2_2",
       "community": 36,
       "norm_label": "\u5df2\u77e5\u9650\u5236(\u5f85\u9a8c\u8bc1\u9879\u89c1 openspec \u4efb\u52a1 2.2)"
+    },
+    {
+      "label": "API-MAP.md",
+      "file_type": "document",
+      "source_file": "docs/API-MAP.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_api_map",
+      "community": 42,
+      "norm_label": "api-map.md"
+    },
+    {
+      "label": "\u524d\u540e\u7aef\u63a5\u53e3\u6620\u5c04\u8868",
+      "file_type": "document",
+      "source_file": "docs/API-MAP.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_api_map_\u524d\u540e\u7aef\u63a5\u53e3\u6620\u5c04\u8868",
+      "community": 42,
+      "norm_label": "\u524d\u540e\u7aef\u63a5\u53e3\u6620\u5c04\u8868"
+    },
+    {
+      "label": "\u901a\u7528\u8bf7\u6c42\u5c01\u88c5\uff08web/src/api/client.js\uff09",
+      "file_type": "document",
+      "source_file": "docs/API-MAP.md",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "docs_api_map_\u901a\u7528\u8bf7\u6c42\u5c01\u88c5_web_src_api_client_js",
+      "community": 42,
+      "norm_label": "\u901a\u7528\u8bf7\u6c42\u5c01\u88c5(web/src/api/client.js)"
+    },
+    {
+      "label": "\u9700\u6c42\u4efb\u52a1\uff08server/src/routes/requirement-task-routes.js\uff09",
+      "file_type": "document",
+      "source_file": "docs/API-MAP.md",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "docs_api_map_\u9700\u6c42\u4efb\u52a1_server_src_routes_requirement_task_routes_js",
+      "community": 42,
+      "norm_label": "\u9700\u6c42\u4efb\u52a1(server/src/routes/requirement-task-routes.js)"
+    },
+    {
+      "label": "worktree\uff08server/src/routes/worktree-routes.js\uff09",
+      "file_type": "document",
+      "source_file": "docs/API-MAP.md",
+      "source_location": "L35",
+      "_origin": "ast",
+      "id": "docs_api_map_worktree_server_src_routes_worktree_routes_js",
+      "community": 42,
+      "norm_label": "worktree(server/src/routes/worktree-routes.js)"
+    },
+    {
+      "label": "\u5206\u652f\uff08server/src/routes/branch-routes.js\uff09",
+      "file_type": "document",
+      "source_file": "docs/API-MAP.md",
+      "source_location": "L47",
+      "_origin": "ast",
+      "id": "docs_api_map_\u5206\u652f_server_src_routes_branch_routes_js",
+      "community": 42,
+      "norm_label": "\u5206\u652f(server/src/routes/branch-routes.js)"
+    },
+    {
+      "label": "\u6587\u4ef6\u7cfb\u7edf\uff08server/src/routes/filesystem-routes.js\uff09",
+      "file_type": "document",
+      "source_file": "docs/API-MAP.md",
+      "source_location": "L56",
+      "_origin": "ast",
+      "id": "docs_api_map_\u6587\u4ef6\u7cfb\u7edf_server_src_routes_filesystem_routes_js",
+      "community": 42,
+      "norm_label": "\u6587\u4ef6\u7cfb\u7edf(server/src/routes/filesystem-routes.js)"
+    },
+    {
+      "label": "\u540e\u53f0\u4efb\u52a1\uff08server/src/routes/task-routes.js\uff09",
+      "file_type": "document",
+      "source_file": "docs/API-MAP.md",
+      "source_location": "L67",
+      "_origin": "ast",
+      "id": "docs_api_map_\u540e\u53f0\u4efb\u52a1_server_src_routes_task_routes_js",
+      "community": 42,
+      "norm_label": "\u540e\u53f0\u4efb\u52a1(server/src/routes/task-routes.js)"
+    },
+    {
+      "label": "\u8bbe\u7f6e\u4e0e\u7f16\u8f91\u5668\uff08server/src/routes/settings-routes.js\uff09",
+      "file_type": "document",
+      "source_file": "docs/API-MAP.md",
+      "source_location": "L76",
+      "_origin": "ast",
+      "id": "docs_api_map_\u8bbe\u7f6e\u4e0e\u7f16\u8f91\u5668_server_src_routes_settings_routes_js",
+      "community": 42,
+      "norm_label": "\u8bbe\u7f6e\u4e0e\u7f16\u8f91\u5668(server/src/routes/settings-routes.js)"
+    },
+    {
+      "label": "\u8bb0\u5f55\u7c7b\uff08server/src/routes/record-routes.js\uff09",
+      "file_type": "document",
+      "source_file": "docs/API-MAP.md",
+      "source_location": "L86",
+      "_origin": "ast",
+      "id": "docs_api_map_\u8bb0\u5f55\u7c7b_server_src_routes_record_routes_js",
+      "community": 42,
+      "norm_label": "\u8bb0\u5f55\u7c7b(server/src/routes/record-routes.js)"
+    },
+    {
+      "label": "\u63a2\u6d3b\uff08server/src/routes/health-routes.js\uff09",
+      "file_type": "document",
+      "source_file": "docs/API-MAP.md",
+      "source_location": "L96",
+      "_origin": "ast",
+      "id": "docs_api_map_\u63a2\u6d3b_server_src_routes_health_routes_js",
+      "community": 42,
+      "norm_label": "\u63a2\u6d3b(server/src/routes/health-routes.js)"
+    },
+    {
+      "label": "\u53d8\u66f4\u5f71\u54cd\u9762\u901f\u67e5",
+      "file_type": "document",
+      "source_file": "docs/API-MAP.md",
+      "source_location": "L102",
+      "_origin": "ast",
+      "id": "docs_api_map_\u53d8\u66f4\u5f71\u54cd\u9762\u901f\u67e5",
+      "community": 42,
+      "norm_label": "\u53d8\u66f4\u5f71\u54cd\u9762\u901f\u67e5"
     },
     {
       "label": "DESKTOP-DEV.md",
@@ -17301,6 +17421,116 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "docs/API-MAP.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "docs_api_map",
+      "target": "docs_api_map_\u524d\u540e\u7aef\u63a5\u53e3\u6620\u5c04\u8868",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/API-MAP.md",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "docs_api_map_\u524d\u540e\u7aef\u63a5\u53e3\u6620\u5c04\u8868",
+      "target": "docs_api_map_worktree_server_src_routes_worktree_routes_js",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/API-MAP.md",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "docs_api_map_\u524d\u540e\u7aef\u63a5\u53e3\u6620\u5c04\u8868",
+      "target": "docs_api_map_\u5206\u652f_server_src_routes_branch_routes_js",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/API-MAP.md",
+      "source_location": "L102",
+      "weight": 1.0,
+      "source": "docs_api_map_\u524d\u540e\u7aef\u63a5\u53e3\u6620\u5c04\u8868",
+      "target": "docs_api_map_\u53d8\u66f4\u5f71\u54cd\u9762\u901f\u67e5",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/API-MAP.md",
+      "source_location": "L67",
+      "weight": 1.0,
+      "source": "docs_api_map_\u524d\u540e\u7aef\u63a5\u53e3\u6620\u5c04\u8868",
+      "target": "docs_api_map_\u540e\u53f0\u4efb\u52a1_server_src_routes_task_routes_js",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/API-MAP.md",
+      "source_location": "L96",
+      "weight": 1.0,
+      "source": "docs_api_map_\u524d\u540e\u7aef\u63a5\u53e3\u6620\u5c04\u8868",
+      "target": "docs_api_map_\u63a2\u6d3b_server_src_routes_health_routes_js",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/API-MAP.md",
+      "source_location": "L56",
+      "weight": 1.0,
+      "source": "docs_api_map_\u524d\u540e\u7aef\u63a5\u53e3\u6620\u5c04\u8868",
+      "target": "docs_api_map_\u6587\u4ef6\u7cfb\u7edf_server_src_routes_filesystem_routes_js",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/API-MAP.md",
+      "source_location": "L86",
+      "weight": 1.0,
+      "source": "docs_api_map_\u524d\u540e\u7aef\u63a5\u53e3\u6620\u5c04\u8868",
+      "target": "docs_api_map_\u8bb0\u5f55\u7c7b_server_src_routes_record_routes_js",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/API-MAP.md",
+      "source_location": "L76",
+      "weight": 1.0,
+      "source": "docs_api_map_\u524d\u540e\u7aef\u63a5\u53e3\u6620\u5c04\u8868",
+      "target": "docs_api_map_\u8bbe\u7f6e\u4e0e\u7f16\u8f91\u5668_server_src_routes_settings_routes_js",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/API-MAP.md",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "docs_api_map_\u524d\u540e\u7aef\u63a5\u53e3\u6620\u5c04\u8868",
+      "target": "docs_api_map_\u901a\u7528\u8bf7\u6c42\u5c01\u88c5_web_src_api_client_js",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/API-MAP.md",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "docs_api_map_\u524d\u540e\u7aef\u63a5\u53e3\u6620\u5c04\u8868",
+      "target": "docs_api_map_\u9700\u6c42\u4efb\u52a1_server_src_routes_requirement_task_routes_js",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "docs/DESKTOP-DEV.md",
       "source_location": "L26",
       "weight": 1.0,
@@ -19520,5 +19750,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "495ad0a95a8dc24e6f3c7b01638dc65c95edeab5"
+  "built_at_commit": "ccd8a53f9192e5bea8a83b6efebb2b556784bca7"
 }
