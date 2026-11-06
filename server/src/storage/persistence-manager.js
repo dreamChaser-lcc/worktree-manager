@@ -54,6 +54,29 @@ export function createPersistenceManager(managerOptions = {}) {
     return publicDocument;
   }
 
+  /** 按阶段标签过滤需求任务：'unset' 匹配未设置标签的记录，其余按标签精确匹配；空值表示不筛选 */
+  function filterRequirementTaskByStageTag(recordList, stageTag) {
+    if (!stageTag) {
+      return recordList;
+    }
+    if (stageTag === 'unset') {
+      return recordList.filter((record) => !record.stageTag);
+    }
+    return recordList.filter((record) => record.stageTag === stageTag);
+  }
+
+  /** 未发布列表排序：拖拽顺序（sortOrder 升序）优先，未排序的按更新时间倒序排在其后 */
+  function sortUnpublishedRecords(recordList) {
+    return [...recordList].sort((firstRecord, secondRecord) => {
+      const firstOrder = typeof firstRecord.sortOrder === 'number' ? firstRecord.sortOrder : Number.MAX_SAFE_INTEGER;
+      const secondOrder = typeof secondRecord.sortOrder === 'number' ? secondRecord.sortOrder : Number.MAX_SAFE_INTEGER;
+      if (firstOrder !== secondOrder) {
+        return firstOrder - secondOrder;
+      }
+      return String(secondRecord.updatedAt || '').localeCompare(String(firstRecord.updatedAt || ''));
+    });
+  }
+
   /**
    * 按日期前缀过滤需求任务记录（起止日期均为 YYYY-MM-DD，含端点，可只给单边）。
    * 记录存的是 ISO 时间字符串，列表展示也取其日期前缀，因此按字符串比较即与展示一致。
@@ -636,24 +659,30 @@ export function createPersistenceManager(managerOptions = {}) {
 
   async function listRequirementTaskRecords(listOptions = {}) {
     if (!initialized) return [];
-    const { status = 'all', page, pageSize, timeField, startDate, endDate } = listOptions;
+    const { status = 'all', page, pageSize, timeField, startDate, endDate, stageTag } = listOptions;
     try {
       let recordList = await requirementTasksDatastore.findAsync({}).sort({ updatedAt: -1 }).execAsync();
       recordList = recordList.map(stripInternalId);
-      if (status === 'unpublished') {
-        recordList = recordList.filter((record) => !record.publishedAt);
-        // 拖拽排序优先（sortOrder 升序），未排序的按更新时间排在其后
-        recordList.sort((firstRecord, secondRecord) => {
-          const firstOrder = typeof firstRecord.sortOrder === 'number' ? firstRecord.sortOrder : Number.MAX_SAFE_INTEGER;
-          const secondOrder = typeof secondRecord.sortOrder === 'number' ? secondRecord.sortOrder : Number.MAX_SAFE_INTEGER;
-          if (firstOrder !== secondOrder) {
-            return firstOrder - secondOrder;
-          }
-          return String(secondRecord.updatedAt || '').localeCompare(String(firstRecord.updatedAt || ''));
-        });
-      } else if (status === 'published') {
+      if (status === 'published') {
         recordList = recordList.filter((record) => Boolean(record.publishedAt));
+      } else if (status === 'pending-test' || status === 'tested' || status === 'unpublished') {
+        // 已提测 = 未发布且阶段标签为「测试中」；待提测用排除法（除已提测、已发布外都算待提测），
+        // 这样后续新增阶段标签无需再改判断，也不会把记录漏在两个 tab 之外
+        const unpublishedRecordList = recordList.filter((record) => !record.publishedAt);
+        const testedRecordList = unpublishedRecordList.filter((record) => record.stageTag === '测试中');
+        if (status === 'tested') {
+          recordList = sortUnpublishedRecords(testedRecordList);
+        } else if (status === 'pending-test') {
+          const testedTaskIdSet = new Set(testedRecordList.map((record) => record.id));
+          recordList = sortUnpublishedRecords(
+            unpublishedRecordList.filter((record) => !testedTaskIdSet.has(record.id))
+          );
+        } else {
+          recordList = sortUnpublishedRecords(unpublishedRecordList);
+        }
       }
+      // 阶段标签过滤（在分页之前）：与状态 tab 取交集，如「待提测」里只看「开发中」
+      recordList = filterRequirementTaskByStageTag(recordList, stageTag);
       // 时间范围过滤（在分页之前，保证 total 与筛选结果一致）
       recordList = filterRequirementTaskByDateRange(recordList, { timeField, startDate, endDate });
       const total = recordList.length;

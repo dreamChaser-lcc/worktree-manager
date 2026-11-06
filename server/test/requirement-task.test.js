@@ -416,6 +416,69 @@ describe('需求任务删除与恢复', () => {
     expect(invalidDateResult.body.total).toBeGreaterThan(0);
   });
 
+  it('状态 tab 拆分：待提测排除测试中记录、已提测只含测试中、全部含已发布', async () => {
+    const pendingTask = (await postJson('/api/requirement-tasks', buildRequirementPayload({
+      branchName: 'feature/tab-pending',
+      generateWorkspace: false
+    }))).body.task;
+    const testedTask = (await postJson('/api/requirement-tasks', buildRequirementPayload({
+      branchName: 'feature/tab-tested',
+      generateWorkspace: false
+    }))).body.task;
+    const publishedTask = (await postJson('/api/requirement-tasks', buildRequirementPayload({
+      branchName: 'feature/tab-published',
+      generateWorkspace: false
+    }))).body.task;
+
+    // 阶段标签为「待开发」的记录同样算待提测（待提测用排除法）
+    const devTask = (await postJson('/api/requirement-tasks', buildRequirementPayload({
+      branchName: 'feature/tab-dev',
+      generateWorkspace: false
+    }))).body.task;
+    await postJson(`/api/requirement-tasks/${devTask.id}/stage`, { stageTag: '待开发' });
+    await postJson(`/api/requirement-tasks/${testedTask.id}/stage`, { stageTag: '测试中' });
+    await postJson(`/api/requirement-tasks/${publishedTask.id}/publish`, { published: true });
+
+    async function fetchTaskIdSet(statusKey) {
+      const listResult = await getJson(`/api/requirement-tasks?status=${statusKey}&page=1&pageSize=100`);
+      return new Set(listResult.body.tasks.map((task) => task.id));
+    }
+
+    const pendingIdSet = await fetchTaskIdSet('pending-test');
+    expect(pendingIdSet.has(pendingTask.id)).toBe(true);
+    expect(pendingIdSet.has(devTask.id)).toBe(true);
+    expect(pendingIdSet.has(testedTask.id)).toBe(false);
+    expect(pendingIdSet.has(publishedTask.id)).toBe(false);
+
+    const testedIdSet = await fetchTaskIdSet('tested');
+    expect(testedIdSet.has(testedTask.id)).toBe(true);
+    expect(testedIdSet.has(pendingTask.id)).toBe(false);
+
+    const publishedIdSet = await fetchTaskIdSet('published');
+    expect(publishedIdSet.has(publishedTask.id)).toBe(true);
+    expect(publishedIdSet.has(testedTask.id)).toBe(false);
+
+    const allIdSet = await fetchTaskIdSet('all');
+    expect(allIdSet.has(pendingTask.id)).toBe(true);
+    expect(allIdSet.has(testedTask.id)).toBe(true);
+    expect(allIdSet.has(publishedTask.id)).toBe(true);
+
+    // 阶段标签筛选：与状态 tab 取交集，unset 匹配未设置标签的记录
+    const unsetStageResult = await getJson(
+      '/api/requirement-tasks?status=pending-test&page=1&pageSize=100&stageTag=unset'
+    );
+    const unsetStageIdSet = new Set(unsetStageResult.body.tasks.map((task) => task.id));
+    expect(unsetStageIdSet.has(pendingTask.id)).toBe(true);
+    expect(unsetStageIdSet.has(devTask.id)).toBe(false);
+
+    const waitDevStageResult = await getJson(
+      `/api/requirement-tasks?status=pending-test&page=1&pageSize=100&stageTag=${encodeURIComponent('待开发')}`
+    );
+    const waitDevStageIdSet = new Set(waitDevStageResult.body.tasks.map((task) => task.id));
+    expect(waitDevStageIdSet.has(devTask.id)).toBe(true);
+    expect(waitDevStageIdSet.has(pendingTask.id)).toBe(false);
+  });
+
   it('手动重新生成工作区文件', async () => {
     const createResult = await postJson('/api/requirement-tasks', buildRequirementPayload({
       branchName: 'feature/ws-regen',

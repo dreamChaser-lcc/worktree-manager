@@ -27,12 +27,35 @@ function formatTimeText(isoText) {
   return isoText ? isoText.replace('T', ' ').slice(0, 19) : '—';
 }
 
-/** 列表时间筛选默认值：默认按创建时间、不限日期 */
-const DEFAULT_TIME_FILTER = { timeField: 'createdAt', startDate: '', endDate: '' };
+/**
+ * 需求任务列表 tab：statusKey 与后端 status 查询参数一一对应。
+ * 原「未发布」按是否已提测拆分：待提测 = 未发布且阶段标签不是「测试中」，已提测 = 未发布且阶段标签为「测试中」。
+ */
+const REQUIREMENT_STATUS_TAB_LIST = [
+  { statusKey: 'pending-test', label: '待提测' },
+  { statusKey: 'tested', label: '已提测' },
+  { statusKey: 'published', label: '已发布' },
+  { statusKey: 'all', label: '全部' }
+];
 
-/** 时间筛选是否偏离默认值（用于提示当前列表处于筛选态） */
-function hasActiveTimeFilter(timeFilter) {
-  return Boolean(timeFilter.startDate) || Boolean(timeFilter.endDate);
+/** 默认停留在「待提测」 */
+const DEFAULT_STATUS_TAB = 'pending-test';
+
+/** 列表筛选默认值：不限阶段、按创建时间、不限日期 */
+const DEFAULT_LIST_FILTER = { stageTag: '', timeField: 'createdAt', startDate: '', endDate: '' };
+
+/** 阶段标签筛选项：value 为空表示不筛选，unset 表示记录尚未设置阶段标签 */
+const STAGE_TAG_FILTER_OPTION_LIST = [
+  { value: '', label: '全部阶段' },
+  { value: '待开发', label: '待开发' },
+  { value: '开发中', label: '开发中' },
+  { value: '测试中', label: '测试中' },
+  { value: 'unset', label: '未设置' }
+];
+
+/** 列表是否处于筛选态（阶段标签或日期任一非空） */
+function hasActiveListFilter(listFilter) {
+  return Boolean(listFilter.stageTag) || Boolean(listFilter.startDate) || Boolean(listFilter.endDate);
 }
 
 /** 由 YYYY-MM 推出该月最后一天的日期文本（YYYY-MM-DD），供「快捷月份」一键填充范围 */
@@ -42,11 +65,21 @@ function resolveMonthEndDateText(monthText) {
   return `${monthText}-${String(lastDayNumber).padStart(2, '0')}`;
 }
 
-/** 把已应用的时间筛选描述成一行文案（如「创建时间 2026-11-01 ~ 2026-11-30」） */
-function describeTimeFilter(timeFilter) {
-  const fieldText = timeFilter.timeField === 'createdAt' ? '创建时间' : '更新时间';
-  const rangeText = [timeFilter.startDate, timeFilter.endDate].filter(Boolean).join(' ~ ');
-  return `${fieldText} ${rangeText}`;
+/** 把已应用的筛选条件描述成一行文案（如「开发中 · 创建时间 2026-11-01 ~ 2026-11-30」） */
+function describeListFilter(listFilter) {
+  const summaryPartList = [];
+  if (listFilter.stageTag) {
+    const stageTagOption = STAGE_TAG_FILTER_OPTION_LIST.find(
+      (optionItem) => optionItem.value === listFilter.stageTag
+    );
+    summaryPartList.push(stageTagOption ? stageTagOption.label : listFilter.stageTag);
+  }
+  if (listFilter.startDate || listFilter.endDate) {
+    const fieldText = listFilter.timeField === 'createdAt' ? '创建时间' : '更新时间';
+    const rangeText = [listFilter.startDate, listFilter.endDate].filter(Boolean).join(' ~ ');
+    summaryPartList.push(`${fieldText} ${rangeText}`);
+  }
+  return summaryPartList.join(' · ');
 }
 
 /**
@@ -140,13 +173,13 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
   const [taskList, setTaskList] = useState([]);
   const [listError, setListError] = useState(null);
   // 列表时间筛选：draft 为输入中的条件，applied 为实际参与请求的条件（点「查询」才生效）
-  const [timeFilterDraft, setTimeFilterDraft] = useState({ ...DEFAULT_TIME_FILTER });
-  const [timeFilterApplied, setTimeFilterApplied] = useState({ ...DEFAULT_TIME_FILTER });
+  const [listFilterDraft, setListFilterDraft] = useState({ ...DEFAULT_LIST_FILTER });
+  const [listFilterApplied, setListFilterApplied] = useState({ ...DEFAULT_LIST_FILTER });
   // 查询条件面板默认收起（避免长期占位），点「筛选」展开；快捷月份（YYYY-MM）仅用于一键填充日期范围
   const [filterPanelExpanded, setFilterPanelExpanded] = useState(false);
   const [quickMonthText, setQuickMonthText] = useState('');
-  // 发布状态 tab 与分页：unpublished（未发布）/ published（已发布），默认未发布
-  const [activeStatusTab, setActiveStatusTab] = useState('unpublished');
+  // 状态 tab 与分页：pending-test（待提测，默认）/ tested（已提测）/ published（已发布）/ all（全部）
+  const [activeStatusTab, setActiveStatusTab] = useState(DEFAULT_STATUS_TAB);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 20;
   const [totalTasks, setTotalTasks] = useState(0);
@@ -203,9 +236,10 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
       status: activeStatusTab,
       page: currentPage,
       pageSize,
-      timeField: timeFilterApplied.timeField,
-      startDate: timeFilterApplied.startDate,
-      endDate: timeFilterApplied.endDate
+      stageTag: listFilterApplied.stageTag,
+      timeField: listFilterApplied.timeField,
+      startDate: listFilterApplied.startDate,
+      endDate: listFilterApplied.endDate
     })
       .then((listData) => {
         setTaskList(listData.tasks || []);
@@ -218,29 +252,29 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
   useEffect(() => {
     refreshTaskList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeStatusTab, currentPage, timeFilterApplied]);
+  }, [activeStatusTab, currentPage, listFilterApplied]);
 
   /** 应用时间筛选：回到第 1 页并按新条件重新查询，随后收起筛选面板给列表腾位置 */
-  function handleApplyTimeFilter() {
+  function handleApplyListFilter() {
     setCurrentPage(1);
-    setTimeFilterApplied({ ...timeFilterDraft });
+    setListFilterApplied({ ...listFilterDraft });
     setFilterPanelExpanded(false);
   }
 
   /** 重置时间筛选：清空字段、日期与快捷月份后重新查询 */
-  function handleResetTimeFilter() {
-    setTimeFilterDraft({ ...DEFAULT_TIME_FILTER });
+  function handleResetListFilter() {
+    setListFilterDraft({ ...DEFAULT_LIST_FILTER });
     setQuickMonthText('');
     setCurrentPage(1);
-    setTimeFilterApplied({ ...DEFAULT_TIME_FILTER });
+    setListFilterApplied({ ...DEFAULT_LIST_FILTER });
   }
 
   /** 更新时间筛选草稿的单个字段（timeField / startDate / endDate）；手改日期时清掉快捷月份，避免两处显示不一致 */
-  function handleTimeFilterDraftChange(fieldName, fieldValue) {
+  function handleListFilterDraftChange(fieldName, fieldValue) {
     if (fieldName === 'startDate' || fieldName === 'endDate') {
       setQuickMonthText('');
     }
-    setTimeFilterDraft((previousFilter) => ({ ...previousFilter, [fieldName]: fieldValue }));
+    setListFilterDraft((previousFilter) => ({ ...previousFilter, [fieldName]: fieldValue }));
   }
 
   /** 快捷月份：选中某月即把范围填成该月首末日（仍需点「查询」才生效） */
@@ -249,7 +283,7 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
     if (!monthText) {
       return;
     }
-    setTimeFilterDraft((previousFilter) => ({
+    setListFilterDraft((previousFilter) => ({
       ...previousFilter,
       startDate: `${monthText}-01`,
       endDate: resolveMonthEndDateText(monthText)
@@ -667,20 +701,21 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
   return (
     <div>
       <div className="status-tab-row">
-          <button
-            type="button"
-            className={activeStatusTab === 'unpublished' ? 'status-tab status-tab-active' : 'status-tab'}
-            onClick={() => { setActiveStatusTab('unpublished'); setCurrentPage(1); }}
-          >
-            未发布
-          </button>
-          <button
-            type="button"
-            className={activeStatusTab === 'published' ? 'status-tab status-tab-active' : 'status-tab'}
-            onClick={() => { setActiveStatusTab('published'); setCurrentPage(1); }}
-          >
-            已发布
-          </button>
+          {REQUIREMENT_STATUS_TAB_LIST.map((statusTabItem) => (
+            <button
+              key={statusTabItem.statusKey}
+              type="button"
+              className={
+                activeStatusTab === statusTabItem.statusKey ? 'status-tab status-tab-active' : 'status-tab'
+              }
+              onClick={() => {
+                setActiveStatusTab(statusTabItem.statusKey);
+                setCurrentPage(1);
+              }}
+            >
+              {statusTabItem.label}
+            </button>
+          ))}
           <div className="status-tab-actions">
             <button
               type="button"
@@ -703,7 +738,7 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
           <button
             type="button"
             className={
-              hasActiveTimeFilter(timeFilterApplied)
+              hasActiveListFilter(listFilterApplied)
                 ? 'button-secondary filter-toggle-button filter-toggle-active'
                 : 'button-secondary filter-toggle-button'
             }
@@ -717,11 +752,25 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
       {filterPanelExpanded ? (
         <div className="list-filter-row">
           <label className="filter-field">
+            <span className="filter-label">任务状态</span>
+            <select
+              className="form-input filter-control"
+              value={listFilterDraft.stageTag}
+              onChange={(changeEvent) => handleListFilterDraftChange('stageTag', changeEvent.target.value)}
+            >
+              {STAGE_TAG_FILTER_OPTION_LIST.map((stageTagOption) => (
+                <option key={stageTagOption.value || 'all'} value={stageTagOption.value}>
+                  {stageTagOption.label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="filter-field">
             <span className="filter-label">时间字段</span>
             <select
               className="form-input filter-control"
-              value={timeFilterDraft.timeField}
-              onChange={(changeEvent) => handleTimeFilterDraftChange('timeField', changeEvent.target.value)}
+              value={listFilterDraft.timeField}
+              onChange={(changeEvent) => handleListFilterDraftChange('timeField', changeEvent.target.value)}
             >
               <option value="createdAt">创建时间</option>
               <option value="updatedAt">更新时间</option>
@@ -741,8 +790,8 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
             <input
               type="date"
               className="form-input filter-control"
-              value={timeFilterDraft.startDate}
-              onChange={(changeEvent) => handleTimeFilterDraftChange('startDate', changeEvent.target.value)}
+              value={listFilterDraft.startDate}
+              onChange={(changeEvent) => handleListFilterDraftChange('startDate', changeEvent.target.value)}
             />
           </label>
           <label className="filter-field">
@@ -750,21 +799,21 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
             <input
               type="date"
               className="form-input filter-control"
-              value={timeFilterDraft.endDate}
-              onChange={(changeEvent) => handleTimeFilterDraftChange('endDate', changeEvent.target.value)}
+              value={listFilterDraft.endDate}
+              onChange={(changeEvent) => handleListFilterDraftChange('endDate', changeEvent.target.value)}
             />
           </label>
-          <button type="button" className="button-primary" onClick={handleApplyTimeFilter}>
+          <button type="button" className="button-primary" onClick={handleApplyListFilter}>
             查询
           </button>
-          <button type="button" className="button-secondary" onClick={handleResetTimeFilter}>
+          <button type="button" className="button-secondary" onClick={handleResetListFilter}>
             重置
           </button>
         </div>
-      ) : hasActiveTimeFilter(timeFilterApplied) ? (
+      ) : hasActiveListFilter(listFilterApplied) ? (
         <div className="filter-collapsed-hint">
-          当前筛选：{describeTimeFilter(timeFilterApplied)}
-          <button type="button" className="text-link-button" onClick={handleResetTimeFilter}>
+          当前筛选：{describeListFilter(listFilterApplied)}
+          <button type="button" className="text-link-button" onClick={handleResetListFilter}>
             清除
           </button>
         </div>

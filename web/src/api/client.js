@@ -114,9 +114,15 @@ export function fetchRequirementTaskList(listParams = {}) {
   return getJson(`/api/requirement-tasks?${queryText}`);
 }
 
-/** 需求任务列表分页查询（按发布状态 tab + 页码 + 可选时间范围：timeField 取 createdAt/updatedAt） */
-export function fetchRequirementTaskPage({ status, page, pageSize, timeField, startDate, endDate }) {
+/**
+ * 需求任务列表分页查询：状态 tab + 页码，可选筛选条件
+ * （stageTag 阶段标签取 待开发/开发中/测试中/unset；timeField 取 createdAt/updatedAt）
+ */
+export function fetchRequirementTaskPage({ status, page, pageSize, timeField, startDate, endDate, stageTag }) {
   const queryParams = new URLSearchParams({ status, page, pageSize });
+  if (stageTag) {
+    queryParams.set('stageTag', stageTag);
+  }
   if (timeField) {
     queryParams.set('timeField', timeField);
   }

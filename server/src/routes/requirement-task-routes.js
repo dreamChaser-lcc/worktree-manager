@@ -25,7 +25,8 @@ export function registerRequirementTaskRoutes(router) {
       pageSize: context.query.pageSize || 20,
       timeField: context.query.timeField,
       startDate: readDateQuery(context.query.startDate),
-      endDate: readDateQuery(context.query.endDate)
+      endDate: readDateQuery(context.query.endDate),
+      stageTag: readStageTagQuery(context.query.stageTag)
     });
     context.body = {
       tasks: listResult.records,
@@ -574,6 +575,12 @@ export function registerRequirementTaskRoutes(router) {
 function readDateQuery(dateQueryText) {
   const dateText = String(dateQueryText || '').trim();
   return /^\d{4}-\d{2}-\d{2}$/.test(dateText) ? dateText : undefined;
+}
+
+/** 读取阶段标签查询参数：只接受「待开发/开发中/测试中/unset」，其余视为未传 */
+function readStageTagQuery(stageTagQueryText) {
+  const stageTagText = String(stageTagQueryText || '').trim();
+  return ['待开发', '开发中', '测试中', 'unset'].includes(stageTagText) ? stageTagText : undefined;
 }
 
 /**
