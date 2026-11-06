@@ -150,8 +150,8 @@
     "semantic_hash": "4ce4aa958655b848f88f5ff31a87c50c"
   },
   "server/src/routes/requirement-task-routes.js": {
-    "mtime": 1793869990.2265697,
-    "ast_hash": "c635a7e28ad1e5e200cecad8a5481ede",
+    "mtime": 1793954429.6110258,
+    "ast_hash": "448994534af49e8a6a5efc2fa4bb7d9c",
     "semantic_hash": ""
   },
   "server/src/routes/settings-routes.js": {
@@ -185,8 +185,8 @@
     "semantic_hash": "b178367022aa3fbe4d5c9cb4da8eba75"
   },
   "server/src/storage/persistence-manager.js": {
-    "mtime": 1793870485.6883109,
-    "ast_hash": "1c79f7f17c47c39814f28b069c069dce",
+    "mtime": 1793954424.9715173,
+    "ast_hash": "f8b17d7e05c43d2d0a7b40779f2bdf5a",
     "semantic_hash": ""
   },
   "server/src/storage/settings-store.js": {
@@ -250,8 +250,8 @@
     "semantic_hash": "0e32d3126b0192abb6db805774dfe934"
   },
   "server/test/requirement-task.test.js": {
-    "mtime": 1793870035.1994781,
-    "ast_hash": "7514dca76afd560bae2943dc2bb5a996",
+    "mtime": 1793954471.3164668,
+    "ast_hash": "a1e6061c1ac7c012d9345d23cd3e231e",
     "semantic_hash": ""
   },
   "server/test/smoke.test.js": {
@@ -285,8 +285,8 @@
     "semantic_hash": "cf9a090954c73f1c7a01548254335493"
   },
   "web/src/api/client.js": {
-    "mtime": 1793869995.235687,
-    "ast_hash": "4780095b14c56723eca047129f9748ab",
+    "mtime": 1793954430.9626944,
+    "ast_hash": "bbc7a51c46835d01a64caabb43b86d22",
     "semantic_hash": ""
   },
   "web/src/components/BranchSelector.jsx": {
@@ -335,8 +335,8 @@
     "semantic_hash": "7cdc95eae733176e38e048b941c08100"
   },
   "web/src/components/RequirementTaskPanel.jsx": {
-    "mtime": 1793870480.918384,
-    "ast_hash": "0a2bc4ce4c89c5c5a10e034f76e86b19",
+    "mtime": 1793954463.7850828,
+    "ast_hash": "e950dfeeb2e5738b30541eb9336e084d",
     "semantic_hash": ""
   },
   "web/src/components/SearchableSelect.jsx": {
@@ -350,9 +350,9 @@
     "semantic_hash": "6ac0f48f90203fc9d7a8cb241858bc9d"
   },
   "web/src/components/TaskActionsRow.jsx": {
-    "mtime": 1793691825.5137146,
-    "ast_hash": "94a6c5ce526c82be3cdd82acf0d87143",
-    "semantic_hash": "94a6c5ce526c82be3cdd82acf0d87143"
+    "mtime": 1793954198.405178,
+    "ast_hash": "ecd6a0de8d67142c4b04c87cde2fb769",
+    "semantic_hash": ""
   },
   "web/src/components/TaskHistoryPanel.jsx": {
     "mtime": 1793373678.1650817,
@@ -375,8 +375,8 @@
     "semantic_hash": ""
   },
   "web/src/help/helpGuideContent.js": {
-    "mtime": 1793870486.2160437,
-    "ast_hash": "38e1ddbc76c6586d242ff51c50b62fbe",
+    "mtime": 1793954491.3001492,
+    "ast_hash": "0ea8b57dc392e747b1efc5dafc5d2b8f",
     "semantic_hash": ""
   },
   "web/src/main.jsx": {

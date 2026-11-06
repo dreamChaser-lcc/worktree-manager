@@ -60,9 +60,8 @@
   "58": "Tauri 桌面端说明",
   "59": "图文使用教程",
   "60": "TaskActionsRow.jsx",
-  "61": "HelpGuideDialog.jsx",
-  "62": "client.js",
-  "63": "App.jsx",
-  "64": "WorktreeListPanel.jsx",
-  "65": "RequirementTaskDetailDialog.jsx"
+  "61": "RequirementTaskPanel.jsx",
+  "62": "App.jsx",
+  "63": "WorktreeListPanel.jsx",
+  "64": "RequirementTaskDetailDialog.jsx"
 }

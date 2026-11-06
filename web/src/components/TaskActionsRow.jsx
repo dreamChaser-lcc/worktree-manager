@@ -78,7 +78,9 @@ export function TaskActionsRow({
 }) {
   const [stageAnchorRect, setStageAnchorRect] = useState(null);
   const isEditable = !taskEntry.deletedAt;
-  const isUnpublishedTab = activeStatusTab === 'unpublished';
+  // 发布状态按记录自身判断（「全部」tab 里已发布与未发布混排）；排序仅未发布任务可用，「全部」tab 不参与拖拽排序
+  const isPublishedTask = Boolean(taskEntry.publishedAt);
+  const isReorderEnabled = activeStatusTab !== 'all';
   const stageTagClass = ['stage-tag', STAGE_CLASS_MAP[taskEntry.stageTag] ? STAGE_CLASS_MAP[taskEntry.stageTag] : '']
     .filter(Boolean)
     .join(' ');
@@ -111,30 +113,37 @@ export function TaskActionsRow({
               onClose={() => setStageAnchorRect(null)}
             />
           ) : null}
-          {isUnpublishedTab ? (
-            isEditable ? (
-              <>
-                <button
-                  type="button"
-                  className="button-secondary task-action-button"
-                  disabled={!canMoveUp}
-                  onClick={onMoveUp}
-                >
-                  ↑ 上移
-                </button>
-                <button
-                  type="button"
-                  className="button-secondary task-action-button"
-                  disabled={!canMoveDown}
-                  onClick={onMoveDown}
-                >
-                  ↓ 下移
-                </button>
-              </>
-            ) : null
+          {isReorderEnabled && !isPublishedTask && isEditable ? (
+            <>
+              <button
+                type="button"
+                className="button-secondary task-action-button"
+                disabled={!canMoveUp}
+                onClick={onMoveUp}
+              >
+                ↑ 上移
+              </button>
+              <button
+                type="button"
+                className="button-secondary task-action-button"
+                disabled={!canMoveDown}
+                onClick={onMoveDown}
+              >
+                ↓ 下移
+              </button>
+            </>
           ) : null}
-          {isUnpublishedTab ? (
-            isEditable ? (
+          {isEditable ? (
+            isPublishedTask ? (
+              <button
+                type="button"
+                className="button-secondary task-action-button"
+                disabled={publishPending}
+                onClick={onUnpublish}
+              >
+                {publishPending ? '操作中...' : '取消发布'}
+              </button>
+            ) : (
               <button
                 type="button"
                 className="button-secondary task-action-button"
@@ -143,17 +152,7 @@ export function TaskActionsRow({
               >
                 {publishPending ? '发布中...' : '标记已发布'}
               </button>
-            ) : null
-          ) : null}
-          {isUnpublishedTab ? null : isEditable ? (
-            <button
-              type="button"
-              className="button-secondary task-action-button"
-              disabled={publishPending}
-              onClick={onUnpublish}
-            >
-              {publishPending ? '操作中...' : '取消发布'}
-            </button>
+            )
           ) : null}
         </div>
       </td>
