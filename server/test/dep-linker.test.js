@@ -51,10 +51,10 @@ describe('detectPackageManager / recommendDependencyStrategy', () => {
     expect(recommendDependencyStrategy('pnpm')).toBe('install');
   });
 
-  it('package-lock → npm → 推荐 junction 共享', () => {
+  it('package-lock → npm → 默认推荐独立安装（共享需系统权限支持，不再默认推荐）', () => {
     expect(detectPackageManager(fixtureRepository.repoPath)).toBe('npm');
-    expect(recommendDependencyStrategy('npm')).toBe('share');
-    expect(recommendDependencyStrategy('yarn')).toBe('share');
+    expect(recommendDependencyStrategy('npm')).toBe('install');
+    expect(recommendDependencyStrategy('yarn')).toBe('install');
   });
 
   it('yarn.lock → yarn', () => {

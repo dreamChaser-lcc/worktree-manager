@@ -21,15 +21,14 @@ export function detectPackageManager(repoPath) {
   return null;
 }
 
-/** 按设计 D4 的策略矩阵给出默认推荐：pnpm → 独立安装，npm/yarn → junction 共享 */
+/**
+ * 给出默认推荐策略：统一推荐独立安装。
+ * 目录链接共享要求操作系统允许普通权限进程遍历该链接，部分 Windows 安全更新后会拒绝遍历
+ * （链接建得出但读不到依赖），为避免"显示共享成功、实际用不了"，默认不再推荐共享；
+ * 用户仍可在创建表单里手动选择共享。
+ */
 export function recommendDependencyStrategy(packageManagerName) {
-  if (packageManagerName === 'pnpm') {
-    return 'install';
-  }
-  if (packageManagerName === 'npm' || packageManagerName === 'yarn') {
-    return 'share';
-  }
-  return null;
+  return packageManagerName ? 'install' : null;
 }
 
 /**

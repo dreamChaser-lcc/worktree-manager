@@ -89,7 +89,7 @@ export const helpGuideSections = [
         type: 'table',
         columns: ['依赖策略', '适用与说明'],
         rows: [
-          ['共享主目录（junction）', '秒级完成、零额外磁盘；依赖版本以主目录为准，npm / yarn 项目推荐'],
+          ['共享主目录（目录链接）', '秒级完成、零额外磁盘；需系统允许普通权限遍历目录链接，部分 Windows 安全更新后会失败；依赖版本以主目录为准'],
           ['独立安装', '依赖完全隔离；pnpm 走全局 store 硬链接，磁盘占用近似为零；后台任务执行，日志实时可查'],
           ['不处理', '只创建目录，依赖稍后自行安装']
         ]
@@ -104,7 +104,7 @@ export const helpGuideSections = [
       },
       {
         type: 'warning',
-        text: 'Windows 下目录联接要求同一磁盘卷；跨卷请选择「独立安装」或「不处理」。'
+        text: 'Windows 下目录链接要求同一磁盘卷；跨卷请选择「独立安装」或「不处理」。共享还需要系统允许当前权限遍历链接——若出现「链接建好但读不到依赖」（UNKNOWN / ERROR_UNTRUSTED_MOUNT_POINT），说明当前系统策略不允许，请改用「独立安装」。'
       }
     ]
   },
@@ -120,7 +120,7 @@ export const helpGuideSections = [
         type: 'table',
         columns: ['状态', '含义与处理'],
         rows: [
-          ['共享主目录', 'node_modules 与主仓库联接共享；主仓库依赖变更会同步影响本 worktree'],
+          ['共享主目录', 'node_modules 与主仓库链接共享（需系统权限支持遍历链接）；主仓库依赖变更会同步影响本 worktree'],
           ['独立安装', 'node_modules 为真实目录，依赖隔离；可随时「恢复共享」切回联接'],
           ['未安装', '尚未安装依赖'],
           ['高风险', '共享模式下主目录依赖与 lockfile 声明不一致，存在写穿与版本漂移风险，强烈建议执行「独立安装」']

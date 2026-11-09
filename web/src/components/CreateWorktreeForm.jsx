@@ -62,8 +62,9 @@ export function CreateWorktreeForm({
   function handleBranchOverviewLoaded(overviewData) {
     setPackageManager(overviewData.packageManager);
     setRecommendedStrategy(overviewData.recommendedStrategy);
-    // 默认共享主目录（推荐标识仅作参考展示）
-    setStrategy('share');
+    // 默认独立安装：目录链接共享在部分 Windows 环境（安全更新后）普通权限无法遍历，
+    // 共享需要系统权限支持，用户可在本表单手动切换
+    setStrategy('install');
   }
 
   // 需求任务下拉数据：本组件随页签挂载，加载一次即可

@@ -57,8 +57,9 @@ export function WorktreeQuickCreateDialog({
   function handleBranchOverviewLoaded(overviewData) {
     setPackageManager(overviewData.packageManager);
     setRecommendedStrategy(overviewData.recommendedStrategy);
-    // 默认共享主目录（推荐标识仅作参考展示）
-    setStrategy('share');
+    // 默认独立安装：目录链接共享在部分 Windows 环境（安全更新后）普通权限无法遍历，
+    // 共享需要系统权限支持，用户可在此弹窗手动切换
+    setStrategy('install');
   }
 
   async function handleCreateSubmit() {

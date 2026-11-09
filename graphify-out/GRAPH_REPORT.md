@@ -1,16 +1,16 @@
-# Graph Report - worktree-manager  (2026-11-06)
+# Graph Report - worktree-manager  (2026-11-09)
 
 ## Corpus Check
-- 105 files · ~49,346 words
+- 137 files · ~79,063 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 758 nodes · 1199 edges · 65 communities (45 shown, 20 thin omitted)
+- 1213 nodes · 1653 edges · 97 communities (77 shown, 20 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `1c03b10c`
+- Built from commit: `0d64f442`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -78,6 +78,38 @@
 - [[_COMMUNITY_App.jsx|App.jsx]]
 - [[_COMMUNITY_WorktreeListPanel.jsx|WorktreeListPanel.jsx]]
 - [[_COMMUNITY_RequirementTaskDetailDialog.jsx|RequirementTaskDetailDialog.jsx]]
+- [[_COMMUNITY_onboard|onboard.md]]
+- [[_COMMUNITY_The Toolkit|The Toolkit]]
+- [[_COMMUNITY_Delight Techniques|Delight Techniques]]
+- [[_COMMUNITY_Interaction Design|Interaction Design]]
+- [[_COMMUNITY_animate|animate.md]]
+- [[_COMMUNITY_Polish Systematically|Polish Systematically]]
+- [[_COMMUNITY_Common Cognitive Load Violations|Common Cognitive Load Violations]]
+- [[_COMMUNITY_Introduce Color Strategically|Introduce Color Strategically]]
+- [[_COMMUNITY_UX Writing|UX Writing]]
+- [[_COMMUNITY_adapt|adapt.md]]
+- [[_COMMUNITY_Generate Report|Generate Report]]
+- [[_COMMUNITY_Improve Copy Systematically|Improve Copy Systematically]]
+- [[_COMMUNITY_Color & Contrast|Color & Contrast]]
+- [[_COMMUNITY_场景化能力导航|场景化能力导航]]
+- [[_COMMUNITY_Nielsen's 10 Heuristics|Nielsen's 10 Heuristics]]
+- [[_COMMUNITY_Spatial Design|Spatial Design]]
+- [[_COMMUNITY_Typography|Typography]]
+- [[_COMMUNITY_optimize|optimize.md]]
+- [[_COMMUNITY_Improve Layout Systematically|Improve Layout Systematically]]
+- [[_COMMUNITY_Amplify the Design|Amplify the Design]]
+- [[_COMMUNITY_Hardening Dimensions|Hardening Dimensions]]
+- [[_COMMUNITY_quieter|quieter.md]]
+- [[_COMMUNITY_typeset|typeset.md]]
+- [[_COMMUNITY_Responsive Design|Responsive Design]]
+- [[_COMMUNITY_SKILL|SKILL.md]]
+- [[_COMMUNITY_Motion Design|Motion Design]]
+- [[_COMMUNITY_Persona-Based Design Testing|Persona-Based Design Testing]]
+- [[_COMMUNITY_Step 2 Ask UX-Focused Questions|Step 2: Ask UX-Focused Questions]]
+- [[_COMMUNITY_Simplify the Design|Simplify the Design]]
+- [[_COMMUNITY_editor-opener.js|editor-opener.js]]
+- [[_COMMUNITY_distill|distill.md]]
+- [[_COMMUNITY_extract|extract.md]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `executeGitCommand()` - 27 edges
@@ -88,8 +120,8 @@
 6. `createApp()` - 14 edges
 7. `postJson()` - 14 edges
 8. `createFixtureRepository()` - 13 edges
-9. `Worktree 管理器` - 13 edges
-10. `listWorktrees()` - 11 edges
+9. `Polish Systematically` - 13 edges
+10. `Worktree 管理器` - 13 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `executeCreationFlow()` --calls--> `openDirectoryInEditor()`  [EXTRACTED]
@@ -106,19 +138,19 @@
 ## Import Cycles
 - None detected.
 
-## Communities (65 total, 20 thin omitted)
+## Communities (97 total, 20 thin omitted)
 
 ### Community 0 - "前端 API 与界面"
-Cohesion: 0.16
-Nodes (16): fetchDefaultBaseRef(), fetchDirectoryListing(), fetchDriveList(), BranchSelector(), CreateWorktreeForm(), describeIgnoredCopyResult(), DependencyStrategySection(), STRATEGY_LABEL_MAP (+8 more)
+Cohesion: 0.15
+Nodes (17): fetchBranchOverview(), fetchDirectoryListing(), fetchDriveList(), fetchInstalledEditors(), BranchSelector(), CreateWorktreeForm(), describeIgnoredCopyResult(), DependencyStrategySection() (+9 more)
 
 ### Community 1 - "依赖共享与策略"
 Cohesion: 0.06
-Nodes (66): applySharedDependencyLink(), detectPackageManager(), LOCK_FILE_DETECTION_RULES, recommendDependencyStrategy(), startIndependentInstall(), checkWorktreeDependencyStatus(), diffDependencyMaps(), readPackageDependencies() (+58 more)
+Nodes (63): applySharedDependencyLink(), detectPackageManager(), LOCK_FILE_DETECTION_RULES, recommendDependencyStrategy(), startIndependentInstall(), checkWorktreeDependencyStatus(), diffDependencyMaps(), readPackageDependencies() (+55 more)
 
 ### Community 2 - "服务端启动与配置"
-Cohesion: 0.06
-Nodes (45): createApp(), currentFileDir, serverConfig, buildEditorSpawnCommand(), locateCommandCandidates(), openDirectoryInEditor(), resolveBatchFileTarget(), resolveEditorExecutable() (+37 more)
+Cohesion: 0.05
+Nodes (44): createApp(), currentFileDir, serverConfig, AppError, appendJobLog(), createJob(), findRunningJob(), finishJob() (+36 more)
 
 ### Community 3 - "桌面端壳与 sidecar"
 Cohesion: 0.17
@@ -133,8 +165,8 @@ Cohesion: 0.11
 Nodes (18): dependencies, koa, koa-bodyparser, @koa/router, koa-static, @seald-io/nedb, worktree-manager, devDependencies (+10 more)
 
 ### Community 7 - "工作区文件生成"
-Cohesion: 0.14
-Nodes (14): buildExcludedProjectReason(), buildWorkspaceFileContent(), generateWorkspaceFileForTask(), isExistingDirectory(), sanitizeWorkspaceFileName(), convertRemoteUrlToWebUrl(), generateAndAttachWorkspace(), startTestServer() (+6 more)
+Cohesion: 0.16
+Nodes (13): buildExcludedProjectReason(), buildWorkspaceFileContent(), generateWorkspaceFileForTask(), isExistingDirectory(), sanitizeWorkspaceFileName(), convertRemoteUrlToWebUrl(), generateAndAttachWorkspace(), fetchTaskIdSet() (+5 more)
 
 ### Community 8 - "Tauri 配置"
 Cohesion: 0.11
@@ -261,43 +293,171 @@ Cohesion: 0.17
 Nodes (11): worktree（server/src/routes/worktree-routes.js）, 分支（server/src/routes/branch-routes.js）, 前后端接口映射表, 变更影响面速查, 后台任务（server/src/routes/task-routes.js）, 探活（server/src/routes/health-routes.js）, 文件系统（server/src/routes/filesystem-routes.js）, 记录类（server/src/routes/record-routes.js） (+3 more)
 
 ### Community 60 - "TaskActionsRow.jsx"
-Cohesion: 0.40
-Nodes (3): STAGE_CLASS_MAP, STAGE_OPTIONS, TaskActionsRow()
+Cohesion: 0.08
+Nodes (23): 10. Microcopy & Voice, 1. AI Slop Detection (CRITICAL), 2. Visual Hierarchy, 3. Information Architecture & Cognitive Load, 4. Emotional Journey, 5. Discoverability & Affordance, 6. Composition & Balance, 7. Typography as Communication (+15 more)
 
 ### Community 61 - "RequirementTaskPanel.jsx"
-Cohesion: 0.12
-Nodes (14): fetchBranchOverview(), fetchRecentRepositories(), fetchRequirementDependencyCheck(), fetchRequirementTaskList(), fetchRequirementTaskLocate(), fetchRequirementTaskPage(), getJson(), DependencyInstallDialog() (+6 more)
+Cohesion: 0.13
+Nodes (10): DependencyInstallDialog(), DEFAULT_LIST_FILTER, describeListFilter(), hasActiveListFilter(), REQUIREMENT_STATUS_TAB_LIST, RequirementTaskPanel(), STAGE_TAG_FILTER_OPTION_LIST, STAGE_CLASS_MAP (+2 more)
 
 ### Community 62 - "App.jsx"
 Cohesion: 0.19
-Nodes (8): fetchInstalledEditors(), fetchSettings(), fetchWorktreeHistory(), App(), CreationHistoryPanel(), HelpGuideDialog(), SettingsPanel(), helpGuideSections
+Nodes (8): fetchRecentRepositories(), fetchSettings(), fetchWorktreeHistory(), App(), CreationHistoryPanel(), HelpGuideDialog(), SettingsPanel(), helpGuideSections
 
 ### Community 63 - "WorktreeListPanel.jsx"
-Cohesion: 0.22
-Nodes (9): fetchRepositoryCheck(), fetchTaskDetail(), fetchTaskList(), fetchWorktreeList(), TASK_STATUS_LABEL_MAP, taskBadgeClassName(), TaskHistoryPanel(), WorktreeListPanel() (+1 more)
+Cohesion: 0.15
+Nodes (15): fetchDefaultBaseRef(), fetchRepositoryCheck(), fetchRequirementDependencyCheck(), fetchRequirementTaskList(), fetchRequirementTaskLocate(), fetchRequirementTaskPage(), fetchTaskDetail(), fetchTaskList() (+7 more)
 
 ### Community 64 - "RequirementTaskDetailDialog.jsx"
 Cohesion: 0.47
 Nodes (4): isSameLoosePath(), renderBranchLocationInfo(), RequirementTaskDetailDialog(), TaskLogPanel()
 
+### Community 65 - "onboard.md"
+Cohesion: 0.08
+Nodes (23): Assess Onboarding Needs, Context Over Ceremony, Contextual Help, Design Onboarding Experiences, Documentation & Help, Empty State Design, Feature Discovery & Adoption, Guided Tours & Walkthroughs (+15 more)
+
+### Community 66 - "The Toolkit"
+Cohesion: 0.09
+Nodes (21): Animate complex properties, Assess What "Extraordinary" Means Here, For data-heavy interfaces, For functional UI, For performance-critical UI, For visual/marketing surfaces, Implement with Discipline, Interact with the device (+13 more)
+
+### Community 67 - "Delight Techniques"
+Cohesion: 0.11
+Nodes (18): Appropriate to Context, Assess Delight Opportunities, Celebration Moments, Compound Over Time, Delight Amplifies, Never Blocks, Delight Principles, Delight Techniques, Easter Eggs & Hidden Delights (+10 more)
+
+### Community 68 - "Interaction Design"
+Cohesion: 0.11
+Nodes (18): Anti-Patterns, CSS Anchor Positioning, Destructive Actions: Undo > Confirm, Dropdown & Overlay Positioning, Fixed Positioning Fallback, Focus Rings: Do Them Right, Form Design: The Non-Obvious, Gesture Discoverability (+10 more)
+
+### Community 69 - "animate.md"
+Cohesion: 0.11
+Nodes (17): Accessibility, Assess Animation Opportunities, CSS Animations, Delight Moments, Entrance Animations, Feedback & Guidance, Implement Animations, JavaScript Animation (+9 more)
+
+### Community 70 - "Polish Systematically"
+Cohesion: 0.11
+Nodes (17): Code Quality, Color & Contrast, Content & Copy, Edge Cases & Error States, Final Verification, Forms & Inputs, Icons & Images, Interaction States (+9 more)
+
+### Community 71 - "Common Cognitive Load Violations"
+Cohesion: 0.12
+Nodes (16): 1. The Wall of Options, 2. The Memory Bridge, 3. The Hidden Navigation, 4. The Jargon Barrier, 5. The Visual Noise Floor, 6. The Inconsistent Pattern, 7. The Multi-Task Demand, 8. The Context Switch (+8 more)
+
+### Community 72 - "Introduce Color Strategically"
+Cohesion: 0.12
+Nodes (16): Accent Color Application, Accessibility, Assess Color Opportunity, Background & Surfaces, Balance & Refinement, Borders & Accents, Cohesion, Data Visualization (+8 more)
+
+### Community 73 - "UX Writing"
+Cohesion: 0.12
+Nodes (16): Avoid Redundant Copy, Confirmation Dialogs: Use Sparingly, Consistency: The Terminology Problem, Don't Blame the User, Empty States Are Opportunities, Error Message Templates, Error Messages: The Formula, Form Instructions (+8 more)
+
+### Community 74 - "adapt.md"
+Cohesion: 0.12
+Nodes (15): Assess Adaptation Challenge, Content Adaptation, Desktop Adaptation (Mobile → Desktop), Email Adaptation (Web → Email), Implement Adaptations, Layout Adaptation Techniques, MANDATORY PREPARATION, Mobile Adaptation (Desktop → Mobile) (+7 more)
+
+### Community 75 - "Generate Report"
+Cohesion: 0.12
+Nodes (15): 1. Accessibility (A11y), 2. Performance, 3. Theming, 4. Responsive Design, 5. Anti-Patterns (CRITICAL), Anti-Patterns Verdict, Audit Health Score, Detailed Findings by Severity (+7 more)
+
+### Community 76 - "Improve Copy Systematically"
+Cohesion: 0.12
+Nodes (15): Apply Clarity Principles, Assess Current Copy, Button & CTA Text, Confirmation Dialogs, Empty States, Error Messages, Form Labels & Instructions, Help Text & Tooltips (+7 more)
+
+### Community 77 - "Color & Contrast"
+Cohesion: 0.12
+Nodes (15): Alpha Is A Design Smell, Building Functional Palettes, Color & Contrast, Color Spaces: Use OKLCH, Contrast & Accessibility, Dangerous Color Combinations, Dark Mode Is Not Inverted Light Mode, Never Use Pure Gray or Pure Black (+7 more)
+
+### Community 78 - "场景化能力导航"
+Cohesion: 0.12
+Nodes (16): DO / DON'T 速查, Impeccable — 高品质前端设计工具集, The AI Slop Test, ✨ 动效与体验, 场景化能力导航, 实现原则, 📐 布局与排版, 来源 (+8 more)
+
+### Community 79 - "Nielsen's 10 Heuristics"
+Cohesion: 0.13
+Nodes (14): 10. Help and Documentation, 1. Visibility of System Status, 2. Match Between System and Real World, 3. User Control and Freedom, 4. Consistency and Standards, 5. Error Prevention, 6. Recognition Rather Than Recall, 7. Flexibility and Efficiency of Use (+6 more)
+
+### Community 80 - "Spatial Design"
+Cohesion: 0.13
+Nodes (14): Cards Are Not Required, Container Queries, Depth & Elevation, Grid Systems, Hierarchy Through Multiple Dimensions, Name Tokens Semantically, Optical Adjustments, Spacing Systems (+6 more)
+
+### Community 81 - "Typography"
+Cohesion: 0.13
+Nodes (14): Accessibility Considerations, Choosing Distinctive Fonts, Classic Typography Principles, Fluid Type, Font Selection & Pairing, Modern Web Typography, Modular Scale & Hierarchy, OpenType Features (+6 more)
+
+### Community 82 - "optimize.md"
+Cohesion: 0.14
+Nodes (13): Animation Performance, Assess Performance Issues, Core Web Vitals Optimization, Cumulative Layout Shift (CLS < 0.1), First Input Delay (FID < 100ms) / INP (< 200ms), Largest Contentful Paint (LCP < 2.5s), Loading Performance, Network Optimization (+5 more)
+
+### Community 83 - "Improve Layout Systematically"
+Cohesion: 0.15
+Nodes (12): Assess Current Layout, Break Card Grid Monotony, Choose the Right Layout Tool, Create Visual Rhythm, Establish a Spacing System, Improve Layout Systematically, Manage Depth & Elevation, MANDATORY PREPARATION (+4 more)
+
+### Community 84 - "Amplify the Design"
+Cohesion: 0.17
+Nodes (11): Amplify the Design, Assess Current State, Color Intensification, Composition Boldness, MANDATORY PREPARATION, Motion & Animation, Plan Amplification, Spatial Drama (+3 more)
+
+### Community 85 - "Hardening Dimensions"
+Cohesion: 0.17
+Nodes (11): Accessibility Resilience, Assess Hardening Needs, Edge Cases & Boundary Conditions, Error Handling, Hardening Dimensions, Input Validation & Sanitization, Internationalization (i18n), Performance Resilience (+3 more)
+
+### Community 86 - "quieter.md"
+Cohesion: 0.18
+Nodes (10): Assess Current State, Color Refinement, Composition Refinement, MANDATORY PREPARATION, Motion Reduction, Plan Refinement, Refine the Design, Simplification (+2 more)
+
+### Community 87 - "typeset.md"
+Cohesion: 0.18
+Nodes (10): Assess Current Typography, Establish Hierarchy, Fix Readability, Font Selection, Improve Typography Systematically, MANDATORY PREPARATION, Plan Typography Improvements, Refine Details (+2 more)
+
+### Community 88 - "Responsive Design"
+Cohesion: 0.20
+Nodes (10): Breakpoints: Content-Driven, Detect Input Method, Not Just Screen Size, Layout Adaptation Patterns, Mobile-First: Write It Right, Picture Element for Art Direction, Responsive Design, Responsive Images: Get It Right, Safe Areas: Handle the Notch (+2 more)
+
+### Community 89 - "SKILL.md"
+Cohesion: 0.22
+Nodes (4): Clean Up, Execute, MANDATORY PREPARATION, Plan
+
+### Community 90 - "Motion Design"
+Cohesion: 0.25
+Nodes (8): Duration: The 100/300/500 Rule, Easing: Pick the Right Curve, Motion Design, Perceived Performance, Performance, Reduced Motion, Staggered Animations, The Only Two Properties You Should Animate
+
+### Community 91 - "Persona-Based Design Testing"
+Cohesion: 0.25
+Nodes (8): 1. Impatient Power User — "Alex", 2. Confused First-Timer — "Jordan", 3. Accessibility-Dependent User — "Sam", 4. Deliberate Stress Tester — "Riley", 5. Distracted Mobile User — "Casey", Persona-Based Design Testing, Project-Specific Personas, Selecting Personas
+
+### Community 92 - "Step 2: Ask UX-Focused Questions"
+Cohesion: 0.25
+Nodes (7): Accessibility & Inclusion, Aesthetic Preferences, Brand & Personality, Step 1: Explore the Codebase, Step 2: Ask UX-Focused Questions, Step 3: Write Design Context, Users & Purpose
+
+### Community 93 - "Simplify the Design"
+Cohesion: 0.29
+Nodes (7): Code Simplification, Content Simplification, Information Architecture, Interaction Simplification, Layout Simplification, Simplify the Design, Visual Simplification
+
+### Community 94 - "editor-opener.js"
+Cohesion: 0.57
+Nodes (5): buildEditorSpawnCommand(), locateCommandCandidates(), openDirectoryInEditor(), resolveBatchFileTarget(), resolveEditorExecutable()
+
+### Community 95 - "distill.md"
+Cohesion: 0.33
+Nodes (5): Assess Current State, Document Removed Complexity, MANDATORY PREPARATION, Plan Simplification, Verify Simplification
+
+### Community 96 - "extract.md"
+Cohesion: 0.33
+Nodes (5): Discover, Document, Extract & Enrich, Migrate, Plan Extraction
+
 ## Knowledge Gaps
-- **327 isolated node(s):** `{ app, BrowserWindow, Tray, Menu, Notification, nativeImage, ipcMain }`, `path`, `fs`, `net`, `serverEntryPath` (+322 more)
+- **688 isolated node(s):** `{ app, BrowserWindow, Tray, Menu, Notification, nativeImage, ipcMain }`, `path`, `fs`, `net`, `serverEntryPath` (+683 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **20 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `worktree-manager` connect `服务端依赖栈` to `依赖共享与策略`?**
-  _High betweenness centrality (0.013) - this node is a cross-community bridge._
-- **Why does `worktree-manager` connect `前端依赖栈` to `依赖共享与策略`?**
-  _High betweenness centrality (0.010) - this node is a cross-community bridge._
+- **Why does `Impeccable — 高品质前端设计工具集` connect `场景化能力导航` to `SKILL.md`?**
+  _High betweenness centrality (0.015) - this node is a cross-community bridge._
 - **What connects `{ app, BrowserWindow, Tray, Menu, Notification, nativeImage, ipcMain }`, `path`, `fs` to the rest of the system?**
-  _327 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _688 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `前端 API 与界面` be split into smaller, more focused modules?**
+  _Cohesion score 0.14532019704433496 - nodes in this community are weakly interconnected._
 - **Should `依赖共享与策略` be split into smaller, more focused modules?**
-  _Cohesion score 0.055206548638873025 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06184210526315789 - nodes in this community are weakly interconnected._
 - **Should `服务端启动与配置` be split into smaller, more focused modules?**
-  _Cohesion score 0.056692242114237 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.0528169014084507 - nodes in this community are weakly interconnected._
 - **Should `Electron 打包配置` be split into smaller, more focused modules?**
   _Cohesion score 0.06896551724137931 - nodes in this community are weakly interconnected._
 - **Should `服务端依赖栈` be split into smaller, more focused modules?**

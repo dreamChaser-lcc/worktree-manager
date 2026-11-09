@@ -70,14 +70,14 @@
     "semantic_hash": ""
   },
   "server/src/core/dep-linker.js": {
-    "mtime": 1793332174.2186153,
-    "ast_hash": "ccc7b9c396e59fc50571e0456552dc58",
-    "semantic_hash": "ccc7b9c396e59fc50571e0456552dc58"
+    "mtime": 1794212361.49228,
+    "ast_hash": "c57d4e5526c73514650220f00bb64866",
+    "semantic_hash": ""
   },
   "server/src/core/dependency-risk-checker.js": {
-    "mtime": 1793347388.8665977,
-    "ast_hash": "5023f8233d21efc531c149bb46bd0aa1",
-    "semantic_hash": "5023f8233d21efc531c149bb46bd0aa1"
+    "mtime": 1794211298.8993456,
+    "ast_hash": "73ccfea0a237a29acbe36b29d802e142",
+    "semantic_hash": ""
   },
   "server/src/core/directory-remover.js": {
     "mtime": 1793333444.9923966,
@@ -150,8 +150,8 @@
     "semantic_hash": "4ce4aa958655b848f88f5ff31a87c50c"
   },
   "server/src/routes/requirement-task-routes.js": {
-    "mtime": 1793954429.6110258,
-    "ast_hash": "448994534af49e8a6a5efc2fa4bb7d9c",
+    "mtime": 1794211298.982402,
+    "ast_hash": "da3565d5fab4638f87f46b5372dc228d",
     "semantic_hash": ""
   },
   "server/src/routes/settings-routes.js": {
@@ -200,9 +200,9 @@
     "semantic_hash": "de8196ad4beb655a25e76566c1128e65"
   },
   "server/test/dep-linker.test.js": {
-    "mtime": 1793332246.2117689,
-    "ast_hash": "d0a9c439d197eccca85b05eba9363d1c",
-    "semantic_hash": "d0a9c439d197eccca85b05eba9363d1c"
+    "mtime": 1794212362.858674,
+    "ast_hash": "438fcaee6e147810b74751b71665d701",
+    "semantic_hash": ""
   },
   "server/test/dependency-risk-checker.test.js": {
     "mtime": 1793347559.95853,
@@ -250,8 +250,8 @@
     "semantic_hash": "0e32d3126b0192abb6db805774dfe934"
   },
   "server/test/requirement-task.test.js": {
-    "mtime": 1793954471.3164668,
-    "ast_hash": "a1e6061c1ac7c012d9345d23cd3e231e",
+    "mtime": 1794211298.9844017,
+    "ast_hash": "f848e5c9bedfec46baac5a0f5fafa5b2",
     "semantic_hash": ""
   },
   "server/test/smoke.test.js": {
@@ -280,9 +280,9 @@
     "semantic_hash": "2f27b40636bb9ac9b52b58e70e4d1a5c"
   },
   "web/src/App.jsx": {
-    "mtime": 1793373985.3802154,
-    "ast_hash": "cf9a090954c73f1c7a01548254335493",
-    "semantic_hash": "cf9a090954c73f1c7a01548254335493"
+    "mtime": 1793955775.5757153,
+    "ast_hash": "7b1d8085d152c718d6b045da71ec0cfd",
+    "semantic_hash": ""
   },
   "web/src/api/client.js": {
     "mtime": 1793954430.9626944,
@@ -295,8 +295,8 @@
     "semantic_hash": "edb3bbcfb8cf8acaf2a2d7e322475595"
   },
   "web/src/components/CreateWorktreeForm.jsx": {
-    "mtime": 1793846770.1149356,
-    "ast_hash": "ba68b8f3404985e940f941678d07565e",
+    "mtime": 1794212342.0559487,
+    "ast_hash": "dbbc54c64d6ec40cde854c2d22d213c5",
     "semantic_hash": ""
   },
   "web/src/components/CreationHistoryPanel.jsx": {
@@ -310,9 +310,9 @@
     "semantic_hash": "5052f8fbf37a995704db95a01f15f901"
   },
   "web/src/components/DependencyStrategySection.jsx": {
-    "mtime": 1793332649.734715,
-    "ast_hash": "6ce7c60809b6d4fa793266621ae51497",
-    "semantic_hash": "6ce7c60809b6d4fa793266621ae51497"
+    "mtime": 1794212352.7053246,
+    "ast_hash": "cd956d2a9e47d5ea454d9f10238e45c4",
+    "semantic_hash": ""
   },
   "web/src/components/DirectoryPicker.jsx": {
     "mtime": 1793603924.9087336,
@@ -370,13 +370,13 @@
     "semantic_hash": "1c4762ca04598dbd0da5fb342b6b83fa"
   },
   "web/src/components/WorktreeQuickCreateDialog.jsx": {
-    "mtime": 1793846770.4967675,
-    "ast_hash": "9723b2dcebff127273a349dd2f0bf1a7",
+    "mtime": 1794212342.998665,
+    "ast_hash": "186568902b0d2ada65bfb54f6e831e8a",
     "semantic_hash": ""
   },
   "web/src/help/helpGuideContent.js": {
-    "mtime": 1793954491.3001492,
-    "ast_hash": "0ea8b57dc392e747b1efc5dafc5d2b8f",
+    "mtime": 1794212392.163682,
+    "ast_hash": "2016f2b5e89f53cc70c7d64a401f0ca1",
     "semantic_hash": ""
   },
   "web/src/main.jsx": {
@@ -395,8 +395,8 @@
     "semantic_hash": "659fff84c90c16b0cdd059b8c3ec7fcd"
   },
   "README.md": {
-    "mtime": 1793863186.4255848,
-    "ast_hash": "64515fce3b8b99dd6e42980dbed0cbb5",
+    "mtime": 1794212379.167986,
+    "ast_hash": "7e663a77d361fb93f5ded31497c7a095",
     "semantic_hash": ""
   },
   "desktop-tauri/README.md": {
@@ -555,8 +555,8 @@
     "semantic_hash": "d67289993204a88a84fa5772168967a6"
   },
   "web/src/components/RequirementTaskDetailDialog.jsx": {
-    "mtime": 1793692597.1096997,
-    "ast_hash": "cd2fe01a27d4949b1521067e7216964f",
+    "mtime": 1794211298.9856896,
+    "ast_hash": "9c63196d81d8266a77a636149e01a1fa",
     "semantic_hash": ""
   },
   ".codebuddy/rules/graphify.md": {
@@ -567,6 +567,166 @@
   "docs/API-MAP.md": {
     "mtime": 1793693774.5020237,
     "ast_hash": "87591e907bd1a2c08c19ee0d1b541479",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/_skillhub_meta.json": {
+    "mtime": 1793954804.3554032,
+    "ast_hash": "0601dc0b3566cc5dafb52b4931cf86c5",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/SKILL.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "777f58f923db511290e67c7f0adda42e",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/adapt.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "3f8fcb86d1aee7ede1437a93b0fbeaa3",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/animate.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "c54218965a695efbf38e405104a62984",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/arrange.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "296d0acee58ae0920fb079c4a49d49e3",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/audit.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "5297ac6220d6e81052c8013acad1edfe",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/bolder.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "73f6d6b9ff4c77964c9b6c42f0b9288b",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/clarify.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "1c80e187d9efdedd7c30286ee48183ad",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/cognitive-load.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "8c098b48df5e2bcd3cbedd0648339105",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/color-and-contrast.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "090b0df2bbeff507b9ae2e4f15cf3fb9",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/colorize.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "ab239ed8a356cd553be95876c984dc45",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/critique.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "9a4809a8429389227244a03071455df3",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/delight.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "82bb53bbaffb7588efe80297bde0f123",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/distill.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "dfffd780ce8cbb926d6666101f33df60",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/extract.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "bb0705ea96c89d093e6290c62297feb2",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/harden.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "3859aae6da36e730b2bfe1cd42802213",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/heuristics-scoring.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "5f64aff796bbc1fff7e4ba71f2afcc57",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/interaction-design.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "4e6b63433d328f97906b23222678efc4",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/motion-design.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "7bfbf3706e2834123429580ee898a5aa",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/normalize.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "fb9c3ec273d4fa9c3a2031b986047b26",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/onboard.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "d992f038172be8563cddd7fcda3f3ee3",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/optimize.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "806ad864e3f4e4e0bc1d6aa8ece8fab6",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/overdrive.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "5d3c956a4b917f7e503c7e85f0308247",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/personas.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "94d6909e01ddb494419b8778729b623d",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/polish.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "3e44e9d304db47a03a556118d5990f26",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/quieter.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "b51156ae7e87ce5bac48efa99de33ea8",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/responsive-design.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "1d50cd4f866c93461fb693f9060a66af",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/spatial-design.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "78d0e2b473a5347f4ceb7a2d5d778172",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/teach-impeccable.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "d75d06da400af3f635104f72843c25d6",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/typeset.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "d8b1cf0023e42f9c97975258dca4b17e",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/typography.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "73818d26cf16d19c48f350d9f2f5df4f",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/ux-writing.md": {
+    "mtime": 1786982658.0,
+    "ast_hash": "034c7386f9d16a83151e34ecdbfdefec",
     "semantic_hash": ""
   }
 }
