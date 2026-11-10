@@ -17,6 +17,8 @@ import {
   restoreSharedDependencies,
   revealInExplorer,
   openDirectoryInEditor,
+  openInHerdr,
+  closeInHerdr,
   fetchRequirementTaskPage,
   setRequirementPublished,
   setRequirementStage,
@@ -485,6 +487,55 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
         return nextMap;
       });
     }
+  }
+
+  /**
+   * 在 herdr 里打开（或复用）当前需求的工作区：工作目录取工作区文件所在目录。
+   * 返回 { ok, text } 供弹窗就地展示结果（弹窗遮罩会盖住列表顶部提示）。
+   */
+  async function handleOpenInHerdr(targetPath, label, startServer = false) {
+    return pathActionPending.run(`herdr:${targetPath}`, async () => {
+      try {
+        const herdrResult = await openInHerdr(targetPath, label, startServer);
+        // 服务未启动：把决定权交回界面，由确认弹窗决定是否拉起 herdr
+        if (herdrResult.needsServerStart) {
+          return { ok: true, needsServerStart: true, text: '' };
+        }
+        // clientAction：launched = 刚拉起终端窗口，activated = 已把现有窗口切到前台
+        const clientActionText =
+          herdrResult.clientAction === 'launched'
+            ? '，已启动 herdr 终端'
+            : herdrResult.clientAction === 'activated'
+              ? '，已切到 herdr 窗口'
+              : '';
+        return {
+          ok: true,
+          text: herdrResult.created
+            ? `已在 herdr 新建工作区「${herdrResult.label}」${clientActionText}，目录：${herdrResult.targetPath}`
+            : `已切换到 herdr 工作区「${herdrResult.label}」${clientActionText}`
+        };
+      } catch (herdrError) {
+        return { ok: false, text: herdrError.message };
+      }
+    });
+  }
+
+  /** 关闭该需求在 herdr 里的工作区（删掉对应终端，工作区内窗格进程一并结束） */
+  async function handleCloseInHerdr(targetPath, label) {
+    return pathActionPending.run(`herdr-close:${targetPath}`, async () => {
+      try {
+        const closeResult = await closeInHerdr(targetPath, label);
+        return {
+          ok: true,
+          text:
+            closeResult.closedCount > 0
+              ? `已关闭 herdr 工作区「${closeResult.label}」（${closeResult.closedCount} 个终端）`
+              : closeResult.message || '未找到可关闭的 herdr 工作区'
+        };
+      } catch (closeError) {
+        return { ok: false, text: closeError.message };
+      }
+    });
   }
 
   /** 在资源管理器中显示路径（文件定位选中，目录直接打开） */
@@ -1086,6 +1137,8 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
           onClose={handleCloseDetailDialog}
           onOpenDirectory={handleOpenWorktree}
           onRevealPath={handleRevealPath}
+          onOpenInHerdr={handleOpenInHerdr}
+          onCloseInHerdr={handleCloseInHerdr}
           onRegenerateWorkspace={handleRegenerateWorkspace}
           onRestoreShared={(projectIndex, projectEntry) =>
             handleRestoreShared(detailDialogTaskEntry, projectIndex, projectEntry)

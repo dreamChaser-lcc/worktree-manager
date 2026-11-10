@@ -4,6 +4,7 @@ import path from 'node:path';
 import { isGitRepository } from '../core/validators.js';
 import { executeGitCommand } from '../core/git-executor.js';
 import { revealInExplorer } from '../core/explorer-revealer.js';
+import { openWorkspaceInHerdr, closeWorkspaceInHerdr } from '../core/herdr-opener.js';
 import { persistenceManager } from '../storage/persistence-manager.js';
 import { NotFoundError, ValidationError } from '../core/errors.js';
 
@@ -65,6 +66,27 @@ export function registerFilesystemRoutes(router) {
       throw new NotFoundError(`路径不存在: ${resolvedPath}`);
     }
     context.body = revealInExplorer(resolvedPath);
+  });
+
+  // 在 herdr 里打开（或复用）工作区：工作目录指向 targetPath（传 .code-workspace 文件时取其所在目录）
+  router.post('/api/filesystem/open-herdr', async (context) => {
+    const targetPath = context.request.body?.targetPath;
+    const label = context.request.body?.label;
+    const startServer = Boolean(context.request.body?.startServer);
+    if (!targetPath || typeof targetPath !== 'string') {
+      throw new ValidationError('缺少 targetPath');
+    }
+    context.body = await openWorkspaceInHerdr({ targetPath, label, startServer });
+  });
+
+  // 关闭该需求在 herdr 里的工作区（删掉对应终端，窗格进程一并结束）
+  router.post('/api/filesystem/close-herdr', async (context) => {
+    const targetPath = context.request.body?.targetPath;
+    const label = context.request.body?.label;
+    if (!targetPath || typeof targetPath !== 'string') {
+      throw new ValidationError('缺少 targetPath');
+    }
+    context.body = closeWorkspaceInHerdr({ targetPath, label });
   });
 
   // 实时校验所选目录是否为 git 仓库

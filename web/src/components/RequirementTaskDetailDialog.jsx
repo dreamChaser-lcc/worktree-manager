@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TaskLogPanel } from './TaskLogPanel.jsx';
 import { deriveProjectNameFromPath } from './RequirementTaskForm.jsx';
 
@@ -83,6 +83,8 @@ export function RequirementTaskDetailDialog({
   onClose,
   onOpenDirectory,
   onRevealPath,
+  onOpenInHerdr,
+  onCloseInHerdr,
   onRegenerateWorkspace,
   onRestoreShared,
   onRequestIndependentInstall,
@@ -91,6 +93,10 @@ export function RequirementTaskDetailDialog({
   const locateProjectList = locateTaskResponse && locateTaskResponse.projectList ? locateTaskResponse.projectList : [];
   const dependencyProjectList =
     dependencyTaskResponse && dependencyTaskResponse.projectList ? dependencyTaskResponse.projectList : [];
+  // herdr 打开结果就地展示：弹窗遮罩会盖住列表顶部提示，所以自己保留一份
+  const [herdrNotice, setHerdrNotice] = useState(null);
+  // herdr 服务未运行时的启动确认层
+  const [confirmHerdrStart, setConfirmHerdrStart] = useState(false);
 
   return (
     <div className="picker-overlay" onClick={onClose}>
@@ -155,7 +161,73 @@ export function RequirementTaskDetailDialog({
                     '重新生成'
                   )}
                 </button>
+                <button
+                  type="button"
+                  className="button-secondary"
+                  title="在 herdr 里打开该需求的工作区（目录为工作区文件所在目录）"
+                  disabled={pathActionPending.isPending(`herdr:${requirementTask.workspaceFilePath}`)}
+                  onClick={async () => {
+                    setHerdrNotice(null);
+                    const herdrResult = await onOpenInHerdr(
+                      requirementTask.workspaceFilePath,
+                      requirementTask.requirementName
+                    );
+                    // 服务没跑：先弹确认，用户同意后再拉起 herdr
+                    if (herdrResult && herdrResult.needsServerStart) {
+                      setConfirmHerdrStart(true);
+                      return;
+                    }
+                    if (herdrResult) {
+                      setHerdrNotice({
+                        type: herdrResult.ok ? 'success' : 'error',
+                        text: herdrResult.text
+                      });
+                    }
+                  }}
+                >
+                  {pathActionPending.isPending(`herdr:${requirementTask.workspaceFilePath}`) ? (
+                    <span>
+                      <span className="button-spinner" />
+                      打开中...
+                    </span>
+                  ) : (
+                    '在 herdr 打开'
+                  )}
+                </button>
+                <button
+                  type="button"
+                  className="button-secondary"
+                  title="关闭该需求在 herdr 里的工作区（终端内运行的进程会一并结束）"
+                  disabled={pathActionPending.isPending(`herdr-close:${requirementTask.workspaceFilePath}`)}
+                  onClick={async () => {
+                    setHerdrNotice(null);
+                    const closeResult = await onCloseInHerdr(
+                      requirementTask.workspaceFilePath,
+                      requirementTask.requirementName
+                    );
+                    if (closeResult) {
+                      setHerdrNotice({
+                        type: closeResult.ok ? 'success' : 'error',
+                        text: closeResult.text
+                      });
+                    }
+                  }}
+                >
+                  {pathActionPending.isPending(`herdr-close:${requirementTask.workspaceFilePath}`) ? (
+                    <span>
+                      <span className="button-spinner" />
+                      关闭中...
+                    </span>
+                  ) : (
+                    '关闭 herdr 终端'
+                  )}
+                </button>
               </div>
+              {herdrNotice ? (
+                <div className={herdrNotice.type === 'success' ? 'alert-success' : 'alert-error'}>
+                  {herdrNotice.text}
+                </div>
+              ) : null}
             </div>
           ) : (
             <div className="form-hint">
@@ -403,6 +475,50 @@ export function RequirementTaskDetailDialog({
             );
           })}
         </div>
+
+        {confirmHerdrStart ? (
+          <div
+            className="herdr-confirm-overlay"
+            onClick={(clickEvent) => {
+              clickEvent.stopPropagation();
+              setConfirmHerdrStart(false);
+            }}
+          >
+            <div className="herdr-confirm-dialog" onClick={(clickEvent) => clickEvent.stopPropagation()}>
+              <div className="herdr-confirm-title">启动 herdr 服务</div>
+              <p className="herdr-confirm-text">
+                herdr 服务当前没有运行。点「启动并打开」会在新终端窗口启动 herdr，并打开该需求的工作区目录：
+              </p>
+              <div className="herdr-confirm-path">{requirementTask.workspaceFilePath}</div>
+              <div className="herdr-confirm-actions">
+                <button type="button" className="button-secondary" onClick={() => setConfirmHerdrStart(false)}>
+                  取消
+                </button>
+                <button
+                  type="button"
+                  className="button-primary"
+                  disabled={pathActionPending.isPending(`herdr:${requirementTask.workspaceFilePath}`)}
+                  onClick={async () => {
+                    setConfirmHerdrStart(false);
+                    const startResult = await onOpenInHerdr(
+                      requirementTask.workspaceFilePath,
+                      requirementTask.requirementName,
+                      true
+                    );
+                    if (startResult) {
+                      setHerdrNotice({
+                        type: startResult.ok ? 'success' : 'error',
+                        text: startResult.text || 'herdr 正在启动，请稍候查看终端窗口'
+                      });
+                    }
+                  }}
+                >
+                  启动并打开
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : null}
       </div>
     </div>
   );

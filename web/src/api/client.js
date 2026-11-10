@@ -188,6 +188,19 @@ export function revealInExplorer(targetPath) {
   return postJson('/api/filesystem/reveal', { targetPath });
 }
 
+/**
+ * 在 herdr 里打开（或复用）工作区，工作目录为 targetPath 所在目录；label 用作工作区名。
+ * startServer 为 false 且服务未运行时，接口返回 { needsServerStart: true }，由界面确认后再传 true 重试。
+ */
+export function openInHerdr(targetPath, label, startServer = false) {
+  return postJson('/api/filesystem/open-herdr', { targetPath, label, startServer });
+}
+
+/** 关闭该需求在 herdr 里的工作区（删掉对应终端） */
+export function closeInHerdr(targetPath, label) {
+  return postJson('/api/filesystem/close-herdr', { targetPath, label });
+}
+
 export function fetchRequirementDependencyCheck(taskId) {
   return getJson(`/api/requirement-tasks/${encodeURIComponent(taskId)}/dependency-check`);
 }
