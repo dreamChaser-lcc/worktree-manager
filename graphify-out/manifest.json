@@ -65,8 +65,8 @@
     "semantic_hash": "2c827728462d0e7d80817a1d9c10bf3d"
   },
   "server/src/config.js": {
-    "mtime": 1793846747.2207177,
-    "ast_hash": "557ad69ce55e8fb59f5abdd7feada164",
+    "mtime": 1794279171.780386,
+    "ast_hash": "9a5ba133a6c23e9ca6e1f70dcd60c9be",
     "semantic_hash": ""
   },
   "server/src/core/dep-linker.js": {
@@ -135,9 +135,9 @@
     "semantic_hash": "1c2daab3f8e07a690513eaa9dd6e274a"
   },
   "server/src/routes/filesystem-routes.js": {
-    "mtime": 1793345527.300316,
-    "ast_hash": "06041c6d99da5dbf0cb01bfff2e8d562",
-    "semantic_hash": "06041c6d99da5dbf0cb01bfff2e8d562"
+    "mtime": 1794281176.0696054,
+    "ast_hash": "20a866af41aa137b159a82506c6b2a4c",
+    "semantic_hash": ""
   },
   "server/src/routes/health-routes.js": {
     "mtime": 1793331664.5341108,
@@ -285,8 +285,8 @@
     "semantic_hash": ""
   },
   "web/src/api/client.js": {
-    "mtime": 1793954430.9626944,
-    "ast_hash": "bbc7a51c46835d01a64caabb43b86d22",
+    "mtime": 1794281176.9518127,
+    "ast_hash": "44a6f7c60404534cb0432c64f5ced3ae",
     "semantic_hash": ""
   },
   "web/src/components/BranchSelector.jsx": {
@@ -335,8 +335,8 @@
     "semantic_hash": "7cdc95eae733176e38e048b941c08100"
   },
   "web/src/components/RequirementTaskPanel.jsx": {
-    "mtime": 1793954463.7850828,
-    "ast_hash": "e950dfeeb2e5738b30541eb9336e084d",
+    "mtime": 1794281181.2839384,
+    "ast_hash": "9b3942db01173bee0aa0a0ef32cc6716",
     "semantic_hash": ""
   },
   "web/src/components/SearchableSelect.jsx": {
@@ -555,8 +555,8 @@
     "semantic_hash": "d67289993204a88a84fa5772168967a6"
   },
   "web/src/components/RequirementTaskDetailDialog.jsx": {
-    "mtime": 1794211298.9856896,
-    "ast_hash": "9c63196d81d8266a77a636149e01a1fa",
+    "mtime": 1794281201.030123,
+    "ast_hash": "556d01a020c8d2ef51173b98e54d3b89",
     "semantic_hash": ""
   },
   ".codebuddy/rules/graphify.md": {
@@ -727,6 +727,11 @@
   ".codebuddy/skills/Impeccable\uff08\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6\uff09/references/ux-writing.md": {
     "mtime": 1786982658.0,
     "ast_hash": "034c7386f9d16a83151e34ecdbfdefec",
+    "semantic_hash": ""
+  },
+  "server/src/core/herdr-opener.js": {
+    "mtime": 1794281167.5386693,
+    "ast_hash": "e7adfd3e0494ef5d605947fe40952959",
     "semantic_hash": ""
   }
 }

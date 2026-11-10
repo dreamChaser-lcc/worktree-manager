@@ -1,16 +1,16 @@
-# Graph Report - worktree-manager  (2026-11-09)
+# Graph Report - worktree-manager  (2026-11-10)
 
 ## Corpus Check
-- 137 files · ~79,063 words
+- 138 files · ~80,741 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1213 nodes · 1653 edges · 97 communities (77 shown, 20 thin omitted)
+- 1230 nodes · 1699 edges · 102 communities (82 shown, 20 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `0d64f442`
+- Built from commit: `282ec3e9`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -110,15 +110,20 @@
 - [[_COMMUNITY_editor-opener.js|editor-opener.js]]
 - [[_COMMUNITY_distill|distill.md]]
 - [[_COMMUNITY_extract|extract.md]]
+- [[_COMMUNITY_herdr-opener.js|herdr-opener.js]]
+- [[_COMMUNITY_app.js|app.js]]
+- [[_COMMUNITY_WorktreeListPanel.jsx|WorktreeListPanel.jsx]]
+- [[_COMMUNITY_api.test.js|api.test.js]]
+- [[_COMMUNITY_config.js|config.js]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `executeGitCommand()` - 27 edges
 2. `getJson()` - 18 edges
 3. `createWorktree()` - 17 edges
-4. `removeWorktree()` - 16 edges
-5. `ValidationError` - 15 edges
-6. `createApp()` - 14 edges
-7. `postJson()` - 14 edges
+4. `ValidationError` - 16 edges
+5. `removeWorktree()` - 16 edges
+6. `postJson()` - 16 edges
+7. `createApp()` - 14 edges
 8. `createFixtureRepository()` - 13 edges
 9. `Polish Systematically` - 13 edges
 10. `Worktree 管理器` - 13 edges
@@ -138,19 +143,19 @@
 ## Import Cycles
 - None detected.
 
-## Communities (97 total, 20 thin omitted)
+## Communities (102 total, 20 thin omitted)
 
 ### Community 0 - "前端 API 与界面"
-Cohesion: 0.15
-Nodes (17): fetchBranchOverview(), fetchDirectoryListing(), fetchDriveList(), fetchInstalledEditors(), BranchSelector(), CreateWorktreeForm(), describeIgnoredCopyResult(), DependencyStrategySection() (+9 more)
+Cohesion: 0.19
+Nodes (14): createWorktree(), fetchDefaultBaseRef(), BranchSelector(), CreateWorktreeForm(), describeIgnoredCopyResult(), DependencyStrategySection(), STRATEGY_LABEL_MAP, RecentRepoBar() (+6 more)
 
 ### Community 1 - "依赖共享与策略"
 Cohesion: 0.06
 Nodes (63): applySharedDependencyLink(), detectPackageManager(), LOCK_FILE_DETECTION_RULES, recommendDependencyStrategy(), startIndependentInstall(), checkWorktreeDependencyStatus(), diffDependencyMaps(), readPackageDependencies() (+55 more)
 
 ### Community 2 - "服务端启动与配置"
-Cohesion: 0.05
-Nodes (44): createApp(), currentFileDir, serverConfig, AppError, appendJobLog(), createJob(), findRunningJob(), finishJob() (+36 more)
+Cohesion: 0.17
+Nodes (15): appendJobLog(), createJob(), findRunningJob(), finishJob(), getJob(), jobMap, listMemoryJobs(), notifyJobListeners() (+7 more)
 
 ### Community 3 - "桌面端壳与 sidecar"
 Cohesion: 0.17
@@ -185,8 +190,8 @@ Cohesion: 0.18
 Nodes (11): appIconPngBuffer, assetsDirectory, buildChunk(), buildDirectory, crc32(), createRoundedSquarePng(), desktopDirectory, fs (+3 more)
 
 ### Community 12 - "编辑器启动"
-Cohesion: 0.16
-Nodes (23): clearWorktreeHistory(), createRequirementTask(), createWorktree(), deleteRequest(), deleteRequirementTask(), deleteTaskRecord(), generateRequirementWorkspace(), openDirectoryInEditor() (+15 more)
+Cohesion: 0.11
+Nodes (31): clearWorktreeHistory(), closeInHerdr(), createRequirementTask(), deleteRequest(), deleteRequirementTask(), deleteTaskRecord(), fetchRequirementDependencyCheck(), fetchRequirementTaskLocate() (+23 more)
 
 ### Community 13 - "开发脚本"
 Cohesion: 0.40
@@ -297,16 +302,16 @@ Cohesion: 0.08
 Nodes (23): 10. Microcopy & Voice, 1. AI Slop Detection (CRITICAL), 2. Visual Hierarchy, 3. Information Architecture & Cognitive Load, 4. Emotional Journey, 5. Discoverability & Affordance, 6. Composition & Balance, 7. Typography as Communication (+15 more)
 
 ### Community 61 - "RequirementTaskPanel.jsx"
-Cohesion: 0.13
-Nodes (10): DependencyInstallDialog(), DEFAULT_LIST_FILTER, describeListFilter(), hasActiveListFilter(), REQUIREMENT_STATUS_TAB_LIST, RequirementTaskPanel(), STAGE_TAG_FILTER_OPTION_LIST, STAGE_CLASS_MAP (+2 more)
+Cohesion: 0.40
+Nodes (3): STAGE_CLASS_MAP, STAGE_OPTIONS, TaskActionsRow()
 
 ### Community 62 - "App.jsx"
-Cohesion: 0.19
-Nodes (8): fetchRecentRepositories(), fetchSettings(), fetchWorktreeHistory(), App(), CreationHistoryPanel(), HelpGuideDialog(), SettingsPanel(), helpGuideSections
+Cohesion: 0.17
+Nodes (9): fetchRecentRepositories(), fetchWorktreeHistory(), App(), CreationHistoryPanel(), HelpGuideDialog(), describeListFilter(), hasActiveListFilter(), RequirementTaskPanel() (+1 more)
 
 ### Community 63 - "WorktreeListPanel.jsx"
-Cohesion: 0.15
-Nodes (15): fetchDefaultBaseRef(), fetchRepositoryCheck(), fetchRequirementDependencyCheck(), fetchRequirementTaskList(), fetchRequirementTaskLocate(), fetchRequirementTaskPage(), fetchTaskDetail(), fetchTaskList() (+7 more)
+Cohesion: 0.21
+Nodes (10): fetchBranchOverview(), fetchDirectoryListing(), fetchDriveList(), fetchInstalledEditors(), fetchRepositoryCheck(), fetchRequirementTaskList(), fetchSettings(), getJson() (+2 more)
 
 ### Community 64 - "RequirementTaskDetailDialog.jsx"
 Cohesion: 0.47
@@ -429,8 +434,8 @@ Cohesion: 0.29
 Nodes (7): Code Simplification, Content Simplification, Information Architecture, Interaction Simplification, Layout Simplification, Simplify the Design, Visual Simplification
 
 ### Community 94 - "editor-opener.js"
-Cohesion: 0.57
-Nodes (5): buildEditorSpawnCommand(), locateCommandCandidates(), openDirectoryInEditor(), resolveBatchFileTarget(), resolveEditorExecutable()
+Cohesion: 0.16
+Nodes (9): KNOWN_EDITOR_CANDIDATE_LIST, resolveDataRootCandidates(), createJobLogFileWriter(), readJobLogFile(), createPersistenceManager(), persistenceManager, readSettingsFile(), writeSettingsFile() (+1 more)
 
 ### Community 95 - "distill.md"
 Cohesion: 0.33
@@ -440,6 +445,26 @@ Nodes (5): Assess Current State, Document Removed Complexity, MANDATORY PREPARAT
 Cohesion: 0.33
 Nodes (5): Discover, Document, Extract & Enrich, Migrate, Plan Extraction
 
+### Community 97 - "herdr-opener.js"
+Cohesion: 0.31
+Nodes (14): activateHerdrWindow(), checkHerdrServerStatus(), closeWorkspaceInHerdr(), ensureHerdrClientWindow(), findHerdrWindowProcessId(), launchHerdrTerminal(), locateInHerdrHome(), locateOnPath() (+6 more)
+
+### Community 98 - "app.js"
+Cohesion: 0.27
+Nodes (10): createApp(), AppError, registerBranchRoutes(), registerFilesystemRoutes(), registerHealthRoutes(), registerRecordRoutes(), registerRequirementTaskRoutes(), registerSettingsRoutes() (+2 more)
+
+### Community 99 - "WorktreeListPanel.jsx"
+Cohesion: 0.24
+Nodes (8): fetchTaskDetail(), fetchTaskList(), fetchWorktreeList(), TASK_STATUS_LABEL_MAP, taskBadgeClassName(), TaskHistoryPanel(), WorktreeListPanel(), usePendingActions()
+
+### Community 100 - "api.test.js"
+Cohesion: 0.24
+Nodes (5): apiWorkspaceDirectory, getJson(), mainDemoPackagePath, waitForJobCompletion(), startTestServer()
+
+### Community 101 - "config.js"
+Cohesion: 0.21
+Nodes (10): currentFileDir, serverConfig, buildEditorSpawnCommand(), locateCommandCandidates(), openDirectoryInEditor(), resolveBatchFileTarget(), resolveEditorExecutable(), recoverInterruptedJobs() (+2 more)
+
 ## Knowledge Gaps
 - **688 isolated node(s):** `{ app, BrowserWindow, Tray, Menu, Notification, nativeImage, ipcMain }`, `path`, `fs`, `net`, `serverEntryPath` (+683 more)
   These have ≤1 connection - possible missing edges or undocumented components.
@@ -448,17 +473,17 @@ Nodes (5): Discover, Document, Extract & Enrich, Migrate, Plan Extraction
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Impeccable — 高品质前端设计工具集` connect `场景化能力导航` to `SKILL.md`?**
-  _High betweenness centrality (0.015) - this node is a cross-community bridge._
 - **What connects `{ app, BrowserWindow, Tray, Menu, Notification, nativeImage, ipcMain }`, `path`, `fs` to the rest of the system?**
   _688 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `前端 API 与界面` be split into smaller, more focused modules?**
-  _Cohesion score 0.14532019704433496 - nodes in this community are weakly interconnected._
 - **Should `依赖共享与策略` be split into smaller, more focused modules?**
   _Cohesion score 0.06184210526315789 - nodes in this community are weakly interconnected._
-- **Should `服务端启动与配置` be split into smaller, more focused modules?**
-  _Cohesion score 0.0528169014084507 - nodes in this community are weakly interconnected._
 - **Should `Electron 打包配置` be split into smaller, more focused modules?**
   _Cohesion score 0.06896551724137931 - nodes in this community are weakly interconnected._
 - **Should `服务端依赖栈` be split into smaller, more focused modules?**
   _Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected._
+- **Should `Tauri 配置` be split into smaller, more focused modules?**
+  _Cohesion score 0.1111111111111111 - nodes in this community are weakly interconnected._
+- **Should `根工程配置` be split into smaller, more focused modules?**
+  _Cohesion score 0.11764705882352941 - nodes in this community are weakly interconnected._
+- **Should `前端依赖栈` be split into smaller, more focused modules?**
+  _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._
