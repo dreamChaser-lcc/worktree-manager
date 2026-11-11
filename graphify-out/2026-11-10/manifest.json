@@ -135,8 +135,8 @@
     "semantic_hash": "1c2daab3f8e07a690513eaa9dd6e274a"
   },
   "server/src/routes/filesystem-routes.js": {
-    "mtime": 1794280307.508184,
-    "ast_hash": "515141c0baf2d92664e6f44e48e42dcd",
+    "mtime": 1794281176.0696054,
+    "ast_hash": "20a866af41aa137b159a82506c6b2a4c",
     "semantic_hash": ""
   },
   "server/src/routes/health-routes.js": {
@@ -285,8 +285,8 @@
     "semantic_hash": ""
   },
   "web/src/api/client.js": {
-    "mtime": 1794280308.2976522,
-    "ast_hash": "caba923c91a125c5feb1aa91b5f4f1e9",
+    "mtime": 1794281176.9518127,
+    "ast_hash": "44a6f7c60404534cb0432c64f5ced3ae",
     "semantic_hash": ""
   },
   "web/src/components/BranchSelector.jsx": {
@@ -335,8 +335,8 @@
     "semantic_hash": "7cdc95eae733176e38e048b941c08100"
   },
   "web/src/components/RequirementTaskPanel.jsx": {
-    "mtime": 1794280318.2818253,
-    "ast_hash": "c4c0a2389f1f74577b94cbf39aad1c10",
+    "mtime": 1794281181.2839384,
+    "ast_hash": "9b3942db01173bee0aa0a0ef32cc6716",
     "semantic_hash": ""
   },
   "web/src/components/SearchableSelect.jsx": {
@@ -555,8 +555,8 @@
     "semantic_hash": "d67289993204a88a84fa5772168967a6"
   },
   "web/src/components/RequirementTaskDetailDialog.jsx": {
-    "mtime": 1794280322.934516,
-    "ast_hash": "0aea901781d5cabe323c627d122a0165",
+    "mtime": 1794281201.030123,
+    "ast_hash": "556d01a020c8d2ef51173b98e54d3b89",
     "semantic_hash": ""
   },
   ".codebuddy/rules/graphify.md": {
@@ -730,8 +730,63 @@
     "semantic_hash": ""
   },
   "server/src/core/herdr-opener.js": {
-    "mtime": 1794280302.9612243,
-    "ast_hash": "c1b9f965b7959bf8a951f302f2066ab7",
+    "mtime": 1794281167.5386693,
+    "ast_hash": "e7adfd3e0494ef5d605947fe40952959",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/worktree-manager/scripts/create-requirement.mjs": {
+    "mtime": 1794282110.7326846,
+    "ast_hash": "afd649c247382fee417b8532a2262027",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/worktree-manager/SKILL.md": {
+    "mtime": 1794282123.0873573,
+    "ast_hash": "fdf358eefe5e185b8dedb560acac133b",
+    "semantic_hash": ""
+  },
+  ".codebuddy/skills/worktree-manager/references/api-endpoints.md": {
+    "mtime": 1794282152.0482767,
+    "ast_hash": "25921434462afe414b9d65c92e2a8f55",
+    "semantic_hash": ""
+  },
+  "ai-tools/install.mjs": {
+    "mtime": 1794284427.8155115,
+    "ast_hash": "80404573eef59059f45f2fde78a8147a",
+    "semantic_hash": ""
+  },
+  "ai-tools/mcp-server/index.js": {
+    "mtime": 1794282099.532308,
+    "ast_hash": "f1a9b07d402328aafc30e190a4f194b3",
+    "semantic_hash": ""
+  },
+  "ai-tools/mcp-server/package.json": {
+    "mtime": 1794281521.0501103,
+    "ast_hash": "61cf2b00806af416b26aa82239b9c21d",
+    "semantic_hash": ""
+  },
+  "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs": {
+    "mtime": 1794283248.5830472,
+    "ast_hash": "eb3932e642e078ed111ece7316d896b7",
+    "semantic_hash": ""
+  },
+  "ai-tools/README.md": {
+    "mtime": 1794284499.9867957,
+    "ast_hash": "e25532b3de3ddb35bd7c6e468979432c",
+    "semantic_hash": ""
+  },
+  "ai-tools/skill/worktree-manager/SKILL.md": {
+    "mtime": 1794284443.479378,
+    "ast_hash": "f255f71d3dd6e688dec51de1814b9c10",
+    "semantic_hash": ""
+  },
+  "ai-tools/skill/worktree-manager/references/api-endpoints.md": {
+    "mtime": 1794282152.0482767,
+    "ast_hash": "25921434462afe414b9d65c92e2a8f55",
+    "semantic_hash": ""
+  },
+  "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json": {
+    "mtime": 1794283232.3222506,
+    "ast_hash": "6412bc061cee9d6a4415e27cf4e02828",
     "semantic_hash": ""
   }
 }

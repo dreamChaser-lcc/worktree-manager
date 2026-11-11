@@ -9,6 +9,10 @@ dist/
 .setup-demo.cjs
 desktop-electron/release/
 
+# AI 工具：skill 源文件在 ai-tools/skill/ 下随仓库走，
+# .codebuddy/skills/ 里的副本由 ai-tools/install.mjs 生成，不入库
+.codebuddy/skills/worktree-manager/
+
 # Tauri 桌面端：Rust 编译产物、sidecar 可执行（bun 编译再生）、生成文件
 desktop-tauri/src-tauri/target/
 desktop-tauri/src-tauri/binaries/

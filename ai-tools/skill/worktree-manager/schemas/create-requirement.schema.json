@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "create-requirement 参数",
+  "description": "worktree-manager skill 创建需求任务的命令行参数约束。agent 可据此校验参数，或直接运行脚本的 --check 模式做完整预检。",
+  "type": "object",
+  "required": ["name", "branch", "repo"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "需求标题，例如「【微赞+星享】【惠康】客服支持语音转文字」"
+    },
+    "branch": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^(?!.*(\\.\\.|//|[ ~^:?*\\[\\\\]))(?!.*\\.lock$)(?!^[/.])(?!.*[/.]$).+$",
+      "description": "开发分支名。必须由用户提供，禁止 agent 编造。遵循 git 分支命名规则：不含空格与 ~^:?*[\\，不以 / 或 . 开头结尾，不含 .. 与 //"
+    },
+    "repo": {
+      "type": "array",
+      "minItems": 1,
+      "description": "主仓库绝对路径，可传多次，至少一个",
+      "items": {
+        "type": "string",
+        "pattern": "^([A-Za-z]:[\\\\/]|\\\\\\\\).+$",
+        "description": "Windows 绝对路径（盘符或 UNC）"
+      }
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://",
+      "description": "需求链接，可选"
+    },
+    "strategy": {
+      "type": "string",
+      "enum": ["install", "share", "skip"],
+      "default": "install",
+      "description": "依赖策略：install=独立安装（默认）、share=共享目录链接、skip=不处理"
+    },
+    "stage": {
+      "type": "string",
+      "enum": ["待开发", "开发中", "测试中"],
+      "description": "阶段标签，可选"
+    },
+    "no-workspace": {
+      "type": "boolean",
+      "default": false,
+      "description": "是否跳过生成 .code-workspace"
+    },
+    "allow-duplicate": {
+      "type": "boolean",
+      "default": false,
+      "description": "跳过「需求名 + 分支名」查重，强制新建"
+    },
+    "check": {
+      "type": "boolean",
+      "default": false,
+      "description": "只做参数校验（本地 + 平台侧仓库校验），不创建任务"
+    },
+    "json": {
+      "type": "boolean",
+      "default": false,
+      "description": "以 JSON 输出校验结果或创建结果，便于程序解析"
+    },
+    "api": {
+      "type": "string",
+      "pattern": "^https?://",
+      "default": "http://127.0.0.1:5210",
+      "description": "平台地址"
+    }
+  }
+}

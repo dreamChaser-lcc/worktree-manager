@@ -1,0 +1,18 @@
+{
+  "name": "worktree-manager-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "把本地 worktree-manager 平台能力暴露给 AI agent（MCP stdio server）",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.20.0",
+    "zod": "^3.23.8"
+  }
+}

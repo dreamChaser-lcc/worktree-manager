@@ -1,16 +1,16 @@
-# Graph Report - worktree-manager  (2026-11-10)
+# Graph Report - worktree-manager  (2026-11-11)
 
 ## Corpus Check
-- 138 files · ~80,741 words
+- 146 files · ~85,764 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1230 nodes · 1699 edges · 102 communities (82 shown, 20 thin omitted)
+- 1408 nodes · 1891 edges · 123 communities (103 shown, 20 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `282ec3e9`
+- Built from commit: `bd6acaca`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -107,7 +107,7 @@
 - [[_COMMUNITY_Persona-Based Design Testing|Persona-Based Design Testing]]
 - [[_COMMUNITY_Step 2 Ask UX-Focused Questions|Step 2: Ask UX-Focused Questions]]
 - [[_COMMUNITY_Simplify the Design|Simplify the Design]]
-- [[_COMMUNITY_editor-opener.js|editor-opener.js]]
+- [[_COMMUNITY_app.js|app.js]]
 - [[_COMMUNITY_distill|distill.md]]
 - [[_COMMUNITY_extract|extract.md]]
 - [[_COMMUNITY_herdr-opener.js|herdr-opener.js]]
@@ -115,6 +115,27 @@
 - [[_COMMUNITY_WorktreeListPanel.jsx|WorktreeListPanel.jsx]]
 - [[_COMMUNITY_api.test.js|api.test.js]]
 - [[_COMMUNITY_config.js|config.js]]
+- [[_COMMUNITY_persistence-manager.js|persistence-manager.js]]
+- [[_COMMUNITY_api.test.js|api.test.js]]
+- [[_COMMUNITY_index.js|index.js]]
+- [[_COMMUNITY_ai-tools|ai-tools]]
+- [[_COMMUNITY_worktree-manager 平台接口全表|worktree-manager 平台接口全表]]
+- [[_COMMUNITY_config.js|config.js]]
+- [[_COMMUNITY_Generate Report|Generate Report]]
+- [[_COMMUNITY_editor-opener.js|editor-opener.js]]
+- [[_COMMUNITY_requirement-task.test.js|requirement-task.test.js]]
+- [[_COMMUNITY_SKILL|SKILL.md]]
+- [[_COMMUNITY_create-requirement.schema.json|create-requirement.schema.json]]
+- [[_COMMUNITY_branch|branch]]
+- [[_COMMUNITY_properties|properties]]
+- [[_COMMUNITY_api|api]]
+- [[_COMMUNITY_name|name]]
+- [[_COMMUNITY_strategy|strategy]]
+- [[_COMMUNITY_url|url]]
+- [[_COMMUNITY_check|check]]
+- [[_COMMUNITY_json|json]]
+- [[_COMMUNITY_no-workspace|no-workspace]]
+- [[_COMMUNITY_stage|stage]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `executeGitCommand()` - 27 edges
@@ -129,33 +150,33 @@
 10. `Worktree 管理器` - 13 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `executeCreationFlow()` --calls--> `openDirectoryInEditor()`  [EXTRACTED]
-  server/src/routes/worktree-routes.js → server/src/core/editor-opener.js
 - `readProjectRemoteUrl()` --calls--> `executeGitCommand()`  [EXTRACTED]
   server/src/routes/requirement-task-routes.js → server/src/core/git-executor.js
-- `copyIgnoredSafely()` --calls--> `copyIgnoredFiles()`  [EXTRACTED]
-  server/src/routes/requirement-task-routes.js → server/src/core/ignore-file-copier.js
-- `generateAndAttachWorkspace()` --calls--> `generateWorkspaceFileForTask()`  [EXTRACTED]
-  server/src/routes/requirement-task-routes.js → server/src/core/workspace-file-generator.js
 - `isRunningInstallForWorktree()` --calls--> `normalizePathForComparison()`  [EXTRACTED]
   server/src/routes/requirement-task-routes.js → server/src/core/worktree-manager.js
+- `createLinkedWorktree()` --calls--> `createWorktree()`  [EXTRACTED]
+  server/test/dep-linker.test.js → server/src/core/worktree-manager.js
+- `executeCreationFlow()` --calls--> `detectPackageManager()`  [EXTRACTED]
+  server/src/routes/worktree-routes.js → server/src/core/dep-linker.js
+- `executeCreationFlow()` --calls--> `applySharedDependencyLink()`  [EXTRACTED]
+  server/src/routes/worktree-routes.js → server/src/core/dep-linker.js
 
 ## Import Cycles
 - None detected.
 
-## Communities (102 total, 20 thin omitted)
+## Communities (123 total, 20 thin omitted)
 
 ### Community 0 - "前端 API 与界面"
 Cohesion: 0.19
 Nodes (14): createWorktree(), fetchDefaultBaseRef(), BranchSelector(), CreateWorktreeForm(), describeIgnoredCopyResult(), DependencyStrategySection(), STRATEGY_LABEL_MAP, RecentRepoBar() (+6 more)
 
 ### Community 1 - "依赖共享与策略"
-Cohesion: 0.06
-Nodes (63): applySharedDependencyLink(), detectPackageManager(), LOCK_FILE_DETECTION_RULES, recommendDependencyStrategy(), startIndependentInstall(), checkWorktreeDependencyStatus(), diffDependencyMaps(), readPackageDependencies() (+55 more)
+Cohesion: 0.26
+Nodes (17): removeDirectoryTree(), executeGitCommand(), detectDefaultBranch(), doesLocalBranchExist(), findRemoteBranchRef(), getMainWorktreePath(), getUnmergedCommitCount(), listWorktrees() (+9 more)
 
 ### Community 2 - "服务端启动与配置"
-Cohesion: 0.17
-Nodes (15): appendJobLog(), createJob(), findRunningJob(), finishJob(), getJob(), jobMap, listMemoryJobs(), notifyJobListeners() (+7 more)
+Cohesion: 0.06
+Nodes (42): createApp(), AppError, appendJobLog(), createJob(), findRunningJob(), finishJob(), getJob(), jobMap (+34 more)
 
 ### Community 3 - "桌面端壳与 sidecar"
 Cohesion: 0.17
@@ -170,8 +191,8 @@ Cohesion: 0.11
 Nodes (18): dependencies, koa, koa-bodyparser, @koa/router, koa-static, @seald-io/nedb, worktree-manager, devDependencies (+10 more)
 
 ### Community 7 - "工作区文件生成"
-Cohesion: 0.16
-Nodes (13): buildExcludedProjectReason(), buildWorkspaceFileContent(), generateWorkspaceFileForTask(), isExistingDirectory(), sanitizeWorkspaceFileName(), convertRemoteUrlToWebUrl(), generateAndAttachWorkspace(), fetchTaskIdSet() (+5 more)
+Cohesion: 0.15
+Nodes (15): applySharedDependencyLink(), detectPackageManager(), LOCK_FILE_DETECTION_RULES, recommendDependencyStrategy(), startIndependentInstall(), checkWorktreeDependencyStatus(), diffDependencyMaps(), readPackageDependencies() (+7 more)
 
 ### Community 8 - "Tauri 配置"
 Cohesion: 0.11
@@ -398,8 +419,8 @@ Cohesion: 0.17
 Nodes (11): Amplify the Design, Assess Current State, Color Intensification, Composition Boldness, MANDATORY PREPARATION, Motion & Animation, Plan Amplification, Spatial Drama (+3 more)
 
 ### Community 85 - "Hardening Dimensions"
-Cohesion: 0.17
-Nodes (11): Accessibility Resilience, Assess Hardening Needs, Edge Cases & Boundary Conditions, Error Handling, Hardening Dimensions, Input Validation & Sanitization, Internationalization (i18n), Performance Resilience (+3 more)
+Cohesion: 0.25
+Nodes (8): Accessibility Resilience, Edge Cases & Boundary Conditions, Error Handling, Hardening Dimensions, Input Validation & Sanitization, Internationalization (i18n), Performance Resilience, Text Overflow & Wrapping
 
 ### Community 86 - "quieter.md"
 Cohesion: 0.18
@@ -410,11 +431,11 @@ Cohesion: 0.18
 Nodes (10): Assess Current Typography, Establish Hierarchy, Fix Readability, Font Selection, Improve Typography Systematically, MANDATORY PREPARATION, Plan Typography Improvements, Refine Details (+2 more)
 
 ### Community 88 - "Responsive Design"
-Cohesion: 0.20
+Cohesion: 0.18
 Nodes (10): Breakpoints: Content-Driven, Detect Input Method, Not Just Screen Size, Layout Adaptation Patterns, Mobile-First: Write It Right, Picture Element for Art Direction, Responsive Design, Responsive Images: Get It Right, Safe Areas: Handle the Notch (+2 more)
 
 ### Community 89 - "SKILL.md"
-Cohesion: 0.22
+Cohesion: 0.40
 Nodes (4): Clean Up, Execute, MANDATORY PREPARATION, Plan
 
 ### Community 90 - "Motion Design"
@@ -430,60 +451,144 @@ Cohesion: 0.25
 Nodes (7): Accessibility & Inclusion, Aesthetic Preferences, Brand & Personality, Step 1: Explore the Codebase, Step 2: Ask UX-Focused Questions, Step 3: Write Design Context, Users & Purpose
 
 ### Community 93 - "Simplify the Design"
-Cohesion: 0.29
-Nodes (7): Code Simplification, Content Simplification, Information Architecture, Interaction Simplification, Layout Simplification, Simplify the Design, Visual Simplification
+Cohesion: 0.15
+Nodes (12): Assess Current State, Code Simplification, Content Simplification, Document Removed Complexity, Information Architecture, Interaction Simplification, Layout Simplification, MANDATORY PREPARATION (+4 more)
 
-### Community 94 - "editor-opener.js"
-Cohesion: 0.16
-Nodes (9): KNOWN_EDITOR_CANDIDATE_LIST, resolveDataRootCandidates(), createJobLogFileWriter(), readJobLogFile(), createPersistenceManager(), persistenceManager, readSettingsFile(), writeSettingsFile() (+1 more)
+### Community 94 - "app.js"
+Cohesion: 0.22
+Nodes (10): buildExcludedProjectReason(), buildWorkspaceFileContent(), generateWorkspaceFileForTask(), isExistingDirectory(), sanitizeWorkspaceFileName(), generateAndAttachWorkspace(), isRunningInstallForWorktree(), normalizeRequirementTaskInput() (+2 more)
 
 ### Community 95 - "distill.md"
-Cohesion: 0.33
-Nodes (5): Assess Current State, Document Removed Complexity, MANDATORY PREPARATION, Plan Simplification, Verify Simplification
+Cohesion: 0.17
+Nodes (17): aiToolsDirectory, argumentList, deployMcpServer(), deploySkill(), flagSet, globalInstall, installDeps, installMcpDependencies() (+9 more)
 
 ### Community 96 - "extract.md"
 Cohesion: 0.33
 Nodes (5): Discover, Document, Extract & Enrich, Migrate, Plan Extraction
 
 ### Community 97 - "herdr-opener.js"
-Cohesion: 0.31
-Nodes (14): activateHerdrWindow(), checkHerdrServerStatus(), closeWorkspaceInHerdr(), ensureHerdrClientWindow(), findHerdrWindowProcessId(), launchHerdrTerminal(), locateInHerdrHome(), locateOnPath() (+6 more)
+Cohesion: 0.16
+Nodes (21): currentFileDir, serverConfig, buildEditorSpawnCommand(), locateCommandCandidates(), openDirectoryInEditor(), resolveBatchFileTarget(), resolveEditorExecutable(), activateHerdrWindow() (+13 more)
 
 ### Community 98 - "app.js"
-Cohesion: 0.27
-Nodes (10): createApp(), AppError, registerBranchRoutes(), registerFilesystemRoutes(), registerHealthRoutes(), registerRecordRoutes(), registerRequirementTaskRoutes(), registerSettingsRoutes() (+2 more)
+Cohesion: 0.14
+Nodes (13): dependencies, @modelcontextprotocol/sdk, zod, description, engines, node, main, name (+5 more)
 
 ### Community 99 - "WorktreeListPanel.jsx"
 Cohesion: 0.24
 Nodes (8): fetchTaskDetail(), fetchTaskList(), fetchWorktreeList(), TASK_STATUS_LABEL_MAP, taskBadgeClassName(), TaskHistoryPanel(), WorktreeListPanel(), usePendingActions()
 
 ### Community 100 - "api.test.js"
-Cohesion: 0.24
-Nodes (5): apiWorkspaceDirectory, getJson(), mainDemoPackagePath, waitForJobCompletion(), startTestServer()
+Cohesion: 0.14
+Nodes (19): allowDuplicate, apiBaseUrl, argumentList, buildProjectList(), callApi(), checkOnly, flagSet, jsonOutput (+11 more)
 
 ### Community 101 - "config.js"
-Cohesion: 0.21
-Nodes (10): currentFileDir, serverConfig, buildEditorSpawnCommand(), locateCommandCandidates(), openDirectoryInEditor(), resolveBatchFileTarget(), resolveEditorExecutable(), recoverInterruptedJobs() (+2 more)
+Cohesion: 0.14
+Nodes (13): 1. 创建需求任务（推荐用脚本）, 2. 查询任务列表, 3. 查单个任务的状态, 4. 在 herdr 终端打开该需求, 5. 关闭 herdr 工作区（破坏性）, 6. 校验仓库, worktree-manager 平台操作, 一、开始前必做 (+5 more)
+
+### Community 102 - "persistence-manager.js"
+Cohesion: 0.42
+Nodes (6): assertNotNestedInRepository(), assertTargetPathAvailable(), assertValidBranchName(), isGitRepository(), createWorktree(), plainTempDir
+
+### Community 103 - "api.test.js"
+Cohesion: 0.24
+Nodes (7): ConflictError, commitFileInRepository(), configureFixtureIdentity(), createFixtureRepository(), targetDirectory, worktreeParentDir, worktreePathList
+
+### Community 104 - "index.js"
+Cohesion: 0.24
+Nodes (6): API_BASE_URL, callApi(), fetchAllRequirementTasks(), mcpServer, requireTaskById(), transport
+
+### Community 105 - "ai-tools"
+Cohesion: 0.07
+Nodes (29): A. 图形界面装 MCP 到全局, A. 手动装 MCP 到全局, ai-tools, B. 图形界面装 Skill 到全局, B. 手动装 Skill 到全局, C. 只装一个, C. 图形界面卸载, `.codebuddy` 目录结构 (+21 more)
+
+### Community 106 - "worktree-manager 平台接口全表"
+Cohesion: 0.25
+Nodes (7): worktree, worktree-manager 平台接口全表, 允许 agent 调用, 分支 / 文件系统 / 任务日志, 响应要点, 禁止 agent 调用（破坏性）, 需求任务
+
+### Community 107 - "config.js"
+Cohesion: 0.33
+Nodes (3): GitCommandError, NotFoundError, revealInExplorer()
+
+### Community 108 - "Generate Report"
+Cohesion: 0.25
+Nodes (8): description, pattern, type, repo, description, items, minItems, type
+
+### Community 109 - "editor-opener.js"
+Cohesion: 0.25
+Nodes (11): compileSingleLevelWildcard(), copyDirectoryTree(), copyIgnoredFiles(), copySingleFile(), existsAsDirectory(), startProcessJob(), copyIgnoredSafely(), attachWorktreeToRequirementTask() (+3 more)
+
+### Community 110 - "requirement-task.test.js"
+Cohesion: 0.24
+Nodes (7): convertRemoteUrlToWebUrl(), fetchTaskIdSet(), getJson(), postJson(), putJson(), requestJson(), waitForJobFinished()
+
+### Community 111 - "SKILL.md"
+Cohesion: 0.29
+Nodes (3): Assess Hardening Needs, Testing Strategies, Verify Hardening
+
+### Community 112 - "create-requirement.schema.json"
+Cohesion: 0.29
+Nodes (6): additionalProperties, description, required, $schema, title, type
+
+### Community 113 - "branch"
+Cohesion: 0.33
+Nodes (6): description, maxLength, minLength, pattern, type, branch
+
+### Community 114 - "properties"
+Cohesion: 0.40
+Nodes (5): default, description, type, properties, allow-duplicate
+
+### Community 115 - "api"
+Cohesion: 0.40
+Nodes (5): default, description, pattern, type, api
+
+### Community 116 - "name"
+Cohesion: 0.40
+Nodes (5): description, maxLength, minLength, type, name
+
+### Community 117 - "strategy"
+Cohesion: 0.40
+Nodes (5): strategy, default, description, enum, type
+
+### Community 118 - "url"
+Cohesion: 0.40
+Nodes (5): url, description, format, pattern, type
+
+### Community 119 - "check"
+Cohesion: 0.50
+Nodes (4): default, description, type, check
+
+### Community 120 - "json"
+Cohesion: 0.50
+Nodes (4): default, description, type, json
+
+### Community 121 - "no-workspace"
+Cohesion: 0.50
+Nodes (4): default, description, type, no-workspace
+
+### Community 122 - "stage"
+Cohesion: 0.50
+Nodes (4): stage, description, enum, type
 
 ## Knowledge Gaps
-- **688 isolated node(s):** `{ app, BrowserWindow, Tray, Menu, Notification, nativeImage, ipcMain }`, `path`, `fs`, `net`, `serverEntryPath` (+683 more)
+- **809 isolated node(s):** `aiToolsDirectory`, `projectRootDirectory`, `skillSourceDirectory`, `mcpSourceDirectory`, `argumentList` (+804 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **20 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **What connects `{ app, BrowserWindow, Tray, Menu, Notification, nativeImage, ipcMain }`, `path`, `fs` to the rest of the system?**
-  _688 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `依赖共享与策略` be split into smaller, more focused modules?**
-  _Cohesion score 0.06184210526315789 - nodes in this community are weakly interconnected._
+- **What connects `aiToolsDirectory`, `projectRootDirectory`, `skillSourceDirectory` to the rest of the system?**
+  _809 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `服务端启动与配置` be split into smaller, more focused modules?**
+  _Cohesion score 0.0553116769095698 - nodes in this community are weakly interconnected._
 - **Should `Electron 打包配置` be split into smaller, more focused modules?**
   _Cohesion score 0.06896551724137931 - nodes in this community are weakly interconnected._
 - **Should `服务端依赖栈` be split into smaller, more focused modules?**
   _Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected._
+- **Should `工作区文件生成` be split into smaller, more focused modules?**
+  _Cohesion score 0.14624505928853754 - nodes in this community are weakly interconnected._
 - **Should `Tauri 配置` be split into smaller, more focused modules?**
   _Cohesion score 0.1111111111111111 - nodes in this community are weakly interconnected._
 - **Should `根工程配置` be split into smaller, more focused modules?**
   _Cohesion score 0.11764705882352941 - nodes in this community are weakly interconnected._
-- **Should `前端依赖栈` be split into smaller, more focused modules?**
-  _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._

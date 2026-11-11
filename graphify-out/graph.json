@@ -4,6 +4,1266 @@
   "graph": {},
   "nodes": [
     {
+      "label": "install.mjs",
+      "file_type": "code",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "ai_tools_install",
+      "community": 95,
+      "norm_label": "install.mjs"
+    },
+    {
+      "label": "aiToolsDirectory",
+      "file_type": "code",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "ai_tools_install_aitoolsdirectory",
+      "community": 95,
+      "norm_label": "aitoolsdirectory"
+    },
+    {
+      "label": "projectRootDirectory",
+      "file_type": "code",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L24",
+      "_origin": "ast",
+      "id": "ai_tools_install_projectrootdirectory",
+      "community": 95,
+      "norm_label": "projectrootdirectory"
+    },
+    {
+      "label": "skillSourceDirectory",
+      "file_type": "code",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L25",
+      "_origin": "ast",
+      "id": "ai_tools_install_skillsourcedirectory",
+      "community": 95,
+      "norm_label": "skillsourcedirectory"
+    },
+    {
+      "label": "mcpSourceDirectory",
+      "file_type": "code",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "ai_tools_install_mcpsourcedirectory",
+      "community": 95,
+      "norm_label": "mcpsourcedirectory"
+    },
+    {
+      "label": "argumentList",
+      "file_type": "code",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L28",
+      "_origin": "ast",
+      "id": "ai_tools_install_argumentlist",
+      "community": 95,
+      "norm_label": "argumentlist"
+    },
+    {
+      "label": "flagSet",
+      "file_type": "code",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L29",
+      "_origin": "ast",
+      "id": "ai_tools_install_flagset",
+      "community": 95,
+      "norm_label": "flagset"
+    },
+    {
+      "label": "printOnly",
+      "file_type": "code",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L31",
+      "_origin": "ast",
+      "id": "ai_tools_install_printonly",
+      "community": 95,
+      "norm_label": "printonly"
+    },
+    {
+      "label": "installDeps",
+      "file_type": "code",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L32",
+      "_origin": "ast",
+      "id": "ai_tools_install_installdeps",
+      "community": 95,
+      "norm_label": "installdeps"
+    },
+    {
+      "label": "globalInstall",
+      "file_type": "code",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L33",
+      "_origin": "ast",
+      "id": "ai_tools_install_globalinstall",
+      "community": 95,
+      "norm_label": "globalinstall"
+    },
+    {
+      "label": "userCodeBuddyDirectory",
+      "file_type": "code",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L35",
+      "_origin": "ast",
+      "id": "ai_tools_install_usercodebuddydirectory",
+      "community": 95,
+      "norm_label": "usercodebuddydirectory"
+    },
+    {
+      "label": "mcpEntryPath",
+      "file_type": "code",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L47",
+      "_origin": "ast",
+      "id": "ai_tools_install_mcpentrypath",
+      "community": 95,
+      "norm_label": "mcpentrypath"
+    },
+    {
+      "label": "printHeader()",
+      "file_type": "code",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L49",
+      "_origin": "ast",
+      "id": "ai_tools_install_printheader",
+      "community": 95,
+      "norm_label": "printheader()"
+    },
+    {
+      "label": "deploySkill()",
+      "file_type": "code",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L54",
+      "_origin": "ast",
+      "id": "ai_tools_install_deployskill",
+      "community": 95,
+      "norm_label": "deployskill()"
+    },
+    {
+      "label": "deployMcpServer()",
+      "file_type": "code",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L78",
+      "_origin": "ast",
+      "id": "ai_tools_install_deploymcpserver",
+      "community": 95,
+      "norm_label": "deploymcpserver()"
+    },
+    {
+      "label": "printMcpConfig()",
+      "file_type": "code",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L97",
+      "_origin": "ast",
+      "id": "ai_tools_install_printmcpconfig",
+      "community": 95,
+      "norm_label": "printmcpconfig()"
+    },
+    {
+      "label": "installMcpDependencies()",
+      "file_type": "code",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L121",
+      "_origin": "ast",
+      "id": "ai_tools_install_installmcpdependencies",
+      "community": 95,
+      "norm_label": "installmcpdependencies()"
+    },
+    {
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L150",
+      "_origin": "ast",
+      "id": "ai_tools_install_main",
+      "community": 95,
+      "norm_label": "main()"
+    },
+    {
+      "label": "index.js",
+      "file_type": "code",
+      "source_file": "ai-tools/mcp-server/index.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "ai_tools_mcp_server_index",
+      "community": 104,
+      "norm_label": "index.js"
+    },
+    {
+      "label": "API_BASE_URL",
+      "file_type": "code",
+      "source_file": "ai-tools/mcp-server/index.js",
+      "source_location": "L20",
+      "_origin": "ast",
+      "id": "ai_tools_mcp_server_index_api_base_url",
+      "community": 104,
+      "norm_label": "api_base_url"
+    },
+    {
+      "label": "callApi()",
+      "file_type": "code",
+      "source_file": "ai-tools/mcp-server/index.js",
+      "source_location": "L28",
+      "_origin": "ast",
+      "id": "ai_tools_mcp_server_index_callapi",
+      "community": 104,
+      "norm_label": "callapi()"
+    },
+    {
+      "label": "textResult()",
+      "file_type": "code",
+      "source_file": "ai-tools/mcp-server/index.js",
+      "source_location": "L65",
+      "_origin": "ast",
+      "id": "ai_tools_mcp_server_index_textresult",
+      "community": 104,
+      "norm_label": "textresult()"
+    },
+    {
+      "label": "errorResult()",
+      "file_type": "code",
+      "source_file": "ai-tools/mcp-server/index.js",
+      "source_location": "L70",
+      "_origin": "ast",
+      "id": "ai_tools_mcp_server_index_errorresult",
+      "community": 104,
+      "norm_label": "errorresult()"
+    },
+    {
+      "label": "fetchAllRequirementTasks()",
+      "file_type": "code",
+      "source_file": "ai-tools/mcp-server/index.js",
+      "source_location": "L76",
+      "_origin": "ast",
+      "id": "ai_tools_mcp_server_index_fetchallrequirementtasks",
+      "community": 104,
+      "norm_label": "fetchallrequirementtasks()"
+    },
+    {
+      "label": "requireTaskById()",
+      "file_type": "code",
+      "source_file": "ai-tools/mcp-server/index.js",
+      "source_location": "L82",
+      "_origin": "ast",
+      "id": "ai_tools_mcp_server_index_requiretaskbyid",
+      "community": 104,
+      "norm_label": "requiretaskbyid()"
+    },
+    {
+      "label": "formatTaskSummary()",
+      "file_type": "code",
+      "source_file": "ai-tools/mcp-server/index.js",
+      "source_location": "L92",
+      "_origin": "ast",
+      "id": "ai_tools_mcp_server_index_formattasksummary",
+      "community": 104,
+      "norm_label": "formattasksummary()"
+    },
+    {
+      "label": "mcpServer",
+      "file_type": "code",
+      "source_file": "ai-tools/mcp-server/index.js",
+      "source_location": "L110",
+      "_origin": "ast",
+      "id": "ai_tools_mcp_server_index_mcpserver",
+      "community": 104,
+      "norm_label": "mcpserver"
+    },
+    {
+      "label": "transport",
+      "file_type": "code",
+      "source_file": "ai-tools/mcp-server/index.js",
+      "source_location": "L456",
+      "_origin": "ast",
+      "id": "ai_tools_mcp_server_index_transport",
+      "community": 104,
+      "norm_label": "transport"
+    },
+    {
+      "label": "package.json",
+      "file_type": "code",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "ai_tools_mcp_server_package",
+      "community": 98,
+      "norm_label": "package.json"
+    },
+    {
+      "label": "name",
+      "file_type": "code",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L2",
+      "_origin": "ast",
+      "id": "ai_tools_mcp_server_package_name",
+      "community": 98,
+      "norm_label": "name"
+    },
+    {
+      "label": "version",
+      "file_type": "code",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "ai_tools_mcp_server_package_version",
+      "community": 98,
+      "norm_label": "version"
+    },
+    {
+      "label": "private",
+      "file_type": "code",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "ai_tools_mcp_server_package_private",
+      "community": 98,
+      "norm_label": "private"
+    },
+    {
+      "label": "type",
+      "file_type": "code",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "ai_tools_mcp_server_package_type",
+      "community": 98,
+      "norm_label": "type"
+    },
+    {
+      "label": "description",
+      "file_type": "code",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "ai_tools_mcp_server_package_description",
+      "community": 98,
+      "norm_label": "description"
+    },
+    {
+      "label": "main",
+      "file_type": "code",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "ai_tools_mcp_server_package_main",
+      "community": 98,
+      "norm_label": "main"
+    },
+    {
+      "label": "scripts",
+      "file_type": "code",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "ai_tools_mcp_server_package_scripts",
+      "community": 98,
+      "norm_label": "scripts"
+    },
+    {
+      "label": "start",
+      "file_type": "code",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "ai_tools_mcp_server_package_scripts_start",
+      "community": 98,
+      "norm_label": "start"
+    },
+    {
+      "label": "engines",
+      "file_type": "code",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L11",
+      "_origin": "ast",
+      "id": "ai_tools_mcp_server_package_engines",
+      "community": 98,
+      "norm_label": "engines"
+    },
+    {
+      "label": "node",
+      "file_type": "code",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L12",
+      "_origin": "ast",
+      "id": "ai_tools_mcp_server_package_engines_node",
+      "community": 98,
+      "norm_label": "node"
+    },
+    {
+      "label": "dependencies",
+      "file_type": "code",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "ai_tools_mcp_server_package_dependencies",
+      "community": 98,
+      "norm_label": "dependencies"
+    },
+    {
+      "label": "@modelcontextprotocol/sdk",
+      "file_type": "code",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L15",
+      "_origin": "ast",
+      "id": "ai_tools_mcp_server_package_dependencies_modelcontextprotocol_sdk",
+      "community": 98,
+      "norm_label": "@modelcontextprotocol/sdk"
+    },
+    {
+      "label": "zod",
+      "file_type": "code",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L16",
+      "_origin": "ast",
+      "id": "ai_tools_mcp_server_package_dependencies_zod",
+      "community": 98,
+      "norm_label": "zod"
+    },
+    {
+      "label": "create-requirement.schema.json",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema",
+      "community": 112,
+      "norm_label": "create-requirement.schema.json"
+    },
+    {
+      "label": "$schema",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L2",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_schema",
+      "community": 112,
+      "norm_label": "$schema"
+    },
+    {
+      "label": "title",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_title",
+      "community": 112,
+      "norm_label": "title"
+    },
+    {
+      "label": "description",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_description",
+      "community": 112,
+      "norm_label": "description"
+    },
+    {
+      "label": "type",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_type",
+      "community": 112,
+      "norm_label": "type"
+    },
+    {
+      "label": "required",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_required",
+      "community": 112,
+      "norm_label": "required"
+    },
+    {
+      "label": "additionalProperties",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_additionalproperties",
+      "community": 112,
+      "norm_label": "additionalproperties"
+    },
+    {
+      "label": "properties",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties",
+      "community": 114,
+      "norm_label": "properties"
+    },
+    {
+      "label": "name",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_name",
+      "community": 116,
+      "norm_label": "name"
+    },
+    {
+      "label": "type",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L10",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_name_type",
+      "community": 116,
+      "norm_label": "type"
+    },
+    {
+      "label": "minLength",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L11",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_name_minlength",
+      "community": 116,
+      "norm_label": "minlength"
+    },
+    {
+      "label": "maxLength",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L12",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_name_maxlength",
+      "community": 116,
+      "norm_label": "maxlength"
+    },
+    {
+      "label": "description",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L13",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_name_description",
+      "community": 116,
+      "norm_label": "description"
+    },
+    {
+      "label": "branch",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L15",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_branch",
+      "community": 113,
+      "norm_label": "branch"
+    },
+    {
+      "label": "type",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L16",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_branch_type",
+      "community": 113,
+      "norm_label": "type"
+    },
+    {
+      "label": "minLength",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L17",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_branch_minlength",
+      "community": 113,
+      "norm_label": "minlength"
+    },
+    {
+      "label": "maxLength",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L18",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_branch_maxlength",
+      "community": 113,
+      "norm_label": "maxlength"
+    },
+    {
+      "label": "pattern",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L19",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_branch_pattern",
+      "community": 113,
+      "norm_label": "pattern"
+    },
+    {
+      "label": "description",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L20",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_branch_description",
+      "community": 113,
+      "norm_label": "description"
+    },
+    {
+      "label": "repo",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L22",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_repo",
+      "community": 108,
+      "norm_label": "repo"
+    },
+    {
+      "label": "type",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_repo_type",
+      "community": 108,
+      "norm_label": "type"
+    },
+    {
+      "label": "minItems",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L24",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_repo_minitems",
+      "community": 108,
+      "norm_label": "minitems"
+    },
+    {
+      "label": "description",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L25",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_repo_description",
+      "community": 108,
+      "norm_label": "description"
+    },
+    {
+      "label": "items",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_repo_items",
+      "community": 108,
+      "norm_label": "items"
+    },
+    {
+      "label": "type",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L27",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_items_type",
+      "community": 108,
+      "norm_label": "type"
+    },
+    {
+      "label": "pattern",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L28",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_items_pattern",
+      "community": 108,
+      "norm_label": "pattern"
+    },
+    {
+      "label": "description",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L29",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_items_description",
+      "community": 108,
+      "norm_label": "description"
+    },
+    {
+      "label": "url",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L32",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_url",
+      "community": 118,
+      "norm_label": "url"
+    },
+    {
+      "label": "type",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L33",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_url_type",
+      "community": 118,
+      "norm_label": "type"
+    },
+    {
+      "label": "format",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L34",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_url_format",
+      "community": 118,
+      "norm_label": "format"
+    },
+    {
+      "label": "pattern",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L35",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_url_pattern",
+      "community": 118,
+      "norm_label": "pattern"
+    },
+    {
+      "label": "description",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L36",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_url_description",
+      "community": 118,
+      "norm_label": "description"
+    },
+    {
+      "label": "strategy",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L38",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_strategy",
+      "community": 117,
+      "norm_label": "strategy"
+    },
+    {
+      "label": "type",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L39",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_strategy_type",
+      "community": 117,
+      "norm_label": "type"
+    },
+    {
+      "label": "enum",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L40",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_strategy_enum",
+      "community": 117,
+      "norm_label": "enum"
+    },
+    {
+      "label": "default",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L41",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_strategy_default",
+      "community": 117,
+      "norm_label": "default"
+    },
+    {
+      "label": "description",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L42",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_strategy_description",
+      "community": 117,
+      "norm_label": "description"
+    },
+    {
+      "label": "stage",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L44",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_stage",
+      "community": 122,
+      "norm_label": "stage"
+    },
+    {
+      "label": "type",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L45",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_stage_type",
+      "community": 122,
+      "norm_label": "type"
+    },
+    {
+      "label": "enum",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L46",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_stage_enum",
+      "community": 122,
+      "norm_label": "enum"
+    },
+    {
+      "label": "description",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L47",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_stage_description",
+      "community": 122,
+      "norm_label": "description"
+    },
+    {
+      "label": "no-workspace",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L49",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_no_workspace",
+      "community": 121,
+      "norm_label": "no-workspace"
+    },
+    {
+      "label": "type",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L50",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_no_workspace_type",
+      "community": 121,
+      "norm_label": "type"
+    },
+    {
+      "label": "default",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L51",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_no_workspace_default",
+      "community": 121,
+      "norm_label": "default"
+    },
+    {
+      "label": "description",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L52",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_no_workspace_description",
+      "community": 121,
+      "norm_label": "description"
+    },
+    {
+      "label": "allow-duplicate",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L54",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_allow_duplicate",
+      "community": 114,
+      "norm_label": "allow-duplicate"
+    },
+    {
+      "label": "type",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L55",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_allow_duplicate_type",
+      "community": 114,
+      "norm_label": "type"
+    },
+    {
+      "label": "default",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L56",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_allow_duplicate_default",
+      "community": 114,
+      "norm_label": "default"
+    },
+    {
+      "label": "description",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L57",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_allow_duplicate_description",
+      "community": 114,
+      "norm_label": "description"
+    },
+    {
+      "label": "check",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L59",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_check",
+      "community": 119,
+      "norm_label": "check"
+    },
+    {
+      "label": "type",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L60",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_check_type",
+      "community": 119,
+      "norm_label": "type"
+    },
+    {
+      "label": "default",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L61",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_check_default",
+      "community": 119,
+      "norm_label": "default"
+    },
+    {
+      "label": "description",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L62",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_check_description",
+      "community": 119,
+      "norm_label": "description"
+    },
+    {
+      "label": "json",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L64",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_json",
+      "community": 120,
+      "norm_label": "json"
+    },
+    {
+      "label": "type",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L65",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_json_type",
+      "community": 120,
+      "norm_label": "type"
+    },
+    {
+      "label": "default",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L66",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_json_default",
+      "community": 120,
+      "norm_label": "default"
+    },
+    {
+      "label": "description",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L67",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_json_description",
+      "community": 120,
+      "norm_label": "description"
+    },
+    {
+      "label": "api",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L69",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_api",
+      "community": 115,
+      "norm_label": "api"
+    },
+    {
+      "label": "type",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L70",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_api_type",
+      "community": 115,
+      "norm_label": "type"
+    },
+    {
+      "label": "pattern",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L71",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_api_pattern",
+      "community": 115,
+      "norm_label": "pattern"
+    },
+    {
+      "label": "default",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L72",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_api_default",
+      "community": 115,
+      "norm_label": "default"
+    },
+    {
+      "label": "description",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L73",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_api_description",
+      "community": 115,
+      "norm_label": "description"
+    },
+    {
+      "label": "create-requirement.mjs",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_scripts_create_requirement",
+      "community": 100,
+      "norm_label": "create-requirement.mjs"
+    },
+    {
+      "label": "argumentList",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L27",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_scripts_create_requirement_argumentlist",
+      "community": 100,
+      "norm_label": "argumentlist"
+    },
+    {
+      "label": "STRATEGY_VALUE_LIST",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L29",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_scripts_create_requirement_strategy_value_list",
+      "community": 100,
+      "norm_label": "strategy_value_list"
+    },
+    {
+      "label": "STAGE_VALUE_LIST",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L30",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_scripts_create_requirement_stage_value_list",
+      "community": 100,
+      "norm_label": "stage_value_list"
+    },
+    {
+      "label": "flagSet",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L32",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_scripts_create_requirement_flagset",
+      "community": 100,
+      "norm_label": "flagset"
+    },
+    {
+      "label": "readOption()",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L34",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_scripts_create_requirement_readoption",
+      "community": 100,
+      "norm_label": "readoption()"
+    },
+    {
+      "label": "readOptionList()",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L47",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_scripts_create_requirement_readoptionlist",
+      "community": 100,
+      "norm_label": "readoptionlist()"
+    },
+    {
+      "label": "rawArgumentMap",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L60",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_scripts_create_requirement_rawargumentmap",
+      "community": 100,
+      "norm_label": "rawargumentmap"
+    },
+    {
+      "label": "repoPathList",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L68",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_scripts_create_requirement_repopathlist",
+      "community": 100,
+      "norm_label": "repopathlist"
+    },
+    {
+      "label": "checkOnly",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L69",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_scripts_create_requirement_checkonly",
+      "community": 100,
+      "norm_label": "checkonly"
+    },
+    {
+      "label": "jsonOutput",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L70",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_scripts_create_requirement_jsonoutput",
+      "community": 100,
+      "norm_label": "jsonoutput"
+    },
+    {
+      "label": "allowDuplicate",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L72",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_scripts_create_requirement_allowduplicate",
+      "community": 100,
+      "norm_label": "allowduplicate"
+    },
+    {
+      "label": "validateBranchName()",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L75",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_scripts_create_requirement_validatebranchname",
+      "community": 100,
+      "norm_label": "validatebranchname()"
+    },
+    {
+      "label": "validateLocalArguments()",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L108",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_scripts_create_requirement_validatelocalarguments",
+      "community": 100,
+      "norm_label": "validatelocalarguments()"
+    },
+    {
+      "label": "apiBaseUrl",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L172",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_scripts_create_requirement_apibaseurl",
+      "community": 100,
+      "norm_label": "apibaseurl"
+    },
+    {
+      "label": "callApi()",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L174",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_scripts_create_requirement_callapi",
+      "community": 100,
+      "norm_label": "callapi()"
+    },
+    {
+      "label": "validateRemoteArguments()",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L197",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_scripts_create_requirement_validateremotearguments",
+      "community": 100,
+      "norm_label": "validateremotearguments()"
+    },
+    {
+      "label": "printValidationResult()",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L227",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_scripts_create_requirement_printvalidationresult",
+      "community": 100,
+      "norm_label": "printvalidationresult()"
+    },
+    {
+      "label": "buildProjectList()",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L247",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_scripts_create_requirement_buildprojectlist",
+      "community": 100,
+      "norm_label": "buildprojectlist()"
+    },
+    {
+      "label": "runCheck()",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L251",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_scripts_create_requirement_runcheck",
+      "community": 100,
+      "norm_label": "runcheck()"
+    },
+    {
+      "label": "runCreate()",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L267",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_scripts_create_requirement_runcreate",
+      "community": 100,
+      "norm_label": "runcreate()"
+    },
+    {
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L334",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_scripts_create_requirement_main",
+      "community": 100,
+      "norm_label": "main()"
+    },
+    {
       "label": "main.js",
       "file_type": "code",
       "source_file": "desktop-electron/main.js",
@@ -1400,7 +2660,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_src_app",
-      "community": 98,
+      "community": 2,
       "norm_label": "app.js"
     },
     {
@@ -1410,7 +2670,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "server_src_app_createapp",
-      "community": 98,
+      "community": 2,
       "norm_label": "createapp()"
     },
     {
@@ -1420,7 +2680,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_src_config",
-      "community": 101,
+      "community": 97,
       "norm_label": "config.js"
     },
     {
@@ -1430,7 +2690,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "server_src_config_currentfiledir",
-      "community": 101,
+      "community": 97,
       "norm_label": "currentfiledir"
     },
     {
@@ -1440,7 +2700,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "server_src_config_serverconfig",
-      "community": 101,
+      "community": 97,
       "norm_label": "serverconfig"
     },
     {
@@ -1450,7 +2710,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_src_core_dep_linker",
-      "community": 1,
+      "community": 7,
       "norm_label": "dep-linker.js"
     },
     {
@@ -1460,7 +2720,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "server_src_core_dep_linker_lock_file_detection_rules",
-      "community": 1,
+      "community": 7,
       "norm_label": "lock_file_detection_rules"
     },
     {
@@ -1470,7 +2730,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "server_src_core_dep_linker_detectpackagemanager",
-      "community": 1,
+      "community": 7,
       "norm_label": "detectpackagemanager()"
     },
     {
@@ -1480,7 +2740,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "server_src_core_dep_linker_recommenddependencystrategy",
-      "community": 1,
+      "community": 7,
       "norm_label": "recommenddependencystrategy()"
     },
     {
@@ -1490,7 +2750,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "server_src_core_dep_linker_applyshareddependencylink",
-      "community": 1,
+      "community": 7,
       "norm_label": "applyshareddependencylink()"
     },
     {
@@ -1500,7 +2760,7 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "server_src_core_dep_linker_startindependentinstall",
-      "community": 1,
+      "community": 7,
       "norm_label": "startindependentinstall()"
     },
     {
@@ -1510,7 +2770,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_src_core_dependency_risk_checker",
-      "community": 1,
+      "community": 7,
       "norm_label": "dependency-risk-checker.js"
     },
     {
@@ -1520,7 +2780,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "server_src_core_dependency_risk_checker_readpackagedependencies",
-      "community": 1,
+      "community": 7,
       "norm_label": "readpackagedependencies()"
     },
     {
@@ -1530,7 +2790,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "server_src_core_dependency_risk_checker_diffdependencymaps",
-      "community": 1,
+      "community": 7,
       "norm_label": "diffdependencymaps()"
     },
     {
@@ -1540,7 +2800,7 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "server_src_core_dependency_risk_checker_checkworktreedependencystatus",
-      "community": 1,
+      "community": 7,
       "norm_label": "checkworktreedependencystatus()"
     },
     {
@@ -1570,7 +2830,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_src_core_editor_opener",
-      "community": 101,
+      "community": 97,
       "norm_label": "editor-opener.js"
     },
     {
@@ -1580,7 +2840,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "server_src_core_editor_opener_locatecommandcandidates",
-      "community": 101,
+      "community": 97,
       "norm_label": "locatecommandcandidates()"
     },
     {
@@ -1590,7 +2850,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "server_src_core_editor_opener_resolvebatchfiletarget",
-      "community": 101,
+      "community": 97,
       "norm_label": "resolvebatchfiletarget()"
     },
     {
@@ -1600,7 +2860,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "server_src_core_editor_opener_resolveeditorexecutable",
-      "community": 101,
+      "community": 97,
       "norm_label": "resolveeditorexecutable()"
     },
     {
@@ -1610,7 +2870,7 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "server_src_core_editor_opener_buildeditorspawncommand",
-      "community": 101,
+      "community": 97,
       "norm_label": "buildeditorspawncommand()"
     },
     {
@@ -1620,7 +2880,7 @@
       "source_location": "L91",
       "_origin": "ast",
       "id": "server_src_core_editor_opener_opendirectoryineditor",
-      "community": 101,
+      "community": 97,
       "norm_label": "opendirectoryineditor()"
     },
     {
@@ -1630,7 +2890,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_src_core_errors",
-      "community": 1,
+      "community": 107,
       "norm_label": "errors.js"
     },
     {
@@ -1640,7 +2900,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "server_src_core_errors_apperror",
-      "community": 98,
+      "community": 2,
       "norm_label": "apperror"
     },
     {
@@ -1650,7 +2910,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "server_src_core_errors_apperror_constructor",
-      "community": 98,
+      "community": 2,
       "norm_label": ".constructor()"
     },
     {
@@ -1660,7 +2920,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "server_src_core_errors_validationerror",
-      "community": 1,
+      "community": 7,
       "norm_label": "validationerror"
     },
     {
@@ -1670,7 +2930,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "server_src_core_errors_validationerror_constructor",
-      "community": 1,
+      "community": 7,
       "norm_label": ".constructor()"
     },
     {
@@ -1680,7 +2940,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "server_src_core_errors_conflicterror",
-      "community": 1,
+      "community": 103,
       "norm_label": "conflicterror"
     },
     {
@@ -1690,7 +2950,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "server_src_core_errors_conflicterror_constructor",
-      "community": 1,
+      "community": 103,
       "norm_label": ".constructor()"
     },
     {
@@ -1700,7 +2960,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "server_src_core_errors_notfounderror",
-      "community": 1,
+      "community": 107,
       "norm_label": "notfounderror"
     },
     {
@@ -1710,7 +2970,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "server_src_core_errors_notfounderror_constructor",
-      "community": 1,
+      "community": 107,
       "norm_label": ".constructor()"
     },
     {
@@ -1720,7 +2980,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "server_src_core_errors_gitcommanderror",
-      "community": 1,
+      "community": 107,
       "norm_label": "gitcommanderror"
     },
     {
@@ -1730,7 +2990,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "server_src_core_errors_gitcommanderror_constructor",
-      "community": 1,
+      "community": 107,
       "norm_label": ".constructor()"
     },
     {
@@ -1740,7 +3000,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_src_core_explorer_revealer",
-      "community": 1,
+      "community": 107,
       "norm_label": "explorer-revealer.js"
     },
     {
@@ -1750,7 +3010,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "server_src_core_explorer_revealer_revealinexplorer",
-      "community": 1,
+      "community": 107,
       "norm_label": "revealinexplorer()"
     },
     {
@@ -1760,7 +3020,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_src_core_git_executor",
-      "community": 1,
+      "community": 107,
       "norm_label": "git-executor.js"
     },
     {
@@ -1930,7 +3190,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_src_core_ignore_file_copier",
-      "community": 1,
+      "community": 109,
       "norm_label": "ignore-file-copier.js"
     },
     {
@@ -1940,7 +3200,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "server_src_core_ignore_file_copier_copyignoredfiles",
-      "community": 1,
+      "community": 109,
       "norm_label": "copyignoredfiles()"
     },
     {
@@ -1950,7 +3210,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "server_src_core_ignore_file_copier_copysinglefile",
-      "community": 1,
+      "community": 109,
       "norm_label": "copysinglefile()"
     },
     {
@@ -1960,7 +3220,7 @@
       "source_location": "L64",
       "_origin": "ast",
       "id": "server_src_core_ignore_file_copier_existsasdirectory",
-      "community": 1,
+      "community": 109,
       "norm_label": "existsasdirectory()"
     },
     {
@@ -1970,7 +3230,7 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "server_src_core_ignore_file_copier_copydirectorytree",
-      "community": 1,
+      "community": 109,
       "norm_label": "copydirectorytree()"
     },
     {
@@ -1980,7 +3240,7 @@
       "source_location": "L78",
       "_origin": "ast",
       "id": "server_src_core_ignore_file_copier_compilesinglelevelwildcard",
-      "community": 1,
+      "community": 109,
       "norm_label": "compilesinglelevelwildcard()"
     },
     {
@@ -1990,7 +3250,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_src_core_validators",
-      "community": 1,
+      "community": 102,
       "norm_label": "validators.js"
     },
     {
@@ -2000,7 +3260,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "server_src_core_validators_isgitrepository",
-      "community": 1,
+      "community": 102,
       "norm_label": "isgitrepository()"
     },
     {
@@ -2010,7 +3270,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "server_src_core_validators_assertdirectoryexists",
-      "community": 1,
+      "community": 102,
       "norm_label": "assertdirectoryexists()"
     },
     {
@@ -2020,7 +3280,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "server_src_core_validators_asserttargetpathavailable",
-      "community": 1,
+      "community": 102,
       "norm_label": "asserttargetpathavailable()"
     },
     {
@@ -2030,7 +3290,7 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "server_src_core_validators_assertnotnestedinrepository",
-      "community": 1,
+      "community": 102,
       "norm_label": "assertnotnestedinrepository()"
     },
     {
@@ -2040,7 +3300,7 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "server_src_core_validators_assertsamevolume",
-      "community": 1,
+      "community": 7,
       "norm_label": "assertsamevolume()"
     },
     {
@@ -2050,7 +3310,7 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "server_src_core_validators_assertvalidbranchname",
-      "community": 1,
+      "community": 102,
       "norm_label": "assertvalidbranchname()"
     },
     {
@@ -2060,7 +3320,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_src_core_workspace_file_generator",
-      "community": 7,
+      "community": 94,
       "norm_label": "workspace-file-generator.js"
     },
     {
@@ -2070,7 +3330,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "server_src_core_workspace_file_generator_sanitizeworkspacefilename",
-      "community": 7,
+      "community": 94,
       "norm_label": "sanitizeworkspacefilename()"
     },
     {
@@ -2080,7 +3340,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "server_src_core_workspace_file_generator_buildworkspacefilecontent",
-      "community": 7,
+      "community": 94,
       "norm_label": "buildworkspacefilecontent()"
     },
     {
@@ -2090,7 +3350,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "server_src_core_workspace_file_generator_isexistingdirectory",
-      "community": 7,
+      "community": 94,
       "norm_label": "isexistingdirectory()"
     },
     {
@@ -2100,7 +3360,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "server_src_core_workspace_file_generator_buildexcludedprojectreason",
-      "community": 7,
+      "community": 94,
       "norm_label": "buildexcludedprojectreason()"
     },
     {
@@ -2110,7 +3370,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "server_src_core_workspace_file_generator_generateworkspacefilefortask",
-      "community": 7,
+      "community": 94,
       "norm_label": "generateworkspacefilefortask()"
     },
     {
@@ -2160,7 +3420,7 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "server_src_core_worktree_manager_getbranchoccupationmap",
-      "community": 1,
+      "community": 7,
       "norm_label": "getbranchoccupationmap()"
     },
     {
@@ -2170,7 +3430,7 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "server_src_core_worktree_manager_createworktree",
-      "community": 1,
+      "community": 102,
       "norm_label": "createworktree()"
     },
     {
@@ -2390,7 +3650,7 @@
       "source_location": "L115",
       "_origin": "ast",
       "id": "server_src_jobs_job_runner_recoverinterruptedjobs",
-      "community": 101,
+      "community": 2,
       "norm_label": "recoverinterruptedjobs()"
     },
     {
@@ -2400,7 +3660,7 @@
       "source_location": "L123",
       "_origin": "ast",
       "id": "server_src_jobs_job_runner_startprocessjob",
-      "community": 1,
+      "community": 109,
       "norm_label": "startprocessjob()"
     },
     {
@@ -2410,7 +3670,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_src_routes_branch_routes",
-      "community": 1,
+      "community": 7,
       "norm_label": "branch-routes.js"
     },
     {
@@ -2420,7 +3680,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "server_src_routes_branch_routes_registerbranchroutes",
-      "community": 98,
+      "community": 2,
       "norm_label": "registerbranchroutes()"
     },
     {
@@ -2430,7 +3690,7 @@
       "source_location": "L99",
       "_origin": "ast",
       "id": "server_src_routes_branch_routes_requirestring",
-      "community": 1,
+      "community": 7,
       "norm_label": "requirestring()"
     },
     {
@@ -2440,7 +3700,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_src_routes_filesystem_routes",
-      "community": 1,
+      "community": 107,
       "norm_label": "filesystem-routes.js"
     },
     {
@@ -2450,7 +3710,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "server_src_routes_filesystem_routes_registerfilesystemroutes",
-      "community": 98,
+      "community": 2,
       "norm_label": "registerfilesystemroutes()"
     },
     {
@@ -2460,7 +3720,7 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "server_src_routes_filesystem_routes_requirevaliddirectory",
-      "community": 1,
+      "community": 107,
       "norm_label": "requirevaliddirectory()"
     },
     {
@@ -2470,7 +3730,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_src_routes_health_routes",
-      "community": 98,
+      "community": 2,
       "norm_label": "health-routes.js"
     },
     {
@@ -2480,7 +3740,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "server_src_routes_health_routes_registerhealthroutes",
-      "community": 98,
+      "community": 2,
       "norm_label": "registerhealthroutes()"
     },
     {
@@ -2490,7 +3750,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_src_routes_record_routes",
-      "community": 94,
+      "community": 2,
       "norm_label": "record-routes.js"
     },
     {
@@ -2500,7 +3760,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "server_src_routes_record_routes_registerrecordroutes",
-      "community": 98,
+      "community": 2,
       "norm_label": "registerrecordroutes()"
     },
     {
@@ -2510,7 +3770,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "server_src_routes_record_routes_recordrecentrepousage",
-      "community": 94,
+      "community": 2,
       "norm_label": "recordrecentrepousage()"
     },
     {
@@ -2520,7 +3780,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_src_routes_requirement_task_routes",
-      "community": 1,
+      "community": 94,
       "norm_label": "requirement-task-routes.js"
     },
     {
@@ -2530,7 +3790,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "server_src_routes_requirement_task_routes_registerrequirementtaskroutes",
-      "community": 98,
+      "community": 2,
       "norm_label": "registerrequirementtaskroutes()"
     },
     {
@@ -2540,7 +3800,7 @@
       "source_location": "L575",
       "_origin": "ast",
       "id": "server_src_routes_requirement_task_routes_readdatequery",
-      "community": 1,
+      "community": 94,
       "norm_label": "readdatequery()"
     },
     {
@@ -2550,7 +3810,7 @@
       "source_location": "L581",
       "_origin": "ast",
       "id": "server_src_routes_requirement_task_routes_readstagetagquery",
-      "community": 1,
+      "community": 94,
       "norm_label": "readstagetagquery()"
     },
     {
@@ -2560,7 +3820,7 @@
       "source_location": "L590",
       "_origin": "ast",
       "id": "server_src_routes_requirement_task_routes_copyignoredsafely",
-      "community": 1,
+      "community": 109,
       "norm_label": "copyignoredsafely()"
     },
     {
@@ -2570,7 +3830,7 @@
       "source_location": "L604",
       "_origin": "ast",
       "id": "server_src_routes_requirement_task_routes_isrunninginstallforworktree",
-      "community": 1,
+      "community": 94,
       "norm_label": "isrunninginstallforworktree()"
     },
     {
@@ -2590,7 +3850,7 @@
       "source_location": "L683",
       "_origin": "ast",
       "id": "server_src_routes_requirement_task_routes_generateandattachworkspace",
-      "community": 7,
+      "community": 94,
       "norm_label": "generateandattachworkspace()"
     },
     {
@@ -2600,7 +3860,7 @@
       "source_location": "L694",
       "_origin": "ast",
       "id": "server_src_routes_requirement_task_routes_readprojectremoteurl",
-      "community": 1,
+      "community": 94,
       "norm_label": "readprojectremoteurl()"
     },
     {
@@ -2610,7 +3870,7 @@
       "source_location": "L718",
       "_origin": "ast",
       "id": "server_src_routes_requirement_task_routes_convertremoteurltoweburl",
-      "community": 7,
+      "community": 110,
       "norm_label": "convertremoteurltoweburl()"
     },
     {
@@ -2620,7 +3880,7 @@
       "source_location": "L734",
       "_origin": "ast",
       "id": "server_src_routes_requirement_task_routes_normalizerequirementtaskinput",
-      "community": 1,
+      "community": 94,
       "norm_label": "normalizerequirementtaskinput()"
     },
     {
@@ -2630,7 +3890,7 @@
       "source_location": "L763",
       "_origin": "ast",
       "id": "server_src_routes_requirement_task_routes_requirenonemptytext",
-      "community": 1,
+      "community": 94,
       "norm_label": "requirenonemptytext()"
     },
     {
@@ -2640,7 +3900,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_src_routes_settings_routes",
-      "community": 94,
+      "community": 2,
       "norm_label": "settings-routes.js"
     },
     {
@@ -2650,7 +3910,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "server_src_routes_settings_routes_known_editor_candidate_list",
-      "community": 94,
+      "community": 2,
       "norm_label": "known_editor_candidate_list"
     },
     {
@@ -2660,7 +3920,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "server_src_routes_settings_routes_detectinstallededitorlist",
-      "community": 94,
+      "community": 2,
       "norm_label": "detectinstallededitorlist()"
     },
     {
@@ -2670,7 +3930,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "server_src_routes_settings_routes_registersettingsroutes",
-      "community": 98,
+      "community": 2,
       "norm_label": "registersettingsroutes()"
     },
     {
@@ -2690,7 +3950,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "server_src_routes_task_routes_registertaskroutes",
-      "community": 98,
+      "community": 2,
       "norm_label": "registertaskroutes()"
     },
     {
@@ -2720,7 +3980,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_src_routes_worktree_routes",
-      "community": 1,
+      "community": 109,
       "norm_label": "worktree-routes.js"
     },
     {
@@ -2730,7 +3990,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "server_src_routes_worktree_routes_registerworktreeroutes",
-      "community": 98,
+      "community": 2,
       "norm_label": "registerworktreeroutes()"
     },
     {
@@ -2740,7 +4000,7 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "server_src_routes_worktree_routes_requirestring",
-      "community": 1,
+      "community": 109,
       "norm_label": "requirestring()"
     },
     {
@@ -2750,7 +4010,7 @@
       "source_location": "L120",
       "_origin": "ast",
       "id": "server_src_routes_worktree_routes_executecreationflow",
-      "community": 1,
+      "community": 109,
       "norm_label": "executecreationflow()"
     },
     {
@@ -2760,7 +4020,7 @@
       "source_location": "L270",
       "_origin": "ast",
       "id": "server_src_routes_worktree_routes_normalizelocalpath",
-      "community": 1,
+      "community": 109,
       "norm_label": "normalizelocalpath()"
     },
     {
@@ -2770,7 +4030,7 @@
       "source_location": "L280",
       "_origin": "ast",
       "id": "server_src_routes_worktree_routes_attachworktreetorequirementtask",
-      "community": 1,
+      "community": 109,
       "norm_label": "attachworktreetorequirementtask()"
     },
     {
@@ -2780,7 +4040,7 @@
       "source_location": "L311",
       "_origin": "ast",
       "id": "server_src_routes_worktree_routes_recordcreationhistory",
-      "community": 1,
+      "community": 109,
       "norm_label": "recordcreationhistory()"
     },
     {
@@ -2790,7 +4050,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_src_server",
-      "community": 101,
+      "community": 2,
       "norm_label": "server.js"
     },
     {
@@ -2800,7 +4060,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "server_src_server_koaapplication",
-      "community": 101,
+      "community": 2,
       "norm_label": "koaapplication"
     },
     {
@@ -2810,7 +4070,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "server_src_server_koaserver",
-      "community": 101,
+      "community": 2,
       "norm_label": "koaserver"
     },
     {
@@ -2820,7 +4080,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_src_storage_data_root_resolver",
-      "community": 94,
+      "community": 2,
       "norm_label": "data-root-resolver.js"
     },
     {
@@ -2830,7 +4090,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "server_src_storage_data_root_resolver_resolvedatarootcandidates",
-      "community": 94,
+      "community": 2,
       "norm_label": "resolvedatarootcandidates()"
     },
     {
@@ -2840,7 +4100,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_src_storage_job_log_writer",
-      "community": 94,
+      "community": 2,
       "norm_label": "job-log-writer.js"
     },
     {
@@ -2850,7 +4110,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "server_src_storage_job_log_writer_createjoblogfilewriter",
-      "community": 94,
+      "community": 2,
       "norm_label": "createjoblogfilewriter()"
     },
     {
@@ -2860,7 +4120,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "server_src_storage_job_log_writer_readjoblogfile",
-      "community": 94,
+      "community": 2,
       "norm_label": "readjoblogfile()"
     },
     {
@@ -2870,7 +4130,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_src_storage_persistence_manager",
-      "community": 94,
+      "community": 2,
       "norm_label": "persistence-manager.js"
     },
     {
@@ -2880,7 +4140,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "server_src_storage_persistence_manager_createpersistencemanager",
-      "community": 94,
+      "community": 2,
       "norm_label": "createpersistencemanager()"
     },
     {
@@ -2890,7 +4150,7 @@
       "source_location": "L774",
       "_origin": "ast",
       "id": "server_src_storage_persistence_manager_persistencemanager",
-      "community": 94,
+      "community": 2,
       "norm_label": "persistencemanager"
     },
     {
@@ -2900,7 +4160,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_src_storage_settings_store",
-      "community": 94,
+      "community": 2,
       "norm_label": "settings-store.js"
     },
     {
@@ -2910,7 +4170,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "server_src_storage_settings_store_readsettingsfile",
-      "community": 94,
+      "community": 2,
       "norm_label": "readsettingsfile()"
     },
     {
@@ -2920,7 +4180,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "server_src_storage_settings_store_writesettingsfile",
-      "community": 94,
+      "community": 2,
       "norm_label": "writesettingsfile()"
     },
     {
@@ -2930,7 +4190,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_test_api_test",
-      "community": 100,
+      "community": 2,
       "norm_label": "api.test.js"
     },
     {
@@ -2940,7 +4200,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "server_test_api_test_apiworkspacedirectory",
-      "community": 100,
+      "community": 2,
       "norm_label": "apiworkspacedirectory"
     },
     {
@@ -2950,7 +4210,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "server_test_api_test_maindemopackagepath",
-      "community": 100,
+      "community": 2,
       "norm_label": "maindemopackagepath"
     },
     {
@@ -2960,7 +4220,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "server_test_api_test_buildworktreepath",
-      "community": 100,
+      "community": 2,
       "norm_label": "buildworktreepath()"
     },
     {
@@ -2970,7 +4230,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "server_test_api_test_getjson",
-      "community": 100,
+      "community": 2,
       "norm_label": "getjson()"
     },
     {
@@ -2980,7 +4240,7 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "server_test_api_test_postjson",
-      "community": 100,
+      "community": 2,
       "norm_label": "postjson()"
     },
     {
@@ -2990,7 +4250,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "server_test_api_test_readsseuntilend",
-      "community": 100,
+      "community": 2,
       "norm_label": "readsseuntilend()"
     },
     {
@@ -3000,7 +4260,7 @@
       "source_location": "L96",
       "_origin": "ast",
       "id": "server_test_api_test_waitforjobcompletion",
-      "community": 100,
+      "community": 2,
       "norm_label": "waitforjobcompletion()"
     },
     {
@@ -3010,7 +4270,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_test_dep_linker_test",
-      "community": 1,
+      "community": 7,
       "norm_label": "dep-linker.test.js"
     },
     {
@@ -3020,7 +4280,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "server_test_dep_linker_test_worktreeparentdir",
-      "community": 1,
+      "community": 7,
       "norm_label": "worktreeparentdir"
     },
     {
@@ -3030,7 +4290,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "server_test_dep_linker_test_maindemopackagepath",
-      "community": 1,
+      "community": 7,
       "norm_label": "maindemopackagepath"
     },
     {
@@ -3040,7 +4300,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "server_test_dep_linker_test_createdworktreepathlist",
-      "community": 1,
+      "community": 7,
       "norm_label": "createdworktreepathlist"
     },
     {
@@ -3050,7 +4310,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "server_test_dep_linker_test_createlinkedworktree",
-      "community": 1,
+      "community": 7,
       "norm_label": "createlinkedworktree()"
     },
     {
@@ -3060,7 +4320,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_test_dependency_risk_checker_test",
-      "community": 1,
+      "community": 7,
       "norm_label": "dependency-risk-checker.test.js"
     },
     {
@@ -3070,7 +4330,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "server_test_dependency_risk_checker_test_createpackagejson",
-      "community": 1,
+      "community": 7,
       "norm_label": "createpackagejson()"
     },
     {
@@ -3110,7 +4370,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_test_editor_opener_test",
-      "community": 101,
+      "community": 97,
       "norm_label": "editor-opener.test.js"
     },
     {
@@ -3120,7 +4380,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_test_git_executor_test",
-      "community": 1,
+      "community": 107,
       "norm_label": "git-executor.test.js"
     },
     {
@@ -3130,7 +4390,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_test_helpers_fixture_repo",
-      "community": 1,
+      "community": 103,
       "norm_label": "fixture-repo.js"
     },
     {
@@ -3140,7 +4400,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "server_test_helpers_fixture_repo_createfixturerepository",
-      "community": 1,
+      "community": 103,
       "norm_label": "createfixturerepository()"
     },
     {
@@ -3150,7 +4410,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "server_test_helpers_fixture_repo_commitfileinrepository",
-      "community": 1,
+      "community": 103,
       "norm_label": "commitfileinrepository()"
     },
     {
@@ -3160,7 +4420,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "server_test_helpers_fixture_repo_configurefixtureidentity",
-      "community": 1,
+      "community": 103,
       "norm_label": "configurefixtureidentity()"
     },
     {
@@ -3170,7 +4430,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_test_helpers_test_server",
-      "community": 100,
+      "community": 2,
       "norm_label": "test-server.js"
     },
     {
@@ -3180,7 +4440,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "server_test_helpers_test_server_starttestserver",
-      "community": 100,
+      "community": 2,
       "norm_label": "starttestserver()"
     },
     {
@@ -3190,7 +4450,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_test_ignore_file_copier_test",
-      "community": 1,
+      "community": 103,
       "norm_label": "ignore-file-copier.test.js"
     },
     {
@@ -3200,7 +4460,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "server_test_ignore_file_copier_test_targetdirectory",
-      "community": 1,
+      "community": 103,
       "norm_label": "targetdirectory"
     },
     {
@@ -3210,7 +4470,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_test_persistence_test",
-      "community": 94,
+      "community": 2,
       "norm_label": "persistence.test.js"
     },
     {
@@ -3220,7 +4480,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "server_test_persistence_test_createisolatedenvironment",
-      "community": 94,
+      "community": 2,
       "norm_label": "createisolatedenvironment()"
     },
     {
@@ -3230,7 +4490,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "server_test_persistence_test_createtestmanager",
-      "community": 94,
+      "community": 2,
       "norm_label": "createtestmanager()"
     },
     {
@@ -3240,7 +4500,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "server_test_persistence_test_buildjobsnapshot",
-      "community": 94,
+      "community": 2,
       "norm_label": "buildjobsnapshot()"
     },
     {
@@ -3300,7 +4560,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_test_requirement_task_test",
-      "community": 7,
+      "community": 110,
       "norm_label": "requirement-task.test.js"
     },
     {
@@ -3310,7 +4570,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "server_test_requirement_task_test_requestjson",
-      "community": 7,
+      "community": 110,
       "norm_label": "requestjson()"
     },
     {
@@ -3320,7 +4580,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "server_test_requirement_task_test_getjson",
-      "community": 7,
+      "community": 110,
       "norm_label": "getjson()"
     },
     {
@@ -3330,7 +4590,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "server_test_requirement_task_test_postjson",
-      "community": 7,
+      "community": 110,
       "norm_label": "postjson()"
     },
     {
@@ -3340,7 +4600,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "server_test_requirement_task_test_putjson",
-      "community": 7,
+      "community": 110,
       "norm_label": "putjson()"
     },
     {
@@ -3350,7 +4610,7 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "server_test_requirement_task_test_waitforjobfinished",
-      "community": 7,
+      "community": 110,
       "norm_label": "waitforjobfinished()"
     },
     {
@@ -3360,7 +4620,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "server_test_requirement_task_test_buildrequirementpayload",
-      "community": 7,
+      "community": 110,
       "norm_label": "buildrequirementpayload()"
     },
     {
@@ -3370,7 +4630,7 @@
       "source_location": "L442",
       "_origin": "ast",
       "id": "server_test_requirement_task_test_fetchtaskidset",
-      "community": 7,
+      "community": 110,
       "norm_label": "fetchtaskidset()"
     },
     {
@@ -3380,7 +4640,7 @@
       "source_location": "L700",
       "_origin": "ast",
       "id": "server_test_requirement_task_test_createworktreedirectory",
-      "community": 7,
+      "community": 110,
       "norm_label": "createworktreedirectory()"
     },
     {
@@ -3390,7 +4650,7 @@
       "source_location": "L705",
       "_origin": "ast",
       "id": "server_test_requirement_task_test_buildgeneratorrecord",
-      "community": 7,
+      "community": 110,
       "norm_label": "buildgeneratorrecord()"
     },
     {
@@ -3400,7 +4660,7 @@
       "source_location": "L716",
       "_origin": "ast",
       "id": "server_test_requirement_task_test_readworkspacedocument",
-      "community": 7,
+      "community": 110,
       "norm_label": "readworkspacedocument()"
     },
     {
@@ -3410,7 +4670,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_test_smoke_test",
-      "community": 100,
+      "community": 2,
       "norm_label": "smoke.test.js"
     },
     {
@@ -3420,7 +4680,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_test_validators_test",
-      "community": 1,
+      "community": 102,
       "norm_label": "validators.test.js"
     },
     {
@@ -3430,7 +4690,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "server_test_validators_test_plaintempdir",
-      "community": 1,
+      "community": 102,
       "norm_label": "plaintempdir"
     },
     {
@@ -3440,7 +4700,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_test_worktree_manager_test",
-      "community": 1,
+      "community": 103,
       "norm_label": "worktree-manager.test.js"
     },
     {
@@ -3450,7 +4710,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "server_test_worktree_manager_test_worktreeparentdir",
-      "community": 1,
+      "community": 103,
       "norm_label": "worktreeparentdir"
     },
     {
@@ -3460,7 +4720,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "server_test_worktree_manager_test_worktreepathlist",
-      "community": 1,
+      "community": 103,
       "norm_label": "worktreepathlist"
     },
     {
@@ -3470,7 +4730,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "server_test_worktree_manager_test_buildworktreepath",
-      "community": 1,
+      "community": 103,
       "norm_label": "buildworktreepath()"
     },
     {
@@ -3480,7 +4740,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_vitest_config",
-      "community": 101,
+      "community": 97,
       "norm_label": "vitest.config.js"
     },
     {
@@ -4820,7 +6080,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "codebuddy_skills_impeccable_\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6_skill",
-      "community": 89,
+      "community": 111,
       "norm_label": "skill.md"
     },
     {
@@ -6830,7 +8090,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "codebuddy_skills_impeccable_\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6_references_distill",
-      "community": 95,
+      "community": 93,
       "norm_label": "distill.md"
     },
     {
@@ -6840,7 +8100,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "codebuddy_skills_impeccable_\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6_references_distill_mandatory_preparation",
-      "community": 95,
+      "community": 93,
       "norm_label": "mandatory preparation"
     },
     {
@@ -6850,7 +8110,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "codebuddy_skills_impeccable_\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6_references_distill_assess_current_state",
-      "community": 95,
+      "community": 93,
       "norm_label": "assess current state"
     },
     {
@@ -6860,7 +8120,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "codebuddy_skills_impeccable_\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6_references_distill_plan_simplification",
-      "community": 95,
+      "community": 93,
       "norm_label": "plan simplification"
     },
     {
@@ -6940,7 +8200,7 @@
       "source_location": "L102",
       "_origin": "ast",
       "id": "codebuddy_skills_impeccable_\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6_references_distill_verify_simplification",
-      "community": 95,
+      "community": 93,
       "norm_label": "verify simplification"
     },
     {
@@ -6950,7 +8210,7 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "codebuddy_skills_impeccable_\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6_references_distill_document_removed_complexity",
-      "community": 95,
+      "community": 93,
       "norm_label": "document removed complexity"
     },
     {
@@ -7020,7 +8280,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "codebuddy_skills_impeccable_\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6_references_harden",
-      "community": 85,
+      "community": 111,
       "norm_label": "harden.md"
     },
     {
@@ -7030,7 +8290,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "codebuddy_skills_impeccable_\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6_references_harden_assess_hardening_needs",
-      "community": 85,
+      "community": 111,
       "norm_label": "assess hardening needs"
     },
     {
@@ -7120,7 +8380,7 @@
       "source_location": "L308",
       "_origin": "ast",
       "id": "codebuddy_skills_impeccable_\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6_references_harden_testing_strategies",
-      "community": 85,
+      "community": 111,
       "norm_label": "testing strategies"
     },
     {
@@ -7130,7 +8390,7 @@
       "source_location": "L338",
       "_origin": "ast",
       "id": "codebuddy_skills_impeccable_\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6_references_harden_verify_hardening",
-      "community": 85,
+      "community": 111,
       "norm_label": "verify hardening"
     },
     {
@@ -7480,7 +8740,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "codebuddy_skills_impeccable_\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6_references_motion_design",
-      "community": 89,
+      "community": 111,
       "norm_label": "motion-design.md"
     },
     {
@@ -8220,7 +9480,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "codebuddy_skills_impeccable_\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6_references_personas",
-      "community": 89,
+      "community": 111,
       "norm_label": "personas.md"
     },
     {
@@ -8600,7 +9860,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "codebuddy_skills_impeccable_\u524d\u7aef\u8bbe\u8ba1\u5de5\u5177\u96c6_references_responsive_design",
-      "community": 89,
+      "community": 88,
       "norm_label": "responsive-design.md"
     },
     {
@@ -9502,6 +10762,526 @@
       "id": "readme_\u5e38\u89c1\u95ee\u9898",
       "community": 19,
       "norm_label": "\u5e38\u89c1\u95ee\u9898"
+    },
+    {
+      "label": "README.md",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "ai_tools_readme",
+      "community": 105,
+      "norm_label": "readme.md"
+    },
+    {
+      "label": "ai-tools",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "ai_tools_readme_ai_tools",
+      "community": 105,
+      "norm_label": "ai-tools"
+    },
+    {
+      "label": "\u76ee\u5f55",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L19",
+      "_origin": "ast",
+      "id": "ai_tools_readme_\u76ee\u5f55",
+      "community": 105,
+      "norm_label": "\u76ee\u5f55"
+    },
+    {
+      "label": "\u4e00\u3001MCP \u65b9\u6848\uff08\u63a8\u8350\uff09",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L41",
+      "_origin": "ast",
+      "id": "ai_tools_readme_\u4e00_mcp_\u65b9\u6848_\u63a8\u8350",
+      "community": 105,
+      "norm_label": "\u4e00\u3001mcp \u65b9\u6848(\u63a8\u8350)"
+    },
+    {
+      "label": "\u5b89\u88c5",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L54",
+      "_origin": "ast",
+      "id": "ai_tools_readme_\u5b89\u88c5",
+      "community": 105,
+      "norm_label": "\u5b89\u88c5"
+    },
+    {
+      "label": "\u6ce8\u518c",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L73",
+      "_origin": "ast",
+      "id": "ai_tools_readme_\u6ce8\u518c",
+      "community": 105,
+      "norm_label": "\u6ce8\u518c"
+    },
+    {
+      "label": "\u9a8c\u8bc1",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L90",
+      "_origin": "ast",
+      "id": "ai_tools_readme_\u9a8c\u8bc1",
+      "community": 105,
+      "norm_label": "\u9a8c\u8bc1"
+    },
+    {
+      "label": "\u4e8c\u3001Skill \u65b9\u6848",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L104",
+      "_origin": "ast",
+      "id": "ai_tools_readme_\u4e8c_skill_\u65b9\u6848",
+      "community": 105,
+      "norm_label": "\u4e8c\u3001skill \u65b9\u6848"
+    },
+    {
+      "label": "\u4e09\u3001\u5b89\u88c5\u5230\u5168\u5c40\uff08\u6240\u6709\u9879\u76ee\u53ef\u7528\uff09",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L121",
+      "_origin": "ast",
+      "id": "ai_tools_readme_\u4e09_\u5b89\u88c5\u5230\u5168\u5c40_\u6240\u6709\u9879\u76ee\u53ef\u7528",
+      "community": 105,
+      "norm_label": "\u4e09\u3001\u5b89\u88c5\u5230\u5168\u5c40(\u6240\u6709\u9879\u76ee\u53ef\u7528)"
+    },
+    {
+      "label": "\u4e24\u79cd\u65b9\u6848\u7684\"\u5168\u5c40\"\u5206\u522b\u6307\u4ec0\u4e48",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L129",
+      "_origin": "ast",
+      "id": "ai_tools_readme_\u4e24\u79cd\u65b9\u6848\u7684_\u5168\u5c40_\u5206\u522b\u6307\u4ec0\u4e48",
+      "community": 105,
+      "norm_label": "\u4e24\u79cd\u65b9\u6848\u7684\"\u5168\u5c40\"\u5206\u522b\u6307\u4ec0\u4e48"
+    },
+    {
+      "label": "\u76ee\u5f55\u5bf9\u7167",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L149",
+      "_origin": "ast",
+      "id": "ai_tools_readme_\u76ee\u5f55\u5bf9\u7167",
+      "community": 105,
+      "norm_label": "\u76ee\u5f55\u5bf9\u7167"
+    },
+    {
+      "label": "\u624b\u52a8\u5b89\u88c5\uff08\u4e0d\u8dd1\u811a\u672c\uff09",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L157",
+      "_origin": "ast",
+      "id": "ai_tools_readme_\u624b\u52a8\u5b89\u88c5_\u4e0d\u8dd1\u811a\u672c",
+      "community": 105,
+      "norm_label": "\u624b\u52a8\u5b89\u88c5(\u4e0d\u8dd1\u811a\u672c)"
+    },
+    {
+      "label": "A. \u624b\u52a8\u88c5 MCP \u5230\u5168\u5c40",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L161",
+      "_origin": "ast",
+      "id": "ai_tools_readme_a_\u624b\u52a8\u88c5_mcp_\u5230\u5168\u5c40",
+      "community": 105,
+      "norm_label": "a. \u624b\u52a8\u88c5 mcp \u5230\u5168\u5c40"
+    },
+    {
+      "label": "B. \u624b\u52a8\u88c5 Skill \u5230\u5168\u5c40",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L216",
+      "_origin": "ast",
+      "id": "ai_tools_readme_b_\u624b\u52a8\u88c5_skill_\u5230\u5168\u5c40",
+      "community": 105,
+      "norm_label": "b. \u624b\u52a8\u88c5 skill \u5230\u5168\u5c40"
+    },
+    {
+      "label": "C. \u53ea\u88c5\u4e00\u4e2a",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L242",
+      "_origin": "ast",
+      "id": "ai_tools_readme_c_\u53ea\u88c5\u4e00\u4e2a",
+      "community": 105,
+      "norm_label": "c. \u53ea\u88c5\u4e00\u4e2a"
+    },
+    {
+      "label": "\u624b\u52a8\u5b89\u88c5\uff08\u7eaf\u56fe\u5f62\u754c\u9762\u64cd\u4f5c\uff09",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L252",
+      "_origin": "ast",
+      "id": "ai_tools_readme_\u624b\u52a8\u5b89\u88c5_\u7eaf\u56fe\u5f62\u754c\u9762\u64cd\u4f5c",
+      "community": 105,
+      "norm_label": "\u624b\u52a8\u5b89\u88c5(\u7eaf\u56fe\u5f62\u754c\u9762\u64cd\u4f5c)"
+    },
+    {
+      "label": "A. \u56fe\u5f62\u754c\u9762\u88c5 MCP \u5230\u5168\u5c40",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L258",
+      "_origin": "ast",
+      "id": "ai_tools_readme_a_\u56fe\u5f62\u754c\u9762\u88c5_mcp_\u5230\u5168\u5c40",
+      "community": 105,
+      "norm_label": "a. \u56fe\u5f62\u754c\u9762\u88c5 mcp \u5230\u5168\u5c40"
+    },
+    {
+      "label": "B. \u56fe\u5f62\u754c\u9762\u88c5 Skill \u5230\u5168\u5c40",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L312",
+      "_origin": "ast",
+      "id": "ai_tools_readme_b_\u56fe\u5f62\u754c\u9762\u88c5_skill_\u5230\u5168\u5c40",
+      "community": 105,
+      "norm_label": "b. \u56fe\u5f62\u754c\u9762\u88c5 skill \u5230\u5168\u5c40"
+    },
+    {
+      "label": "C. \u56fe\u5f62\u754c\u9762\u5378\u8f7d",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L341",
+      "_origin": "ast",
+      "id": "ai_tools_readme_c_\u56fe\u5f62\u754c\u9762\u5378\u8f7d",
+      "community": 105,
+      "norm_label": "c. \u56fe\u5f62\u754c\u9762\u5378\u8f7d"
+    },
+    {
+      "label": "\u5168\u5c40\u5b89\u88c5\u540e\u6ce8\u610f",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L348",
+      "_origin": "ast",
+      "id": "ai_tools_readme_\u5168\u5c40\u5b89\u88c5\u540e\u6ce8\u610f",
+      "community": 105,
+      "norm_label": "\u5168\u5c40\u5b89\u88c5\u540e\u6ce8\u610f"
+    },
+    {
+      "label": "\u5347\u7ea7",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L356",
+      "_origin": "ast",
+      "id": "ai_tools_readme_\u5347\u7ea7",
+      "community": 105,
+      "norm_label": "\u5347\u7ea7"
+    },
+    {
+      "label": "\u5378\u8f7d",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L364",
+      "_origin": "ast",
+      "id": "ai_tools_readme_\u5378\u8f7d",
+      "community": 105,
+      "norm_label": "\u5378\u8f7d"
+    },
+    {
+      "label": "\u56db\u3001\u6362\u7535\u8111\u600e\u4e48\u7528",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L374",
+      "_origin": "ast",
+      "id": "ai_tools_readme_\u56db_\u6362\u7535\u8111\u600e\u4e48\u7528",
+      "community": 105,
+      "norm_label": "\u56db\u3001\u6362\u7535\u8111\u600e\u4e48\u7528"
+    },
+    {
+      "label": "\u4e94\u3001\u5b89\u5168\u8fb9\u754c",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L392",
+      "_origin": "ast",
+      "id": "ai_tools_readme_\u4e94_\u5b89\u5168\u8fb9\u754c",
+      "community": 105,
+      "norm_label": "\u4e94\u3001\u5b89\u5168\u8fb9\u754c"
+    },
+    {
+      "label": "\u516d\u3001\u6392\u9519",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L404",
+      "_origin": "ast",
+      "id": "ai_tools_readme_\u516d_\u6392\u9519",
+      "community": 105,
+      "norm_label": "\u516d\u3001\u6392\u9519"
+    },
+    {
+      "label": "\u4e03\u3001\u9644\u5f55\uff1a\u8def\u5f84\u91cc\u7684 `%USERPROFILE%` \u662f\u4ec0\u4e48",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L416",
+      "_origin": "ast",
+      "id": "ai_tools_readme_\u4e03_\u9644\u5f55_\u8def\u5f84\u91cc\u7684_userprofile_\u662f\u4ec0\u4e48",
+      "community": 105,
+      "norm_label": "\u4e03\u3001\u9644\u5f55:\u8def\u5f84\u91cc\u7684 `%userprofile%` \u662f\u4ec0\u4e48"
+    },
+    {
+      "label": "\u600e\u4e48\u67e5\u770b\u81ea\u5df1\u7684\u503c",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L430",
+      "_origin": "ast",
+      "id": "ai_tools_readme_\u600e\u4e48\u67e5\u770b\u81ea\u5df1\u7684\u503c",
+      "community": 105,
+      "norm_label": "\u600e\u4e48\u67e5\u770b\u81ea\u5df1\u7684\u503c"
+    },
+    {
+      "label": "\u8de8\u5e73\u53f0\u5bf9\u7167",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L439",
+      "_origin": "ast",
+      "id": "ai_tools_readme_\u8de8\u5e73\u53f0\u5bf9\u7167",
+      "community": 105,
+      "norm_label": "\u8de8\u5e73\u53f0\u5bf9\u7167"
+    },
+    {
+      "label": "\u5173\u952e\u5751\uff1a\u4e0d\u662f\u6240\u6709\u5730\u65b9\u90fd\u4f1a\u5c55\u5f00",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L449",
+      "_origin": "ast",
+      "id": "ai_tools_readme_\u5173\u952e\u5751_\u4e0d\u662f\u6240\u6709\u5730\u65b9\u90fd\u4f1a\u5c55\u5f00",
+      "community": 105,
+      "norm_label": "\u5173\u952e\u5751:\u4e0d\u662f\u6240\u6709\u5730\u65b9\u90fd\u4f1a\u5c55\u5f00"
+    },
+    {
+      "label": "`.codebuddy` \u76ee\u5f55\u7ed3\u6784",
+      "file_type": "document",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L467",
+      "_origin": "ast",
+      "id": "ai_tools_readme_codebuddy_\u76ee\u5f55\u7ed3\u6784",
+      "community": 105,
+      "norm_label": "`.codebuddy` \u76ee\u5f55\u7ed3\u6784"
+    },
+    {
+      "label": "SKILL.md",
+      "file_type": "document",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_skill",
+      "community": 101,
+      "norm_label": "skill.md"
+    },
+    {
+      "label": "worktree-manager \u5e73\u53f0\u64cd\u4f5c",
+      "file_type": "document",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L15",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_skill_worktree_manager_\u5e73\u53f0\u64cd\u4f5c",
+      "community": 101,
+      "norm_label": "worktree-manager \u5e73\u53f0\u64cd\u4f5c"
+    },
+    {
+      "label": "\u4e00\u3001\u5f00\u59cb\u524d\u5fc5\u505a",
+      "file_type": "document",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L22",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_skill_\u4e00_\u5f00\u59cb\u524d\u5fc5\u505a",
+      "community": 101,
+      "norm_label": "\u4e00\u3001\u5f00\u59cb\u524d\u5fc5\u505a"
+    },
+    {
+      "label": "\u4e8c\u3001\u53c2\u6570\u89c4\u5219\uff08\u6700\u5bb9\u6613\u51fa\u9519\u7684\u5730\u65b9\uff09",
+      "file_type": "document",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L30",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_skill_\u4e8c_\u53c2\u6570\u89c4\u5219_\u6700\u5bb9\u6613\u51fa\u9519\u7684\u5730\u65b9",
+      "community": 101,
+      "norm_label": "\u4e8c\u3001\u53c2\u6570\u89c4\u5219(\u6700\u5bb9\u6613\u51fa\u9519\u7684\u5730\u65b9)"
+    },
+    {
+      "label": "\u4e09\u3001\u6838\u5fc3\u64cd\u4f5c",
+      "file_type": "document",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L45",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_skill_\u4e09_\u6838\u5fc3\u64cd\u4f5c",
+      "community": 101,
+      "norm_label": "\u4e09\u3001\u6838\u5fc3\u64cd\u4f5c"
+    },
+    {
+      "label": "1. \u521b\u5efa\u9700\u6c42\u4efb\u52a1\uff08\u63a8\u8350\u7528\u811a\u672c\uff09",
+      "file_type": "document",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L47",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_skill_1_\u521b\u5efa\u9700\u6c42\u4efb\u52a1_\u63a8\u8350\u7528\u811a\u672c",
+      "community": 101,
+      "norm_label": "1. \u521b\u5efa\u9700\u6c42\u4efb\u52a1(\u63a8\u8350\u7528\u811a\u672c)"
+    },
+    {
+      "label": "2. \u67e5\u8be2\u4efb\u52a1\u5217\u8868",
+      "file_type": "document",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L81",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_skill_2_\u67e5\u8be2\u4efb\u52a1\u5217\u8868",
+      "community": 101,
+      "norm_label": "2. \u67e5\u8be2\u4efb\u52a1\u5217\u8868"
+    },
+    {
+      "label": "3. \u67e5\u5355\u4e2a\u4efb\u52a1\u7684\u72b6\u6001",
+      "file_type": "document",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L90",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_skill_3_\u67e5\u5355\u4e2a\u4efb\u52a1\u7684\u72b6\u6001",
+      "community": 101,
+      "norm_label": "3. \u67e5\u5355\u4e2a\u4efb\u52a1\u7684\u72b6\u6001"
+    },
+    {
+      "label": "4. \u5728 herdr \u7ec8\u7aef\u6253\u5f00\u8be5\u9700\u6c42",
+      "file_type": "document",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L100",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_skill_4_\u5728_herdr_\u7ec8\u7aef\u6253\u5f00\u8be5\u9700\u6c42",
+      "community": 101,
+      "norm_label": "4. \u5728 herdr \u7ec8\u7aef\u6253\u5f00\u8be5\u9700\u6c42"
+    },
+    {
+      "label": "5. \u5173\u95ed herdr \u5de5\u4f5c\u533a\uff08\u7834\u574f\u6027\uff09",
+      "file_type": "document",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L112",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_skill_5_\u5173\u95ed_herdr_\u5de5\u4f5c\u533a_\u7834\u574f\u6027",
+      "community": 101,
+      "norm_label": "5. \u5173\u95ed herdr \u5de5\u4f5c\u533a(\u7834\u574f\u6027)"
+    },
+    {
+      "label": "6. \u6821\u9a8c\u4ed3\u5e93",
+      "file_type": "document",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L122",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_skill_6_\u6821\u9a8c\u4ed3\u5e93",
+      "community": 101,
+      "norm_label": "6. \u6821\u9a8c\u4ed3\u5e93"
+    },
+    {
+      "label": "\u56db\u3001\u9519\u8bef\u5bf9\u7167",
+      "file_type": "document",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L130",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_skill_\u56db_\u9519\u8bef\u5bf9\u7167",
+      "community": 101,
+      "norm_label": "\u56db\u3001\u9519\u8bef\u5bf9\u7167"
+    },
+    {
+      "label": "\u4e94\u3001\u7981\u6b62\u4e8b\u9879",
+      "file_type": "document",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L140",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_skill_\u4e94_\u7981\u6b62\u4e8b\u9879",
+      "community": 101,
+      "norm_label": "\u4e94\u3001\u7981\u6b62\u4e8b\u9879"
+    },
+    {
+      "label": "\u516d\u3001\u66f4\u591a",
+      "file_type": "document",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L147",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_skill_\u516d_\u66f4\u591a",
+      "community": 101,
+      "norm_label": "\u516d\u3001\u66f4\u591a"
+    },
+    {
+      "label": "api-endpoints.md",
+      "file_type": "document",
+      "source_file": "ai-tools/skill/worktree-manager/references/api-endpoints.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_references_api_endpoints",
+      "community": 106,
+      "norm_label": "api-endpoints.md"
+    },
+    {
+      "label": "worktree-manager \u5e73\u53f0\u63a5\u53e3\u5168\u8868",
+      "file_type": "document",
+      "source_file": "ai-tools/skill/worktree-manager/references/api-endpoints.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_references_api_endpoints_worktree_manager_\u5e73\u53f0\u63a5\u53e3\u5168\u8868",
+      "community": 106,
+      "norm_label": "worktree-manager \u5e73\u53f0\u63a5\u53e3\u5168\u8868"
+    },
+    {
+      "label": "\u5141\u8bb8 agent \u8c03\u7528",
+      "file_type": "document",
+      "source_file": "ai-tools/skill/worktree-manager/references/api-endpoints.md",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_references_api_endpoints_\u5141\u8bb8_agent_\u8c03\u7528",
+      "community": 106,
+      "norm_label": "\u5141\u8bb8 agent \u8c03\u7528"
+    },
+    {
+      "label": "\u9700\u6c42\u4efb\u52a1",
+      "file_type": "document",
+      "source_file": "ai-tools/skill/worktree-manager/references/api-endpoints.md",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_references_api_endpoints_\u9700\u6c42\u4efb\u52a1",
+      "community": 106,
+      "norm_label": "\u9700\u6c42\u4efb\u52a1"
+    },
+    {
+      "label": "worktree",
+      "file_type": "document",
+      "source_file": "ai-tools/skill/worktree-manager/references/api-endpoints.md",
+      "source_location": "L24",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_references_api_endpoints_worktree",
+      "community": 106,
+      "norm_label": "worktree"
+    },
+    {
+      "label": "\u5206\u652f / \u6587\u4ef6\u7cfb\u7edf / \u4efb\u52a1\u65e5\u5fd7",
+      "file_type": "document",
+      "source_file": "ai-tools/skill/worktree-manager/references/api-endpoints.md",
+      "source_location": "L33",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_references_api_endpoints_\u5206\u652f_\u6587\u4ef6\u7cfb\u7edf_\u4efb\u52a1\u65e5\u5fd7",
+      "community": 106,
+      "norm_label": "\u5206\u652f / \u6587\u4ef6\u7cfb\u7edf / \u4efb\u52a1\u65e5\u5fd7"
+    },
+    {
+      "label": "\u7981\u6b62 agent \u8c03\u7528\uff08\u7834\u574f\u6027\uff09",
+      "file_type": "document",
+      "source_file": "ai-tools/skill/worktree-manager/references/api-endpoints.md",
+      "source_location": "L49",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_references_api_endpoints_\u7981\u6b62_agent_\u8c03\u7528_\u7834\u574f\u6027",
+      "community": 106,
+      "norm_label": "\u7981\u6b62 agent \u8c03\u7528(\u7834\u574f\u6027)"
+    },
+    {
+      "label": "\u54cd\u5e94\u8981\u70b9",
+      "file_type": "document",
+      "source_file": "ai-tools/skill/worktree-manager/references/api-endpoints.md",
+      "source_location": "L62",
+      "_origin": "ast",
+      "id": "ai_tools_skill_worktree_manager_references_api_endpoints_\u54cd\u5e94\u8981\u70b9",
+      "community": 106,
+      "norm_label": "\u54cd\u5e94\u8981\u70b9"
     },
     {
       "label": "README.md",
@@ -12324,6 +14104,1458 @@
     }
   ],
   "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "ai_tools_install",
+      "target": "ai_tools_install_aitoolsdirectory",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "ai_tools_install",
+      "target": "ai_tools_install_argumentlist",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L78",
+      "weight": 1.0,
+      "source": "ai_tools_install",
+      "target": "ai_tools_install_deploymcpserver",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L54",
+      "weight": 1.0,
+      "source": "ai_tools_install",
+      "target": "ai_tools_install_deployskill",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "ai_tools_install",
+      "target": "ai_tools_install_flagset",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "ai_tools_install",
+      "target": "ai_tools_install_globalinstall",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "ai_tools_install",
+      "target": "ai_tools_install_installdeps",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L121",
+      "weight": 1.0,
+      "source": "ai_tools_install",
+      "target": "ai_tools_install_installmcpdependencies",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L150",
+      "weight": 1.0,
+      "source": "ai_tools_install",
+      "target": "ai_tools_install_main",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "ai_tools_install",
+      "target": "ai_tools_install_mcpentrypath",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "ai_tools_install",
+      "target": "ai_tools_install_mcpsourcedirectory",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L49",
+      "weight": 1.0,
+      "source": "ai_tools_install",
+      "target": "ai_tools_install_printheader",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L97",
+      "weight": 1.0,
+      "source": "ai_tools_install",
+      "target": "ai_tools_install_printmcpconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "ai_tools_install",
+      "target": "ai_tools_install_printonly",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "ai_tools_install",
+      "target": "ai_tools_install_projectrootdirectory",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "ai_tools_install",
+      "target": "ai_tools_install_skillsourcedirectory",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "ai_tools_install",
+      "target": "ai_tools_install_usercodebuddydirectory",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L82",
+      "weight": 1.0,
+      "source": "ai_tools_install_deploymcpserver",
+      "target": "ai_tools_install_printheader",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "ai_tools_install_deployskill",
+      "target": "ai_tools_install_printheader",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L122",
+      "weight": 1.0,
+      "source": "ai_tools_install_installmcpdependencies",
+      "target": "ai_tools_install_printheader",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L160",
+      "weight": 1.0,
+      "source": "ai_tools_install_main",
+      "target": "ai_tools_install_printheader",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L98",
+      "weight": 1.0,
+      "source": "ai_tools_install_printmcpconfig",
+      "target": "ai_tools_install_printheader",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L155",
+      "weight": 1.0,
+      "source": "ai_tools_install_main",
+      "target": "ai_tools_install_deployskill",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L156",
+      "weight": 1.0,
+      "source": "ai_tools_install_main",
+      "target": "ai_tools_install_deploymcpserver",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L157",
+      "weight": 1.0,
+      "source": "ai_tools_install_main",
+      "target": "ai_tools_install_printmcpconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/install.mjs",
+      "source_location": "L158",
+      "weight": 1.0,
+      "source": "ai_tools_install_main",
+      "target": "ai_tools_install_installmcpdependencies",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/mcp-server/index.js",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "ai_tools_mcp_server_index",
+      "target": "ai_tools_mcp_server_index_api_base_url",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/mcp-server/index.js",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "ai_tools_mcp_server_index",
+      "target": "ai_tools_mcp_server_index_callapi",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/mcp-server/index.js",
+      "source_location": "L70",
+      "weight": 1.0,
+      "source": "ai_tools_mcp_server_index",
+      "target": "ai_tools_mcp_server_index_errorresult",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/mcp-server/index.js",
+      "source_location": "L76",
+      "weight": 1.0,
+      "source": "ai_tools_mcp_server_index",
+      "target": "ai_tools_mcp_server_index_fetchallrequirementtasks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/mcp-server/index.js",
+      "source_location": "L92",
+      "weight": 1.0,
+      "source": "ai_tools_mcp_server_index",
+      "target": "ai_tools_mcp_server_index_formattasksummary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/mcp-server/index.js",
+      "source_location": "L110",
+      "weight": 1.0,
+      "source": "ai_tools_mcp_server_index",
+      "target": "ai_tools_mcp_server_index_mcpserver",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/mcp-server/index.js",
+      "source_location": "L82",
+      "weight": 1.0,
+      "source": "ai_tools_mcp_server_index",
+      "target": "ai_tools_mcp_server_index_requiretaskbyid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/mcp-server/index.js",
+      "source_location": "L65",
+      "weight": 1.0,
+      "source": "ai_tools_mcp_server_index",
+      "target": "ai_tools_mcp_server_index_textresult",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/mcp-server/index.js",
+      "source_location": "L456",
+      "weight": 1.0,
+      "source": "ai_tools_mcp_server_index",
+      "target": "ai_tools_mcp_server_index_transport",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/mcp-server/index.js",
+      "source_location": "L77",
+      "weight": 1.0,
+      "source": "ai_tools_mcp_server_index_fetchallrequirementtasks",
+      "target": "ai_tools_mcp_server_index_callapi",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/mcp-server/index.js",
+      "source_location": "L83",
+      "weight": 1.0,
+      "source": "ai_tools_mcp_server_index_requiretaskbyid",
+      "target": "ai_tools_mcp_server_index_fetchallrequirementtasks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "ai_tools_mcp_server_package",
+      "target": "ai_tools_mcp_server_package_dependencies",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "ai_tools_mcp_server_package",
+      "target": "ai_tools_mcp_server_package_description",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "ai_tools_mcp_server_package",
+      "target": "ai_tools_mcp_server_package_engines",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "ai_tools_mcp_server_package",
+      "target": "ai_tools_mcp_server_package_main",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "ai_tools_mcp_server_package",
+      "target": "ai_tools_mcp_server_package_name",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "ai_tools_mcp_server_package",
+      "target": "ai_tools_mcp_server_package_private",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "ai_tools_mcp_server_package",
+      "target": "ai_tools_mcp_server_package_scripts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "ai_tools_mcp_server_package",
+      "target": "ai_tools_mcp_server_package_type",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "ai_tools_mcp_server_package",
+      "target": "ai_tools_mcp_server_package_version",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "ai_tools_mcp_server_package_scripts",
+      "target": "ai_tools_mcp_server_package_scripts_start",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "ai_tools_mcp_server_package_engines",
+      "target": "ai_tools_mcp_server_package_engines_node",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "ai_tools_mcp_server_package_dependencies",
+      "target": "ai_tools_mcp_server_package_dependencies_modelcontextprotocol_sdk",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/mcp-server/package.json",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "ai_tools_mcp_server_package_dependencies",
+      "target": "ai_tools_mcp_server_package_dependencies_zod",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_additionalproperties",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_description",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_required",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_schema",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_title",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_type",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L54",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_allow_duplicate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L69",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_api",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_branch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L59",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_check",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L64",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_json",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_name",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L49",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_no_workspace",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_repo",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_stage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_strategy",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_url",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_name",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_name_description",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_name",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_name_maxlength",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_name",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_name_minlength",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_name",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_name_type",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_branch",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_branch_description",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_branch",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_branch_maxlength",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_branch",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_branch_minlength",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_branch",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_branch_pattern",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_branch",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_branch_type",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_repo",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_repo_description",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_repo",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_repo_items",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_repo",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_repo_minitems",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_repo",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_repo_type",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_repo_items",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_items_description",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_repo_items",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_items_pattern",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_repo_items",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_items_type",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_url",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_url_description",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_url",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_url_format",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_url",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_url_pattern",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_url",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_url_type",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_strategy",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_strategy_default",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_strategy",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_strategy_description",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L40",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_strategy",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_strategy_enum",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_strategy",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_strategy_type",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_stage",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_stage_description",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L46",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_stage",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_stage_enum",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L45",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_stage",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_stage_type",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L51",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_no_workspace",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_no_workspace_default",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_no_workspace",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_no_workspace_description",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L50",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_no_workspace",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_no_workspace_type",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L56",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_allow_duplicate",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_allow_duplicate_default",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L57",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_allow_duplicate",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_allow_duplicate_description",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_allow_duplicate",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_allow_duplicate_type",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_check",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_check_default",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_check",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_check_description",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L60",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_check",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_check_type",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L66",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_json",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_json_default",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L67",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_json",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_json_description",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L65",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_json",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_json_type",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L72",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_api",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_api_default",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L73",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_api",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_api_description",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L71",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_api",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_api_pattern",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json",
+      "source_location": "L70",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_properties_api",
+      "target": "ai_tools_skill_worktree_manager_schemas_create_requirement_schema_api_type",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L72",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_allowduplicate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L172",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_apibaseurl",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_argumentlist",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L247",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_buildprojectlist",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L174",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_callapi",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L69",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_checkonly",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_flagset",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L70",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_jsonoutput",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L334",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_main",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L227",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_printvalidationresult",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L60",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_rawargumentmap",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_readoption",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_readoptionlist",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L68",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_repopathlist",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L251",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_runcheck",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L267",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_runcreate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_stage_value_list",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_strategy_value_list",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L75",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_validatebranchname",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L108",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_validatelocalarguments",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L197",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_validateremotearguments",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L118",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement_validatelocalarguments",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_validatebranchname",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L341",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement_main",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_validatelocalarguments",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L252",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement_runcheck",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_validatelocalarguments",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L269",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement_runcreate",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_callapi",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L200",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement_validateremotearguments",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_callapi",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L258",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement_runcheck",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_validateremotearguments",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L343",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement_main",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_printvalidationresult",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L254",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement_runcheck",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_printvalidationresult",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L293",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement_runcreate",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_buildprojectlist",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L336",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement_main",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_runcheck",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/scripts/create-requirement.mjs",
+      "source_location": "L347",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_scripts_create_requirement_main",
+      "target": "ai_tools_skill_worktree_manager_scripts_create_requirement_runcreate",
+      "confidence_score": 1.0
+    },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
@@ -27531,6 +30763,496 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "ai_tools_readme",
+      "target": "ai_tools_readme_ai_tools",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "ai_tools_readme_ai_tools",
+      "target": "ai_tools_readme_\u4e00_mcp_\u65b9\u6848_\u63a8\u8350",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L416",
+      "weight": 1.0,
+      "source": "ai_tools_readme_ai_tools",
+      "target": "ai_tools_readme_\u4e03_\u9644\u5f55_\u8def\u5f84\u91cc\u7684_userprofile_\u662f\u4ec0\u4e48",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L121",
+      "weight": 1.0,
+      "source": "ai_tools_readme_ai_tools",
+      "target": "ai_tools_readme_\u4e09_\u5b89\u88c5\u5230\u5168\u5c40_\u6240\u6709\u9879\u76ee\u53ef\u7528",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L104",
+      "weight": 1.0,
+      "source": "ai_tools_readme_ai_tools",
+      "target": "ai_tools_readme_\u4e8c_skill_\u65b9\u6848",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L392",
+      "weight": 1.0,
+      "source": "ai_tools_readme_ai_tools",
+      "target": "ai_tools_readme_\u4e94_\u5b89\u5168\u8fb9\u754c",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L404",
+      "weight": 1.0,
+      "source": "ai_tools_readme_ai_tools",
+      "target": "ai_tools_readme_\u516d_\u6392\u9519",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L374",
+      "weight": 1.0,
+      "source": "ai_tools_readme_ai_tools",
+      "target": "ai_tools_readme_\u56db_\u6362\u7535\u8111\u600e\u4e48\u7528",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "ai_tools_readme_ai_tools",
+      "target": "ai_tools_readme_\u76ee\u5f55",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L54",
+      "weight": 1.0,
+      "source": "ai_tools_readme_\u4e00_mcp_\u65b9\u6848_\u63a8\u8350",
+      "target": "ai_tools_readme_\u5b89\u88c5",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L73",
+      "weight": 1.0,
+      "source": "ai_tools_readme_\u4e00_mcp_\u65b9\u6848_\u63a8\u8350",
+      "target": "ai_tools_readme_\u6ce8\u518c",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L90",
+      "weight": 1.0,
+      "source": "ai_tools_readme_\u4e00_mcp_\u65b9\u6848_\u63a8\u8350",
+      "target": "ai_tools_readme_\u9a8c\u8bc1",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L129",
+      "weight": 1.0,
+      "source": "ai_tools_readme_\u4e09_\u5b89\u88c5\u5230\u5168\u5c40_\u6240\u6709\u9879\u76ee\u53ef\u7528",
+      "target": "ai_tools_readme_\u4e24\u79cd\u65b9\u6848\u7684_\u5168\u5c40_\u5206\u522b\u6307\u4ec0\u4e48",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L348",
+      "weight": 1.0,
+      "source": "ai_tools_readme_\u4e09_\u5b89\u88c5\u5230\u5168\u5c40_\u6240\u6709\u9879\u76ee\u53ef\u7528",
+      "target": "ai_tools_readme_\u5168\u5c40\u5b89\u88c5\u540e\u6ce8\u610f",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L356",
+      "weight": 1.0,
+      "source": "ai_tools_readme_\u4e09_\u5b89\u88c5\u5230\u5168\u5c40_\u6240\u6709\u9879\u76ee\u53ef\u7528",
+      "target": "ai_tools_readme_\u5347\u7ea7",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L364",
+      "weight": 1.0,
+      "source": "ai_tools_readme_\u4e09_\u5b89\u88c5\u5230\u5168\u5c40_\u6240\u6709\u9879\u76ee\u53ef\u7528",
+      "target": "ai_tools_readme_\u5378\u8f7d",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L157",
+      "weight": 1.0,
+      "source": "ai_tools_readme_\u4e09_\u5b89\u88c5\u5230\u5168\u5c40_\u6240\u6709\u9879\u76ee\u53ef\u7528",
+      "target": "ai_tools_readme_\u624b\u52a8\u5b89\u88c5_\u4e0d\u8dd1\u811a\u672c",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L252",
+      "weight": 1.0,
+      "source": "ai_tools_readme_\u4e09_\u5b89\u88c5\u5230\u5168\u5c40_\u6240\u6709\u9879\u76ee\u53ef\u7528",
+      "target": "ai_tools_readme_\u624b\u52a8\u5b89\u88c5_\u7eaf\u56fe\u5f62\u754c\u9762\u64cd\u4f5c",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L149",
+      "weight": 1.0,
+      "source": "ai_tools_readme_\u4e09_\u5b89\u88c5\u5230\u5168\u5c40_\u6240\u6709\u9879\u76ee\u53ef\u7528",
+      "target": "ai_tools_readme_\u76ee\u5f55\u5bf9\u7167",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L161",
+      "weight": 1.0,
+      "source": "ai_tools_readme_\u624b\u52a8\u5b89\u88c5_\u4e0d\u8dd1\u811a\u672c",
+      "target": "ai_tools_readme_a_\u624b\u52a8\u88c5_mcp_\u5230\u5168\u5c40",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L216",
+      "weight": 1.0,
+      "source": "ai_tools_readme_\u624b\u52a8\u5b89\u88c5_\u4e0d\u8dd1\u811a\u672c",
+      "target": "ai_tools_readme_b_\u624b\u52a8\u88c5_skill_\u5230\u5168\u5c40",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L242",
+      "weight": 1.0,
+      "source": "ai_tools_readme_\u624b\u52a8\u5b89\u88c5_\u4e0d\u8dd1\u811a\u672c",
+      "target": "ai_tools_readme_c_\u53ea\u88c5\u4e00\u4e2a",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L258",
+      "weight": 1.0,
+      "source": "ai_tools_readme_\u624b\u52a8\u5b89\u88c5_\u7eaf\u56fe\u5f62\u754c\u9762\u64cd\u4f5c",
+      "target": "ai_tools_readme_a_\u56fe\u5f62\u754c\u9762\u88c5_mcp_\u5230\u5168\u5c40",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L312",
+      "weight": 1.0,
+      "source": "ai_tools_readme_\u624b\u52a8\u5b89\u88c5_\u7eaf\u56fe\u5f62\u754c\u9762\u64cd\u4f5c",
+      "target": "ai_tools_readme_b_\u56fe\u5f62\u754c\u9762\u88c5_skill_\u5230\u5168\u5c40",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L341",
+      "weight": 1.0,
+      "source": "ai_tools_readme_\u624b\u52a8\u5b89\u88c5_\u7eaf\u56fe\u5f62\u754c\u9762\u64cd\u4f5c",
+      "target": "ai_tools_readme_c_\u56fe\u5f62\u754c\u9762\u5378\u8f7d",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L467",
+      "weight": 1.0,
+      "source": "ai_tools_readme_\u4e03_\u9644\u5f55_\u8def\u5f84\u91cc\u7684_userprofile_\u662f\u4ec0\u4e48",
+      "target": "ai_tools_readme_codebuddy_\u76ee\u5f55\u7ed3\u6784",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L449",
+      "weight": 1.0,
+      "source": "ai_tools_readme_\u4e03_\u9644\u5f55_\u8def\u5f84\u91cc\u7684_userprofile_\u662f\u4ec0\u4e48",
+      "target": "ai_tools_readme_\u5173\u952e\u5751_\u4e0d\u662f\u6240\u6709\u5730\u65b9\u90fd\u4f1a\u5c55\u5f00",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L430",
+      "weight": 1.0,
+      "source": "ai_tools_readme_\u4e03_\u9644\u5f55_\u8def\u5f84\u91cc\u7684_userprofile_\u662f\u4ec0\u4e48",
+      "target": "ai_tools_readme_\u600e\u4e48\u67e5\u770b\u81ea\u5df1\u7684\u503c",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/README.md",
+      "source_location": "L439",
+      "weight": 1.0,
+      "source": "ai_tools_readme_\u4e03_\u9644\u5f55_\u8def\u5f84\u91cc\u7684_userprofile_\u662f\u4ec0\u4e48",
+      "target": "ai_tools_readme_\u8de8\u5e73\u53f0\u5bf9\u7167",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_skill",
+      "target": "ai_tools_skill_worktree_manager_skill_worktree_manager_\u5e73\u53f0\u64cd\u4f5c",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_skill_worktree_manager_\u5e73\u53f0\u64cd\u4f5c",
+      "target": "ai_tools_skill_worktree_manager_skill_\u4e00_\u5f00\u59cb\u524d\u5fc5\u505a",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L45",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_skill_worktree_manager_\u5e73\u53f0\u64cd\u4f5c",
+      "target": "ai_tools_skill_worktree_manager_skill_\u4e09_\u6838\u5fc3\u64cd\u4f5c",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_skill_worktree_manager_\u5e73\u53f0\u64cd\u4f5c",
+      "target": "ai_tools_skill_worktree_manager_skill_\u4e8c_\u53c2\u6570\u89c4\u5219_\u6700\u5bb9\u6613\u51fa\u9519\u7684\u5730\u65b9",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L140",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_skill_worktree_manager_\u5e73\u53f0\u64cd\u4f5c",
+      "target": "ai_tools_skill_worktree_manager_skill_\u4e94_\u7981\u6b62\u4e8b\u9879",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L147",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_skill_worktree_manager_\u5e73\u53f0\u64cd\u4f5c",
+      "target": "ai_tools_skill_worktree_manager_skill_\u516d_\u66f4\u591a",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L130",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_skill_worktree_manager_\u5e73\u53f0\u64cd\u4f5c",
+      "target": "ai_tools_skill_worktree_manager_skill_\u56db_\u9519\u8bef\u5bf9\u7167",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_skill_\u4e09_\u6838\u5fc3\u64cd\u4f5c",
+      "target": "ai_tools_skill_worktree_manager_skill_1_\u521b\u5efa\u9700\u6c42\u4efb\u52a1_\u63a8\u8350\u7528\u811a\u672c",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L81",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_skill_\u4e09_\u6838\u5fc3\u64cd\u4f5c",
+      "target": "ai_tools_skill_worktree_manager_skill_2_\u67e5\u8be2\u4efb\u52a1\u5217\u8868",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L90",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_skill_\u4e09_\u6838\u5fc3\u64cd\u4f5c",
+      "target": "ai_tools_skill_worktree_manager_skill_3_\u67e5\u5355\u4e2a\u4efb\u52a1\u7684\u72b6\u6001",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L100",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_skill_\u4e09_\u6838\u5fc3\u64cd\u4f5c",
+      "target": "ai_tools_skill_worktree_manager_skill_4_\u5728_herdr_\u7ec8\u7aef\u6253\u5f00\u8be5\u9700\u6c42",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L112",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_skill_\u4e09_\u6838\u5fc3\u64cd\u4f5c",
+      "target": "ai_tools_skill_worktree_manager_skill_5_\u5173\u95ed_herdr_\u5de5\u4f5c\u533a_\u7834\u574f\u6027",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/SKILL.md",
+      "source_location": "L122",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_skill_\u4e09_\u6838\u5fc3\u64cd\u4f5c",
+      "target": "ai_tools_skill_worktree_manager_skill_6_\u6821\u9a8c\u4ed3\u5e93",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/references/api-endpoints.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_references_api_endpoints",
+      "target": "ai_tools_skill_worktree_manager_references_api_endpoints_worktree_manager_\u5e73\u53f0\u63a5\u53e3\u5168\u8868",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/references/api-endpoints.md",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_references_api_endpoints_worktree_manager_\u5e73\u53f0\u63a5\u53e3\u5168\u8868",
+      "target": "ai_tools_skill_worktree_manager_references_api_endpoints_\u5141\u8bb8_agent_\u8c03\u7528",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/references/api-endpoints.md",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_references_api_endpoints_worktree_manager_\u5e73\u53f0\u63a5\u53e3\u5168\u8868",
+      "target": "ai_tools_skill_worktree_manager_references_api_endpoints_\u54cd\u5e94\u8981\u70b9",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/references/api-endpoints.md",
+      "source_location": "L49",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_references_api_endpoints_worktree_manager_\u5e73\u53f0\u63a5\u53e3\u5168\u8868",
+      "target": "ai_tools_skill_worktree_manager_references_api_endpoints_\u7981\u6b62_agent_\u8c03\u7528_\u7834\u574f\u6027",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/references/api-endpoints.md",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_references_api_endpoints_\u5141\u8bb8_agent_\u8c03\u7528",
+      "target": "ai_tools_skill_worktree_manager_references_api_endpoints_worktree",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/references/api-endpoints.md",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_references_api_endpoints_\u5141\u8bb8_agent_\u8c03\u7528",
+      "target": "ai_tools_skill_worktree_manager_references_api_endpoints_\u5206\u652f_\u6587\u4ef6\u7cfb\u7edf_\u4efb\u52a1\u65e5\u5fd7",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ai-tools/skill/worktree-manager/references/api-endpoints.md",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "ai_tools_skill_worktree_manager_references_api_endpoints_\u5141\u8bb8_agent_\u8c03\u7528",
+      "target": "ai_tools_skill_worktree_manager_references_api_endpoints_\u9700\u6c42\u4efb\u52a1",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "desktop-tauri/README.md",
       "source_location": "L1",
       "weight": 1.0,
@@ -29910,5 +33632,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "282ec3e9b30c74e1e2c91251f53eeff49a9e929c"
+  "built_at_commit": "bd6acacab4864d37a545adb7b7f0f082932d5035"
 }
