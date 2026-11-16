@@ -60,9 +60,9 @@
     "semantic_hash": "bb41a04abe6274fc8c5560b2a49fec57"
   },
   "server/src/app.js": {
-    "mtime": 1793505322.377707,
-    "ast_hash": "2c827728462d0e7d80817a1d9c10bf3d",
-    "semantic_hash": "2c827728462d0e7d80817a1d9c10bf3d"
+    "mtime": 1794456798.056959,
+    "ast_hash": "2ca9b8ae892a701ccb60f2d70efbac32",
+    "semantic_hash": ""
   },
   "server/src/config.js": {
     "mtime": 1794279171.780386,
@@ -280,8 +280,8 @@
     "semantic_hash": "2f27b40636bb9ac9b52b58e70e4d1a5c"
   },
   "web/src/App.jsx": {
-    "mtime": 1793955775.5757153,
-    "ast_hash": "7b1d8085d152c718d6b045da71ec0cfd",
+    "mtime": 1794457221.4147,
+    "ast_hash": "dee77be72a567581f9b3344364cb4cc1",
     "semantic_hash": ""
   },
   "web/src/api/client.js": {
@@ -395,8 +395,8 @@
     "semantic_hash": "659fff84c90c16b0cdd059b8c3ec7fcd"
   },
   "README.md": {
-    "mtime": 1794212379.167986,
-    "ast_hash": "7e663a77d361fb93f5ded31497c7a095",
+    "mtime": 1794465256.3662143,
+    "ast_hash": "78ab0b91f7e8297c182d1300977c6280",
     "semantic_hash": ""
   },
   "desktop-tauri/README.md": {
@@ -730,8 +730,8 @@
     "semantic_hash": ""
   },
   "server/src/core/herdr-opener.js": {
-    "mtime": 1794281167.5386693,
-    "ast_hash": "e7adfd3e0494ef5d605947fe40952959",
+    "mtime": 1794466513.4692924,
+    "ast_hash": "e77c9f58db278415cea3d6983516d8ae",
     "semantic_hash": ""
   },
   ".codebuddy/skills/worktree-manager/scripts/create-requirement.mjs": {
@@ -787,6 +787,56 @@
   "ai-tools/skill/worktree-manager/schemas/create-requirement.schema.json": {
     "mtime": 1794283232.3222506,
     "ast_hash": "6412bc061cee9d6a4415e27cf4e02828",
+    "semantic_hash": ""
+  },
+  "server/src/core/codebuddy-cli-resolver.js": {
+    "mtime": 1794464342.3308017,
+    "ast_hash": "ffea4dc71ee023c6525a0bd81a9a38e4",
+    "semantic_hash": ""
+  },
+  "server/src/core/codebuddy-gateway-client.js": {
+    "mtime": 1794459245.030267,
+    "ast_hash": "56b23848b8e19a2bb5f36ab526216263",
+    "semantic_hash": ""
+  },
+  "server/src/core/codebuddy-instance-manager.js": {
+    "mtime": 1794466523.251266,
+    "ast_hash": "8c4fcc71acc168891f1b3e18e27d6106",
+    "semantic_hash": ""
+  },
+  "server/src/core/codebuddy-terminal-opener.js": {
+    "mtime": 1794465185.0346446,
+    "ast_hash": "e0f6f2b8ed39403df7001504a83c9a9d",
+    "semantic_hash": ""
+  },
+  "server/src/routes/codebuddy-routes.js": {
+    "mtime": 1794466707.8171809,
+    "ast_hash": "5d07a378ad1c250c2d1adad1b206dd6b",
+    "semantic_hash": ""
+  },
+  "web/src/api/codebuddy-client.js": {
+    "mtime": 1794463745.8487983,
+    "ast_hash": "41b1ee5a27120e5f06be01372b6e60b0",
+    "semantic_hash": ""
+  },
+  "web/src/components/CodebuddyChatPanel.jsx": {
+    "mtime": 1794456831.5687275,
+    "ast_hash": "d25ae067ea1de628e32fe9e017183299",
+    "semantic_hash": ""
+  },
+  "web/src/components/CodebuddyPanel.jsx": {
+    "mtime": 1794466561.0338688,
+    "ast_hash": "ccdcdc8f374edb335b9bf34ad885b843",
+    "semantic_hash": ""
+  },
+  "web/src/components/CodebuddySessionPickerDialog.jsx": {
+    "mtime": 1794466535.4034274,
+    "ast_hash": "713338207ca061f71d80f7ae9032b33c",
+    "semantic_hash": ""
+  },
+  "docs/ARCHITECTURE.md": {
+    "mtime": 1794466816.4540963,
+    "ast_hash": "c1b277586d69602fbd6fa3e10334a13a",
     "semantic_hash": ""
   }
 }

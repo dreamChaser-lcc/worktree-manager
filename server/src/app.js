@@ -12,6 +12,7 @@ import { registerTaskRoutes } from './routes/task-routes.js';
 import { registerRecordRoutes } from './routes/record-routes.js';
 import { registerSettingsRoutes } from './routes/settings-routes.js';
 import { registerRequirementTaskRoutes } from './routes/requirement-task-routes.js';
+import { registerCodebuddyRoutes } from './routes/codebuddy-routes.js';
 import { AppError } from './core/errors.js';
 
 /** 组装 Koa 应用：路由注册 + 静态托管 + 统一错误处理 */
@@ -27,6 +28,7 @@ export function createApp() {
   registerRecordRoutes(apiRouter);
   registerSettingsRoutes(apiRouter);
   registerRequirementTaskRoutes(apiRouter);
+  registerCodebuddyRoutes(apiRouter);
 
   koaApplication.use(async (context, next) => {
     try {

@@ -1,6 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TaskLogPanel } from './TaskLogPanel.jsx';
 import { deriveProjectNameFromPath } from './RequirementTaskForm.jsx';
+import {
+  activateCodebuddyInstance,
+  fetchCodebuddyOverview,
+  fetchCodebuddySessionList,
+  startCodebuddyInstance,
+  stopCodebuddyInstance
+} from '../api/codebuddy-client.js';
 
 /** 路径宽松比较（斜杠/大小写不敏感），用于匹配 worktree 清单条目 */
 function isSameLoosePath(firstPath, secondPath) {
@@ -97,6 +104,156 @@ export function RequirementTaskDetailDialog({
   const [herdrNotice, setHerdrNotice] = useState(null);
   // herdr 服务未运行时的启动确认层
   const [confirmHerdrStart, setConfirmHerdrStart] = useState(false);
+
+  // ===== CodeBuddy 实例（一个需求一个实例，入口在这个弹窗里） =====
+  const [codebuddyInstance, setCodebuddyInstance] = useState(null);
+  const [codebuddyPending, setCodebuddyPending] = useState('');
+  const [codebuddyNotice, setCodebuddyNotice] = useState(null);
+  const [codebuddyLaunchTarget, setCodebuddyLaunchTarget] = useState('window');
+  const [codebuddySessionList, setCodebuddySessionList] = useState([]);
+  const [codebuddySessionListOpen, setCodebuddySessionListOpen] = useState(false);
+
+  /** 拉一次实例状态（与 CodeBuddy 页签共用同一份实例表） */
+  async function refreshCodebuddyInstance() {
+    try {
+      const overviewData = await fetchCodebuddyOverview();
+      const matchedInstance = (overviewData.instanceList || []).find(
+        (instanceEntry) => instanceEntry.taskId === requirementTask.id
+      );
+      // 只有真正 running 才算「已启用」；stopped/error 的残留记录不应显示成运行中
+      setCodebuddyInstance(matchedInstance && matchedInstance.state === 'running' ? matchedInstance : null);
+    } catch {
+      // 拉不到就保持原状，不打断弹窗
+    }
+  }
+
+  useEffect(() => {
+    refreshCodebuddyInstance();
+    // 弹窗开着的时候也定时刷新，避免实例在别处被起停后这里还显示旧状态
+    const instanceStateTimer = setInterval(() => {
+      refreshCodebuddyInstance();
+    }, 8000);
+    return () => clearInterval(instanceStateTimer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [requirementTask.id]);
+
+  /** 启用实例：终端或 herdr，默认续接平台记录的上次会话 */
+  async function handleEnableCodebuddy() {
+    setCodebuddyPending('start');
+    setCodebuddyNotice(null);
+    try {
+      const startResult = await startCodebuddyInstance({
+        taskId: requirementTask.id,
+        launchTarget: codebuddyLaunchTarget,
+        resumeMode: 'last'
+      });
+      await refreshCodebuddyInstance();
+      setCodebuddyNotice({
+        type: 'success',
+        text: `实例已启动（端口 ${startResult.instance.port}）`
+      });
+    } catch (startError) {
+      setCodebuddyNotice({ type: 'error', text: startError.message });
+    } finally {
+      setCodebuddyPending('');
+    }
+  }
+
+  /** 激活已打开的窗口：不启动新进程 */
+  async function handleActivateCodebuddy() {
+    if (!codebuddyInstance) {
+      return;
+    }
+    setCodebuddyPending('activate');
+    setCodebuddyNotice(null);
+    try {
+      const activateResult = await activateCodebuddyInstance(codebuddyInstance.id);
+      if (activateResult.strategy === 'window-title' || activateResult.strategy === 'session') {
+        setCodebuddyNotice({ type: 'success', text: '已定位到该需求的终端窗口' });
+      } else if (activateResult.strategy === 'window') {
+        setCodebuddyNotice({
+          type: 'warning',
+          text: '已把终端窗口切到前台，但 TUI 可能在别的标签页，需要手动切一下标签'
+        });
+      } else {
+        setCodebuddyNotice({
+          type: 'error',
+          text: '没找到终端窗口，可能已被关闭。可先点「停止」再重新启用。'
+        });
+      }
+    } catch (activateError) {
+      setCodebuddyNotice({ type: 'error', text: activateError.message });
+    } finally {
+      setCodebuddyPending('');
+    }
+  }
+
+  async function handleStopCodebuddy() {
+    if (!codebuddyInstance) {
+      return;
+    }
+    setCodebuddyPending('stop');
+    setCodebuddyNotice(null);
+    try {
+      await stopCodebuddyInstance(codebuddyInstance.id);
+      // 先乐观清空（后端 kill 是异步的，紧接着拉 overview 可能还读到 running）
+      setCodebuddyInstance(null);
+      setCodebuddySessionListOpen(false);
+      setCodebuddyNotice({ type: 'success', text: '实例已停止' });
+      // 稍后再校准一次真实状态
+      setTimeout(() => {
+        refreshCodebuddyInstance();
+      }, 1500);
+    } catch (stopError) {
+      setCodebuddyNotice({ type: 'error', text: stopError.message });
+    } finally {
+      setCodebuddyPending('');
+    }
+  }
+
+  /** 展开/收起会话列表 */
+  async function handleToggleCodebuddySessions() {
+    if (codebuddySessionListOpen) {
+      setCodebuddySessionListOpen(false);
+      return;
+    }
+    setCodebuddyPending('sessions');
+    setCodebuddyNotice(null);
+    try {
+      const sessionData = await fetchCodebuddySessionList(requirementTask.id);
+      setCodebuddySessionList(sessionData.sessionList || []);
+      setCodebuddySessionListOpen(true);
+    } catch (sessionError) {
+      setCodebuddyNotice({ type: 'error', text: sessionError.message });
+    } finally {
+      setCodebuddyPending('');
+    }
+  }
+
+  /** 切到某个历史会话：同端口重建 TUI，让它 --resume 该会话 */
+  async function handleSwitchCodebuddySession(sessionId) {
+    if (!codebuddyInstance) {
+      return;
+    }
+    setCodebuddyPending(`switch:${sessionId}`);
+    setCodebuddyNotice(null);
+    try {
+      await startCodebuddyInstance({
+        taskId: requirementTask.id,
+        port: String(codebuddyInstance.port),
+        launchTarget: codebuddyInstance.launchTarget === 'herdr' ? 'herdr' : 'window',
+        sessionId,
+        forceRestart: true
+      });
+      await refreshCodebuddyInstance();
+      setCodebuddySessionListOpen(false);
+      setCodebuddyNotice({ type: 'success', text: '已切换到所选会话' });
+    } catch (switchError) {
+      setCodebuddyNotice({ type: 'error', text: switchError.message });
+    } finally {
+      setCodebuddyPending('');
+    }
+  }
 
   return (
     <div className="picker-overlay" onClick={onClose}>
@@ -249,6 +406,162 @@ export function RequirementTaskDetailDialog({
               </button>
             </div>
           )}
+
+          <span className="form-label">CodeBuddy 实例</span>
+          <div className="project-detail-card">
+            {codebuddyInstance ? (
+              <>
+                <div className="codebuddy-instance-status">
+                  <span className="badge-status badge-clean">运行中</span>
+                  <span>端口 {codebuddyInstance.port}</span>
+                  {codebuddyInstance.activeSessionId ? (
+                    <span className="form-hint">
+                      会话 {String(codebuddyInstance.activeSessionId).slice(0, 8)}
+                    </span>
+                  ) : null}
+                </div>
+                <div className="codebuddy-instance-action-row">
+                  <button
+                    type="button"
+                    className="button-secondary"
+                    disabled={Boolean(codebuddyPending)}
+                    onClick={handleActivateCodebuddy}
+                  >
+                    {codebuddyPending === 'activate' ? (
+                      <span>
+                        <span className="button-spinner" />
+                        激活中...
+                      </span>
+                    ) : (
+                      '激活终端'
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    className="button-secondary"
+                    disabled={Boolean(codebuddyPending)}
+                    onClick={handleToggleCodebuddySessions}
+                  >
+                    {codebuddySessionListOpen ? '收起会话' : '切换会话'}
+                  </button>
+                  <button
+                    type="button"
+                    className="button-secondary"
+                    disabled={!codebuddyInstance.webUiUrl}
+                    onClick={() => {
+                      const webUrl = codebuddyInstance.webUiUrl;
+                      if (webUrl) {
+                        window.open(webUrl, '_blank', 'noopener');
+                      }
+                    }}
+                  >
+                    完整工作台
+                  </button>
+                  <button
+                    type="button"
+                    className="button-danger"
+                    disabled={Boolean(codebuddyPending)}
+                    onClick={handleStopCodebuddy}
+                  >
+                    {codebuddyPending === 'stop' ? '停止中...' : '停止'}
+                  </button>
+                </div>
+                {codebuddySessionListOpen ? (
+                  <div className="picker-list codebuddy-session-list">
+                    {codebuddySessionList.length === 0 ? (
+                      <div className="picker-item-empty">该目录下还没有历史会话</div>
+                    ) : (
+                      codebuddySessionList.map((sessionEntry) => {
+                        const isCurrentSession =
+                          codebuddyInstance.activeSessionId === sessionEntry.id;
+                        return (
+                          <button
+                            key={sessionEntry.id}
+                            type="button"
+                            className={
+                              isCurrentSession
+                                ? 'codebuddy-session-item codebuddy-session-item-current'
+                                : 'codebuddy-session-item'
+                            }
+                            disabled={Boolean(codebuddyPending) || isCurrentSession}
+                            onClick={() => handleSwitchCodebuddySession(sessionEntry.id)}
+                          >
+                            <span className="codebuddy-session-item-title">
+                              {sessionEntry.name}
+                              {isCurrentSession ? (
+                                <span className="codebuddy-current-badge">当前</span>
+                              ) : null}
+                            </span>
+                            <span className="codebuddy-session-item-meta">
+                              {sessionEntry.isRunning ? '运行中' : `${sessionEntry.messageCount} 条消息`}
+                              <span className="codebuddy-session-item-id">
+                                {sessionEntry.id.slice(0, 8)}
+                              </span>
+                            </span>
+                          </button>
+                        );
+                      })
+                    )}
+                  </div>
+                ) : null}
+              </>
+            ) : (
+              <>
+                <div className="form-hint">
+                  未启用。启用后会在所选位置打开 CodeBuddy 终端，并续接该需求上次使用的会话。
+                </div>
+                <div className="codebuddy-instance-launch-row">
+                  <span className="codebuddy-instance-launch-label">打开方式</span>
+                  <label className="codebuddy-instance-radio">
+                    <input
+                      type="radio"
+                      checked={codebuddyLaunchTarget === 'window'}
+                      onChange={() => setCodebuddyLaunchTarget('window')}
+                    />
+                    <span>终端窗口</span>
+                  </label>
+                  <label className="codebuddy-instance-radio">
+                    <input
+                      type="radio"
+                      checked={codebuddyLaunchTarget === 'herdr'}
+                      onChange={() => setCodebuddyLaunchTarget('herdr')}
+                    />
+                    <span>herdr 工作区</span>
+                  </label>
+                </div>
+                <div className="codebuddy-instance-launch-actions">
+                  <button
+                    type="button"
+                    className="button-primary"
+                    disabled={Boolean(codebuddyPending)}
+                    onClick={handleEnableCodebuddy}
+                  >
+                    {codebuddyPending === 'start' ? (
+                      <span>
+                        <span className="button-spinner" />
+                        启用中...
+                      </span>
+                    ) : (
+                      '启用实例'
+                    )}
+                  </button>
+                </div>
+              </>
+            )}
+            {codebuddyNotice ? (
+              <div
+                className={`codebuddy-instance-notice ${
+                  codebuddyNotice.type === 'success'
+                    ? 'alert-success'
+                    : codebuddyNotice.type === 'warning'
+                      ? 'alert-warning'
+                      : 'alert-error'
+                }`}
+              >
+                {codebuddyNotice.text}
+              </div>
+            ) : null}
+          </div>
 
           <span className="form-label">涉及项目与关联 worktree</span>
           {(() => {

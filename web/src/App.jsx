@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { CreateWorktreeForm } from './components/CreateWorktreeForm.jsx';
 import { WorktreeListPanel } from './components/WorktreeListPanel.jsx';
 import { RequirementTaskPanel } from './components/RequirementTaskPanel.jsx';
+import { CodebuddyPanel } from './components/CodebuddyPanel.jsx';
 import { TaskHistoryPanel } from './components/TaskHistoryPanel.jsx';
 import { CreationHistoryPanel } from './components/CreationHistoryPanel.jsx';
 import { SettingsPanel } from './components/SettingsPanel.jsx';
@@ -53,7 +54,7 @@ export function App() {
   }, []);
 
   return (
-    <div className="app-shell">
+    <div className={activeTab === 'codebuddy' ? 'app-shell app-shell-wide' : 'app-shell'}>
       <header className="app-header">
         <h1 className="app-title">Worktree 管理器</h1>
         <span className={serverReady ? 'server-badge server-badge-online' : 'server-badge server-badge-offline'}>
@@ -74,6 +75,13 @@ export function App() {
           onClick={() => setActiveTab('requirements')}
         >
           需求任务
+        </button>
+        <button
+          type="button"
+          className={activeTab === 'codebuddy' ? 'tab-button tab-button-active' : 'tab-button'}
+          onClick={() => setActiveTab('codebuddy')}
+        >
+          CodeBuddy
         </button>
         <button
           type="button"
@@ -139,6 +147,7 @@ export function App() {
             onWorkspaceLayoutChange={setWorkspaceLayoutEnabled}
           />
         ) : null}
+        {activeTab === 'codebuddy' ? <CodebuddyPanel /> : null}
         {activeTab === 'task-records' ? <TaskHistoryPanel /> : null}
       </main>
       {helpDialogVisible ? <HelpGuideDialog onClose={() => setHelpDialogVisible(false)} /> : null}

@@ -36,6 +36,9 @@
 - Node.js ≥ 18
 - Git
 
+可选能力（herdr 终端、CodeBuddy 实例、编辑器打开、Windows Terminal）缺失时只影响对应功能，不影响启动。
+完整的技术栈、模块职责与依赖分级见 **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**。
+
 ## 启动
 
 双击 `start.bat`（自动装依赖、构建前端、启动服务并打开浏览器），或手动执行：

@@ -846,6 +846,74 @@ button {
   text-decoration: underline;
 }
 
+.codebuddy-instance-status {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.codebuddy-instance-status > * {
+  margin-right: 10px;
+}
+
+/* 未启用状态：打开方式单选 + 启用按钮，按钮靠右 */
+.codebuddy-instance-launch-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.codebuddy-instance-launch-label {
+  margin-right: 12px;
+  color: #57606a;
+  font-size: 13px;
+}
+
+.codebuddy-instance-radio {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 14px;
+  color: #24292f;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.codebuddy-instance-radio input {
+  margin: 0 5px 0 0;
+}
+
+.codebuddy-instance-launch-actions {
+  margin-top: 10px;
+}
+
+/* 已启用状态：激活 / 切换会话 / 停止 */
+.codebuddy-instance-action-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.codebuddy-instance-action-row button {
+  margin-right: 8px;
+}
+
+.codebuddy-instance-action-row button:last-child {
+  margin-right: 0;
+}
+
+/* 实例区块里的提示：与按钮行留出间距，别糊在一起 */
+.codebuddy-instance-notice {
+  margin: 10px 0 0;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
 /* 项目明细卡片：纵向布局，避免多列挤压 */
 .project-detail-card {
   border: 1px solid #d0d7de;
@@ -1468,4 +1536,760 @@ button {
 
 .herdr-confirm-actions .button-primary {
   margin-left: 8px;
+}
+
+/* ── CodeBuddy 工作台 ─────────────────── */
+/* 注意：全站不使用 gap，间距一律用 margin，兼容低版本 webview */
+/* CodeBuddy 页签是双栏布局，内容区放宽（其余页签保持 960px 不变） */
+.app-shell-wide {
+  max-width: 1320px;
+}
+
+.codebuddy-workbench {
+  margin-top: 4px;
+}
+
+.codebuddy-env-hint {
+  margin-left: 6px;
+  font-size: 12px;
+  color: #57606a;
+  word-break: break-all;
+}
+
+.codebuddy-layout {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  background-color: #ffffff;
+  min-height: 560px;
+  overflow: hidden;
+}
+
+.codebuddy-task-column {
+  width: 300px;
+  flex-shrink: 0;
+  border-right: 1px solid #d0d7de;
+  background-color: #fafbfc;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.codebuddy-task-column .list-toolbar {
+  padding: 10px 12px 6px;
+  margin-bottom: 0;
+}
+
+.codebuddy-task-column .list-toolbar .form-label {
+  margin: 0;
+}
+
+.codebuddy-task-column .list-toolbar .button-secondary {
+  margin-left: auto;
+  padding: 2px 10px;
+  font-size: 12px;
+}
+
+.codebuddy-task-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0 8px 10px;
+}
+
+.codebuddy-task-empty {
+  padding: 16px 4px;
+  font-size: 13px;
+  color: #8c959f;
+}
+
+.codebuddy-task-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background-color: transparent;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  color: #24292f;
+}
+
+.codebuddy-task-item:hover {
+  background-color: #f6f8fa;
+  border-color: #d0d7de;
+}
+
+.codebuddy-task-item-active {
+  background-color: #ddf4ff;
+  border-color: #0969da;
+}
+
+.codebuddy-task-title {
+  display: block;
+  font-size: 13px;
+  line-height: 1.5;
+  word-break: break-all;
+  margin-bottom: 4px;
+}
+
+.codebuddy-task-meta {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: #57606a;
+  margin-bottom: 2px;
+}
+
+.codebuddy-task-state-text {
+  margin-right: 6px;
+}
+
+.codebuddy-task-port {
+  color: #8c959f;
+}
+
+.codebuddy-task-branch {
+  display: block;
+  font-size: 12px;
+  color: #8c959f;
+  word-break: break-all;
+}
+
+/* 状态圆点：实例是否在运行 */
+.codebuddy-state-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  flex-shrink: 0;
+  background-color: #8c959f;
+}
+
+.codebuddy-dot-online {
+  background-color: #1a7f37;
+}
+
+.codebuddy-dot-pending {
+  background-color: #bf8700;
+}
+
+.codebuddy-dot-error {
+  background-color: #cf222e;
+}
+
+.codebuddy-dot-idle {
+  background-color: #afb8c1;
+}
+
+.codebuddy-detail-column {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 12px 12px;
+}
+
+.codebuddy-instance-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.codebuddy-instance-info {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-right: 10px;
+}
+
+.codebuddy-instance-name {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  word-break: break-all;
+  margin-bottom: 2px;
+}
+
+.codebuddy-instance-line {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: #57606a;
+}
+
+.codebuddy-instance-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.codebuddy-instance-actions .task-action-button {
+  margin-left: 6px;
+}
+
+.codebuddy-port-input {
+  width: 96px;
+  padding: 3px 6px;
+  font-size: 12px;
+}
+
+.codebuddy-chat-panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+.codebuddy-chat-header {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  border-bottom: 1px solid #d0d7de;
+  background-color: #f6f8fa;
+  flex-shrink: 0;
+}
+
+.codebuddy-chat-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 12.5px;
+  color: #57606a;
+  word-break: break-all;
+  margin-right: 8px;
+}
+
+.codebuddy-chat-state {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background-color: #eaeef2;
+  color: #24292f;
+  font-size: 11.5px;
+}
+
+.codebuddy-message-list {
+  flex: 1 1 auto;
+  min-height: 240px;
+  max-height: 460px;
+  overflow-y: auto;
+  padding: 10px;
+  background-color: #ffffff;
+}
+
+.codebuddy-message-empty {
+  padding: 24px 10px;
+  font-size: 13px;
+  color: #8c959f;
+  text-align: center;
+}
+
+.codebuddy-message {
+  margin-bottom: 10px;
+}
+
+.codebuddy-message:last-child {
+  margin-bottom: 0;
+}
+
+.codebuddy-message-role {
+  font-size: 12px;
+  color: #8c959f;
+  margin-bottom: 3px;
+}
+
+.codebuddy-message-text {
+  font-size: 13px;
+  line-height: 1.7;
+  padding: 8px 10px;
+  border-radius: 6px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background-color: #f6f8fa;
+  color: #24292f;
+}
+
+.codebuddy-message-user .codebuddy-message-text {
+  background-color: #ddf4ff;
+  border: 1px solid #b6e3ff;
+}
+
+.codebuddy-message-assistant .codebuddy-message-text {
+  background-color: #f6f8fa;
+  border: 1px solid #eaeef2;
+}
+
+.codebuddy-composer {
+  display: flex;
+  align-items: flex-start;
+  padding: 8px 10px;
+  border-top: 1px solid #d0d7de;
+  background-color: #fafbfc;
+  flex-shrink: 0;
+}
+
+.codebuddy-composer-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 62px;
+  resize: vertical;
+  font-family: inherit;
+  line-height: 1.6;
+  margin-right: 8px;
+}
+
+.codebuddy-send-button {
+  flex-shrink: 0;
+}
+
+/* ACP 通道：工具权限确认卡片 */
+.codebuddy-interruption-list {
+  padding: 8px 10px;
+  border-top: 1px solid #eaeef2;
+  background-color: #fff8c5;
+  flex-shrink: 0;
+}
+
+.codebuddy-interruption-card {
+  margin-bottom: 8px;
+  padding: 8px 10px;
+  border: 1px solid #d4a72c;
+  border-radius: 6px;
+  background-color: #ffffff;
+}
+
+.codebuddy-interruption-card:last-child {
+  margin-bottom: 0;
+}
+
+.codebuddy-interruption-head {
+  font-size: 12px;
+  font-weight: 600;
+  color: #7d4e00;
+  margin-bottom: 6px;
+}
+
+.codebuddy-interruption-detail {
+  max-height: 120px;
+  overflow: auto;
+  margin: 0 0 8px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  background-color: #f6f8fa;
+  color: #57606a;
+  font-family: "Cascadia Mono", Consolas, monospace;
+  font-size: 11px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.codebuddy-interruption-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.codebuddy-interruption-actions button {
+  margin-right: 6px;
+  padding: 2px 10px;
+  font-size: 12px;
+}
+
+/* ACP 通道：徽章、配置条、工具调用标签 */
+.codebuddy-channel-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 5px;
+  border-radius: 8px;
+  background-color: #8250df;
+  color: #ffffff;
+  font-size: 10px;
+  line-height: 15px;
+  vertical-align: middle;
+}
+
+.codebuddy-acp-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 6px 10px;
+  border-top: 1px solid #eaeef2;
+  background-color: #fafbfc;
+  flex-shrink: 0;
+}
+
+.codebuddy-acp-select {
+  width: auto;
+  max-width: 220px;
+  margin-right: 8px;
+  padding: 2px 6px;
+  font-size: 12px;
+}
+
+.codebuddy-acp-mode-hint {
+  flex: 1 1 100%;
+  margin-top: 4px;
+  color: #8c959f;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.codebuddy-tool-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.codebuddy-tool-chip {
+  display: inline-block;
+  margin-right: 6px;
+  margin-bottom: 4px;
+  padding: 1px 8px;
+  border-radius: 10px;
+  background-color: #eef1f4;
+  color: #57606a;
+  font-size: 11px;
+}
+
+/* 长耗时操作遮罩（启动/重建实例 20~40 秒） */
+.codebuddy-loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(31, 35, 40, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+}
+
+.codebuddy-loading-box {
+  min-width: 280px;
+  padding: 20px 28px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 8px 24px rgba(31, 35, 40, 0.25);
+  text-align: center;
+}
+
+.codebuddy-loading-spinner {
+  width: 26px;
+  height: 26px;
+  margin: 0 auto 10px;
+  border: 3px solid #d0d7de;
+  border-top-color: #0969da;
+  border-radius: 50%;
+  animation: codebuddy-spin 0.8s linear infinite;
+}
+
+@keyframes codebuddy-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.codebuddy-loading-text {
+  font-size: 13px;
+  color: #24292f;
+  line-height: 1.6;
+}
+
+.codebuddy-loading-elapsed {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #8c959f;
+}
+
+/* 提示条（含关闭按钮） */
+.codebuddy-notice-bar {
+  display: flex;
+  align-items: flex-start;
+}
+
+.codebuddy-stall-hint {
+  margin: 0;
+  border-radius: 0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.codebuddy-notice-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  word-break: break-all;
+}
+
+.codebuddy-notice-close {
+  flex-shrink: 0;
+  margin-left: 8px;
+  padding: 0 4px;
+  border: none;
+  background: none;
+  color: inherit;
+  font-size: 15px;
+  line-height: 1.1;
+  cursor: pointer;
+  opacity: 0.65;
+}
+
+.codebuddy-notice-close:hover {
+  opacity: 1;
+}
+
+/* 页签顶部的刷新设置条 */
+.codebuddy-refresh-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 6px 10px;
+  margin-bottom: 10px;
+  border: 1px solid #eaeef2;
+  border-radius: 6px;
+  background-color: #fafbfc;
+  font-size: 12px;
+  color: #57606a;
+}
+
+.codebuddy-refresh-label {
+  font-weight: 600;
+  margin-right: 10px;
+}
+
+.codebuddy-refresh-item {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.codebuddy-refresh-select {
+  width: auto;
+  margin-left: 6px;
+  padding: 2px 6px;
+  font-size: 12px;
+}
+
+.codebuddy-refresh-hint {
+  color: #8c959f;
+  word-break: break-all;
+}
+
+/* 会话模式：工具栏（会话名 + 新建/切换/同步）与同步设置条 */
+.codebuddy-chat-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 8px 10px;
+  border-bottom: 1px solid #d0d7de;
+  background-color: #f6f8fa;
+  flex-shrink: 0;
+}
+
+.codebuddy-chat-actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.codebuddy-chat-actions .codebuddy-sync-button {
+  margin-left: 6px;
+}
+
+.codebuddy-sync-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 6px 10px;
+  border-bottom: 1px solid #eaeef2;
+  background-color: #ffffff;
+  font-size: 12px;
+  color: #57606a;
+  flex-shrink: 0;
+}
+
+.codebuddy-sync-toggle {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.codebuddy-sync-toggle input {
+  margin-right: 4px;
+}
+
+.codebuddy-sync-interval {
+  width: auto;
+  padding: 2px 6px;
+  font-size: 12px;
+  margin-right: 8px;
+}
+
+.codebuddy-sync-hint {
+  color: #8c959f;
+  word-break: break-all;
+}
+
+/* 会话模式：手动同步按钮与终端占用提示 */
+.codebuddy-sync-button {
+  flex-shrink: 0;
+  padding: 2px 10px;
+  font-size: 12px;
+}
+
+.codebuddy-occupied-hint {
+  margin: 0;
+  border-radius: 0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.codebuddy-request-block {
+  margin-bottom: 12px;
+}
+
+.codebuddy-request-block:last-child {
+  margin-bottom: 0;
+}
+
+.codebuddy-reply-pending {
+  color: #8c959f;
+  font-style: italic;
+}
+
+/* 终端会话选择弹窗 */
+.codebuddy-session-dialog {
+  width: 640px;
+  max-width: 94%;
+  max-height: 84vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.codebuddy-session-hint {
+  padding: 2px 2px 8px;
+  font-size: 12.5px;
+  color: #57606a;
+  word-break: break-all;
+}
+
+.codebuddy-session-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 2px 0;
+}
+
+.codebuddy-session-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background-color: transparent;
+  padding: 8px 10px;
+  margin-bottom: 4px;
+  cursor: pointer;
+}
+
+.codebuddy-session-item:hover {
+  background-color: #f6f8fa;
+  border-color: #d0d7de;
+}
+
+.codebuddy-session-item-title {
+  display: block;
+  font-size: 13px;
+  color: #24292f;
+  margin-bottom: 2px;
+  word-break: break-all;
+}
+
+.codebuddy-session-item-meta {
+  display: block;
+  font-size: 12px;
+  color: #8c959f;
+}
+
+.codebuddy-session-item-id {
+  margin-left: 8px;
+  font-family: "Cascadia Mono", Consolas, monospace;
+}
+
+/* 当前正在使用的会话：底色 + 左侧强调线 + 「当前」徽章 */
+.codebuddy-session-item-current {
+  background-color: #ddf4ff;
+  border-color: #0969da;
+  box-shadow: inset 3px 0 0 #0969da;
+}
+
+.codebuddy-session-item-current:hover {
+  background-color: #cfeaff;
+}
+
+.codebuddy-current-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background-color: #0969da;
+  color: #ffffff;
+  font-size: 11px;
+  line-height: 16px;
+  vertical-align: middle;
+}
+
+/* 启动配置区：启动位置 + 端口 */
+.codebuddy-launch-options {
+  border: 1px solid #eaeef2;
+  border-radius: 6px;
+  background-color: #fafbfc;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+}
+
+.codebuddy-launch-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.codebuddy-launch-row:last-child {
+  margin-bottom: 0;
+}
+
+.codebuddy-launch-label {
+  margin: 0 10px 0 0;
+  flex-shrink: 0;
+}
+
+.codebuddy-launch-row .radio-label {
+  margin-right: 14px;
+}
+
+.codebuddy-launch-hint {
+  margin: 0 0 0 8px;
+}
+
+.codebuddy-launch-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-top: 8px;
+}
+
+.codebuddy-launch-footer-hint {
+  margin: 0 10px 0 0;
 }

@@ -321,6 +321,136 @@ export async function openWorkspaceInHerdr({ targetPath, label, startServer = fa
   };
 }
 
+/** 路径归一：去掉尾斜杠并统一小写，用于跨来源比较 */
+function normalizeDirectoryPath(directoryPath) {
+  return String(directoryPath || '')
+    .trim()
+    .replace(/[\\/]+$/, '')
+    .toLowerCase();
+}
+
+/**
+ * 按"面板当前工作目录"找 pane：用于判断某个 CodeBuddy 会话是否已经在 herdr 的某个面板里跑着。
+ * 注意 pane list 给的是启动目录，process-info 才是面板里 shell 的实时 cwd（cd 过之后才对）。
+ */
+export function findHerdrPaneByWorkingDirectory(herdrExecutable, directoryPath) {
+  const resolvedExecutable = herdrExecutable || resolveHerdrExecutable();
+  const targetPath = normalizeDirectoryPath(directoryPath);
+  if (!resolvedExecutable || !targetPath) {
+    return null;
+  }
+
+  const paneListResult = runHerdrJson(resolvedExecutable, ['pane', 'list']);
+  const paneList = (paneListResult && paneListResult.result && paneListResult.result.panes) || [];
+  for (const paneEntry of paneList) {
+    if (!paneEntry || !paneEntry.pane_id) {
+      continue;
+    }
+    try {
+      const processInfoResult = runHerdrJson(resolvedExecutable, [
+        'pane',
+        'process-info',
+        '--pane',
+        paneEntry.pane_id
+      ]);
+      const processInfo = processInfoResult && processInfoResult.result && processInfoResult.result.process_info;
+      const foregroundList = (processInfo && processInfo.foreground_processes) || [];
+      const matchedProcess = foregroundList.find(
+        (processEntry) => normalizeDirectoryPath(processEntry.cwd) === targetPath
+      );
+      if (matchedProcess) {
+        return {
+          paneId: paneEntry.pane_id,
+          workspaceId: paneEntry.workspace_id,
+          processName: matchedProcess.name || '',
+          processId: matchedProcess.pid || null
+        };
+      }
+    } catch {
+      // 单个面板查询失败不影响其余面板
+    }
+  }
+  return null;
+}
+
+/** 聚焦指定工作区（把用户的 herdr 窗口切过去） */
+export function focusHerdrWorkspace(herdrExecutable, workspaceId) {
+  const resolvedExecutable = herdrExecutable || resolveHerdrExecutable();
+  if (!resolvedExecutable || !workspaceId) {
+    return false;
+  }
+  try {
+    runHerdrJson(resolvedExecutable, ['workspace', 'focus', workspaceId]);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * 在 herdr 工作区里启动一个 CodeBuddy TUI（指定端口），供平台把它当网关。
+ * 先切到目标目录再执行命令：--resume 按工作目录查找会话，目录不对会续接失败。
+ */
+export function startCodebuddyTuiInHerdrPane({ herdrExecutable, workspaceId, workingDirectoryPath, port, sessionId }) {
+  const resolvedExecutable = herdrExecutable || resolveHerdrExecutable();
+  if (!resolvedExecutable || !workspaceId) {
+    throw new ValidationError('缺少 herdr 可执行文件或工作区');
+  }
+  const paneId = resolveWorkspacePaneId(resolvedExecutable, workspaceId);
+  runCommandInPane(resolvedExecutable, paneId, `cd "${workingDirectoryPath}"`);
+  const tuiCommand = `codebuddy --port ${port}${sessionId ? ` --resume ${sessionId}` : ''}`;
+  runCommandInPane(resolvedExecutable, paneId, tuiCommand);
+  return { paneId, command: tuiCommand };
+}
+
+/** 取工作区主终端面板的 pane_id（工作区里第一个 pane） */
+function resolveWorkspacePaneId(herdrExecutable, workspaceId) {
+  const paneListResult = runHerdrJson(herdrExecutable, ['pane', 'list']);
+  const paneList = (paneListResult && paneListResult.result && paneListResult.result.panes) || [];
+  const matchedPane = paneList.find((paneEntry) => paneEntry.workspace_id === workspaceId);
+  if (!matchedPane) {
+    throw new ValidationError(`未找到工作区 ${workspaceId} 的终端面板`);
+  }
+  return matchedPane.pane_id;
+}
+
+/** 往指定 pane 发送一条命令并回车（pane run 的 COMMAND 是变长参数） */
+function runCommandInPane(herdrExecutable, paneId, commandText) {
+  const commandArgumentList = String(commandText).split(/\s+/).filter(Boolean);
+  execFileSync(herdrExecutable, ['pane', 'run', paneId, ...commandArgumentList], {
+    encoding: 'utf8',
+    windowsHide: true,
+    timeout: 15000
+  });
+}
+
+/**
+ * 在 herdr 工作区的终端面板里续接一个 CodeBuddy 会话。
+ * 必须先 cd 到会话所属目录：`--resume` 按工作目录查找会话，
+ * 而 herdr 工作区目录是需求聚合目录（含多个项目），直接 resume 会报 "No conversation found"。
+ */
+export function resumeCodebuddyInHerdrPane({ herdrExecutable, workspaceId, workingDirectoryPath, sessionId }) {
+  const resolvedExecutable = herdrExecutable || resolveHerdrExecutable();
+  if (!resolvedExecutable) {
+    throw new ValidationError('未找到 herdr 可执行文件');
+  }
+  const normalizedDirectoryPath = String(workingDirectoryPath || '').trim();
+  const normalizedSessionId = String(sessionId || '').trim();
+  if (!normalizedDirectoryPath || !normalizedSessionId) {
+    throw new ValidationError('缺少会话目录或 sessionId');
+  }
+
+  const paneId = resolveWorkspacePaneId(resolvedExecutable, workspaceId);
+  runCommandInPane(resolvedExecutable, paneId, `cd "${normalizedDirectoryPath}"`);
+  runCommandInPane(resolvedExecutable, paneId, `codebuddy --resume ${normalizedSessionId}`);
+
+  return {
+    paneId,
+    workingDirectoryPath: normalizedDirectoryPath,
+    sessionId: normalizedSessionId
+  };
+}
+
 /**
  * 关闭该需求在 herdr 里的工作区（等价于删掉对应终端，工作区内的窗格进程会一并结束）。
  * 与打开时的幂等策略一致：按 label 匹配；重名工作区会被一并关闭，返回实际关闭数量。

@@ -108,7 +108,6 @@
   "106": "worktree-manager 平台接口全表",
   "107": "config.js",
   "108": "Generate Report",
-  "109": "editor-opener.js",
   "110": "requirement-task.test.js",
   "111": "SKILL.md",
   "112": "create-requirement.schema.json",
@@ -121,5 +120,11 @@
   "119": "check",
   "120": "json",
   "121": "no-workspace",
-  "122": "stage"
+  "122": "stage",
+  "123": "DESKTOP-DEV.md",
+  "124": "需求任务页",
+  "125": "editor-opener.js",
+  "126": "persistence.test.js",
+  "127": "技术栈",
+  "128": "运行时依赖分级"
 }
