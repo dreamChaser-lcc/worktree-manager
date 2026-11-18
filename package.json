@@ -14,7 +14,7 @@
     "build:web:watch": "npm --prefix web run build -- --watch",
     "dev": "node scripts/dev.js",
     "build:web": "npm --prefix web run build",
-    "start": "node server/src/server.js",
+    "start": "node scripts/start-server.js",
     "test": "npm --prefix server run test"
   }
 }
