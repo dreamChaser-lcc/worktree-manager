@@ -44,6 +44,13 @@ import {
   openCodebuddyTerminalWindow,
   resolveResumableSessionId
 } from '../core/codebuddy-terminal-opener.js';
+import {
+  findHerdrPaneByWorkingDirectory,
+  focusHerdrWorkspace,
+  openWorkspaceInHerdr,
+  resumeCodebuddyInHerdrPane,
+  resolveHerdrExecutable
+} from '../core/herdr-opener.js';
 import { openInHerdrApp } from '../core/herdr-app-opener.js';
 import { NotFoundError, ValidationError } from '../core/errors.js';
 
