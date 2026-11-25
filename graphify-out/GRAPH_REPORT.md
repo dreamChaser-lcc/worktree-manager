@@ -1,16 +1,16 @@
-# Graph Report - worktree-manager  (2026-11-12)
+# Graph Report - worktree-manager  (2026-11-25)
 
 ## Corpus Check
-- 156 files · ~95,677 words
+- 161 files · ~105,134 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1526 nodes · 2158 edges · 128 communities (108 shown, 20 thin omitted)
+- 1603 nodes · 2369 edges · 133 communities (113 shown, 20 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `c0613e03`
+- Built from commit: `bfcd61a9`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -76,7 +76,7 @@
 - [[_COMMUNITY_TaskActionsRow.jsx|TaskActionsRow.jsx]]
 - [[_COMMUNITY_RequirementTaskPanel.jsx|RequirementTaskPanel.jsx]]
 - [[_COMMUNITY_App.jsx|App.jsx]]
-- [[_COMMUNITY_WorktreeListPanel.jsx|WorktreeListPanel.jsx]]
+- [[_COMMUNITY_requirement-task-routes.js|requirement-task-routes.js]]
 - [[_COMMUNITY_RequirementTaskDetailDialog.jsx|RequirementTaskDetailDialog.jsx]]
 - [[_COMMUNITY_onboard|onboard.md]]
 - [[_COMMUNITY_The Toolkit|The Toolkit]]
@@ -122,6 +122,7 @@
 - [[_COMMUNITY_worktree-manager 平台接口全表|worktree-manager 平台接口全表]]
 - [[_COMMUNITY_config.js|config.js]]
 - [[_COMMUNITY_Generate Report|Generate Report]]
+- [[_COMMUNITY_codebuddy-acp-client.js|codebuddy-acp-client.js]]
 - [[_COMMUNITY_requirement-task.test.js|requirement-task.test.js]]
 - [[_COMMUNITY_SKILL|SKILL.md]]
 - [[_COMMUNITY_create-requirement.schema.json|create-requirement.schema.json]]
@@ -137,51 +138,55 @@
 - [[_COMMUNITY_stage|stage]]
 - [[_COMMUNITY_DESKTOP-DEV|DESKTOP-DEV.md]]
 - [[_COMMUNITY_需求任务页|需求任务页]]
-- [[_COMMUNITY_editor-opener.js|editor-opener.js]]
 - [[_COMMUNITY_persistence.test.js|persistence.test.js]]
 - [[_COMMUNITY_技术栈|技术栈]]
 - [[_COMMUNITY_运行时依赖分级|运行时依赖分级]]
+- [[_COMMUNITY_codebuddy-terminal-opener.js|codebuddy-terminal-opener.js]]
+- [[_COMMUNITY_herdr-app-opener.js|herdr-app-opener.js]]
+- [[_COMMUNITY_records-api.test.js|records-api.test.js]]
+- [[_COMMUNITY_start-server.js|start-server.js]]
+- [[_COMMUNITY_getJson|getJson]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `executeGitCommand()` - 27 edges
-2. `ValidationError` - 20 edges
-3. `getJson()` - 18 edges
-4. `startCodebuddyInstance()` - 17 edges
-5. `createWorktree()` - 17 edges
-6. `removeWorktree()` - 16 edges
-7. `postJson()` - 16 edges
-8. `createApp()` - 15 edges
-9. `openWorkspaceInHerdr()` - 13 edges
-10. `persistenceManager` - 13 edges
+2. `ValidationError` - 22 edges
+3. `startCodebuddyInstance()` - 21 edges
+4. `requestCodebuddyApi()` - 19 edges
+5. `getJson()` - 18 edges
+6. `postJson()` - 18 edges
+7. `createWorktree()` - 17 edges
+8. `removeWorktree()` - 16 edges
+9. `createApp()` - 15 edges
+10. `openWorkspaceInHerdr()` - 13 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `executeCreationFlow()` --calls--> `openDirectoryInEditor()`  [EXTRACTED]
-  server/src/routes/worktree-routes.js → server/src/core/editor-opener.js
-- `readProjectRemoteUrl()` --calls--> `executeGitCommand()`  [EXTRACTED]
-  server/src/routes/requirement-task-routes.js → server/src/core/git-executor.js
-- `copyIgnoredSafely()` --calls--> `copyIgnoredFiles()`  [EXTRACTED]
-  server/src/routes/requirement-task-routes.js → server/src/core/ignore-file-copier.js
-- `generateAndAttachWorkspace()` --calls--> `generateWorkspaceFileForTask()`  [EXTRACTED]
-  server/src/routes/requirement-task-routes.js → server/src/core/workspace-file-generator.js
-- `isRunningInstallForWorktree()` --calls--> `normalizePathForComparison()`  [EXTRACTED]
-  server/src/routes/requirement-task-routes.js → server/src/core/worktree-manager.js
+- `buildAcpHeaders()` --calls--> `buildGatewayHeaders()`  [EXTRACTED]
+  server/src/core/codebuddy-acp-client.js → server/src/core/codebuddy-gateway-client.js
+- `ensureAcpConnection()` --calls--> `buildGatewayHeaders()`  [EXTRACTED]
+  server/src/core/codebuddy-acp-client.js → server/src/core/codebuddy-gateway-client.js
+- `startCodebuddyInstance()` --calls--> `resolveCodebuddyExecutable()`  [EXTRACTED]
+  server/src/core/codebuddy-instance-manager.js → server/src/core/codebuddy-cli-resolver.js
+- `startCodebuddyInstance()` --calls--> `buildCodebuddyCliArguments()`  [EXTRACTED]
+  server/src/core/codebuddy-instance-manager.js → server/src/core/codebuddy-terminal-opener.js
+- `startCodebuddyInstance()` --calls--> `startCommandInHerdrApp()`  [EXTRACTED]
+  server/src/core/codebuddy-instance-manager.js → server/src/core/herdr-app-opener.js
 
 ## Import Cycles
 - None detected.
 
-## Communities (128 total, 20 thin omitted)
+## Communities (133 total, 20 thin omitted)
 
 ### Community 0 - "前端 API 与界面"
-Cohesion: 0.19
-Nodes (14): createWorktree(), fetchDefaultBaseRef(), BranchSelector(), CreateWorktreeForm(), describeIgnoredCopyResult(), DependencyStrategySection(), STRATEGY_LABEL_MAP, RecentRepoBar() (+6 more)
+Cohesion: 0.15
+Nodes (17): fetchDefaultBaseRef(), fetchDirectoryListing(), fetchDriveList(), fetchWorktreeList(), BranchSelector(), CreateWorktreeForm(), describeIgnoredCopyResult(), DependencyStrategySection() (+9 more)
 
 ### Community 1 - "依赖共享与策略"
 Cohesion: 0.06
 Nodes (63): applySharedDependencyLink(), detectPackageManager(), LOCK_FILE_DETECTION_RULES, recommendDependencyStrategy(), startIndependentInstall(), checkWorktreeDependencyStatus(), diffDependencyMaps(), readPackageDependencies() (+55 more)
 
 ### Community 2 - "服务端启动与配置"
-Cohesion: 0.17
-Nodes (16): appendJobLog(), createJob(), findRunningJob(), finishJob(), getJob(), jobMap, listMemoryJobs(), notifyJobListeners() (+8 more)
+Cohesion: 0.16
+Nodes (15): appendJobLog(), createJob(), findRunningJob(), finishJob(), getJob(), jobMap, listMemoryJobs(), notifyJobListeners() (+7 more)
 
 ### Community 3 - "桌面端壳与 sidecar"
 Cohesion: 0.17
@@ -216,8 +221,8 @@ Cohesion: 0.18
 Nodes (11): appIconPngBuffer, assetsDirectory, buildChunk(), buildDirectory, crc32(), createRoundedSquarePng(), desktopDirectory, fs (+3 more)
 
 ### Community 12 - "编辑器启动"
-Cohesion: 0.11
-Nodes (31): clearWorktreeHistory(), closeInHerdr(), createRequirementTask(), deleteRequest(), deleteRequirementTask(), deleteTaskRecord(), fetchRequirementDependencyCheck(), fetchRequirementTaskLocate() (+23 more)
+Cohesion: 0.14
+Nodes (28): clearWorktreeHistory(), closeHerdrAppSpace(), closeInHerdr(), createRequirementTask(), createWorktree(), deleteRequest(), deleteRequirementTask(), deleteTaskRecord() (+20 more)
 
 ### Community 13 - "开发脚本"
 Cohesion: 0.40
@@ -328,20 +333,20 @@ Cohesion: 0.08
 Nodes (23): 10. Microcopy & Voice, 1. AI Slop Detection (CRITICAL), 2. Visual Hierarchy, 3. Information Architecture & Cognitive Load, 4. Emotional Journey, 5. Discoverability & Affordance, 6. Composition & Balance, 7. Typography as Communication (+15 more)
 
 ### Community 61 - "RequirementTaskPanel.jsx"
-Cohesion: 0.40
-Nodes (3): STAGE_CLASS_MAP, STAGE_OPTIONS, TaskActionsRow()
+Cohesion: 0.13
+Nodes (11): DependencyInstallDialog(), DEFAULT_LIST_FILTER, describeListFilter(), hasActiveListFilter(), REQUIREMENT_STATUS_TAB_LIST, RequirementTaskPanel(), STAGE_TAG_FILTER_OPTION_LIST, formatTimestamp() (+3 more)
 
 ### Community 62 - "App.jsx"
 Cohesion: 0.17
-Nodes (9): fetchRecentRepositories(), fetchWorktreeHistory(), App(), CreationHistoryPanel(), HelpGuideDialog(), describeListFilter(), hasActiveListFilter(), RequirementTaskPanel() (+1 more)
+Nodes (9): fetchInstalledEditors(), fetchRecentRepositories(), fetchSettings(), fetchWorktreeHistory(), App(), CreationHistoryPanel(), HelpGuideDialog(), SettingsPanel() (+1 more)
 
-### Community 63 - "WorktreeListPanel.jsx"
-Cohesion: 0.21
-Nodes (10): fetchBranchOverview(), fetchDirectoryListing(), fetchDriveList(), fetchInstalledEditors(), fetchRepositoryCheck(), fetchRequirementTaskList(), fetchSettings(), getJson() (+2 more)
+### Community 63 - "requirement-task-routes.js"
+Cohesion: 0.25
+Nodes (7): Cognitive Load Assessment, Cognitive Load Checklist, Extraneous Load — Bad Design, Germane Load — Learning Effort, Intrinsic Load — The Task Itself, The Working Memory Rule, Three Types of Cognitive Load
 
 ### Community 64 - "RequirementTaskDetailDialog.jsx"
-Cohesion: 0.47
-Nodes (4): isSameLoosePath(), renderBranchLocationInfo(), RequirementTaskDetailDialog(), TaskLogPanel()
+Cohesion: 0.19
+Nodes (18): buildGatewayHeaders(), buildInstanceBaseUrl(), callCodebuddyGateway(), dispatchCodebuddyJob(), getCodebuddyJobDetail(), getCodebuddyJobTranscript(), getCodebuddySessionHistory(), jobsSnapshotCache (+10 more)
 
 ### Community 65 - "onboard.md"
 Cohesion: 0.08
@@ -368,8 +373,8 @@ Cohesion: 0.11
 Nodes (17): Code Quality, Color & Contrast, Content & Copy, Edge Cases & Error States, Final Verification, Forms & Inputs, Icons & Images, Interaction States (+9 more)
 
 ### Community 71 - "Common Cognitive Load Violations"
-Cohesion: 0.12
-Nodes (16): 1. The Wall of Options, 2. The Memory Bridge, 3. The Hidden Navigation, 4. The Jargon Barrier, 5. The Visual Noise Floor, 6. The Inconsistent Pattern, 7. The Multi-Task Demand, 8. The Context Switch (+8 more)
+Cohesion: 0.22
+Nodes (9): 1. The Wall of Options, 2. The Memory Bridge, 3. The Hidden Navigation, 4. The Jargon Barrier, 5. The Visual Noise Floor, 6. The Inconsistent Pattern, 7. The Multi-Task Demand, 8. The Context Switch (+1 more)
 
 ### Community 72 - "Introduce Color Strategically"
 Cohesion: 0.12
@@ -460,8 +465,8 @@ Cohesion: 0.15
 Nodes (12): Assess Current State, Code Simplification, Content Simplification, Document Removed Complexity, Information Architecture, Interaction Simplification, Layout Simplification, MANDATORY PREPARATION (+4 more)
 
 ### Community 94 - "app.js"
-Cohesion: 0.24
-Nodes (7): convertRemoteUrlToWebUrl(), fetchTaskIdSet(), getJson(), postJson(), putJson(), requestJson(), waitForJobFinished()
+Cohesion: 0.16
+Nodes (13): buildExcludedProjectReason(), buildWorkspaceFileContent(), generateWorkspaceFileForTask(), isExistingDirectory(), sanitizeWorkspaceFileName(), convertRemoteUrlToWebUrl(), generateAndAttachWorkspace(), fetchTaskIdSet() (+5 more)
 
 ### Community 95 - "distill.md"
 Cohesion: 0.17
@@ -472,8 +477,8 @@ Cohesion: 0.33
 Nodes (5): Discover, Document, Extract & Enrich, Migrate, Plan Extraction
 
 ### Community 97 - "herdr-opener.js"
-Cohesion: 0.29
-Nodes (5): currentFileDir, serverConfig, recoverInterruptedJobs(), koaApplication, koaServer
+Cohesion: 0.23
+Nodes (21): activateHerdrWindow(), checkHerdrServerStatus(), closeWorkspaceInHerdr(), ensureHerdrClientWindow(), findHerdrPaneByWorkingDirectory(), findHerdrWindowProcessId(), focusHerdrWorkspace(), launchHerdrTerminal() (+13 more)
 
 ### Community 98 - "app.js"
 Cohesion: 0.14
@@ -481,7 +486,7 @@ Nodes (13): dependencies, @modelcontextprotocol/sdk, zod, description, engines, 
 
 ### Community 99 - "WorktreeListPanel.jsx"
 Cohesion: 0.24
-Nodes (8): fetchTaskDetail(), fetchTaskList(), fetchWorktreeList(), TASK_STATUS_LABEL_MAP, taskBadgeClassName(), TaskHistoryPanel(), WorktreeListPanel(), usePendingActions()
+Nodes (8): fetchRepositoryCheck(), fetchTaskDetail(), fetchTaskList(), TASK_STATUS_LABEL_MAP, taskBadgeClassName(), TaskHistoryPanel(), WorktreeListPanel(), usePendingActions()
 
 ### Community 100 - "api.test.js"
 Cohesion: 0.14
@@ -492,8 +497,8 @@ Cohesion: 0.14
 Nodes (13): 1. 创建需求任务（推荐用脚本）, 2. 查询任务列表, 3. 查单个任务的状态, 4. 在 herdr 终端打开该需求, 5. 关闭 herdr 工作区（破坏性）, 6. 校验仓库, worktree-manager 平台操作, 一、开始前必做 (+5 more)
 
 ### Community 102 - "persistence-manager.js"
-Cohesion: 0.07
-Nodes (69): describeCodebuddyEnvironment(), locateOnPath(), readCodebuddyGatewayToken(), resolveCodebuddyExecutable(), resolveGatewaySettingsPath(), buildGatewayHeaders(), buildInstanceBaseUrl(), callCodebuddyGateway() (+61 more)
+Cohesion: 0.20
+Nodes (24): buildInstanceWindowTitle(), checkInstanceHealth(), delay(), ensureInitialized(), ensureInitializedWithoutRefresh(), findCodebuddyInstanceByTaskId(), findListeningProcessId(), findReusableGatewaySession() (+16 more)
 
 ### Community 103 - "api.test.js"
 Cohesion: 0.18
@@ -512,16 +517,20 @@ Cohesion: 0.25
 Nodes (7): worktree, worktree-manager 平台接口全表, 允许 agent 调用, 分支 / 文件系统 / 任务日志, 响应要点, 禁止 agent 调用（破坏性）, 需求任务
 
 ### Community 107 - "config.js"
-Cohesion: 0.48
-Nodes (6): buildExcludedProjectReason(), buildWorkspaceFileContent(), generateWorkspaceFileForTask(), isExistingDirectory(), sanitizeWorkspaceFileName(), generateAndAttachWorkspace()
+Cohesion: 0.31
+Nodes (7): currentFileDir, serverConfig, buildEditorSpawnCommand(), locateCommandCandidates(), openDirectoryInEditor(), resolveBatchFileTarget(), resolveEditorExecutable()
 
 ### Community 108 - "Generate Report"
 Cohesion: 0.25
 Nodes (8): description, pattern, type, repo, description, items, minItems, type
 
+### Community 109 - "codebuddy-acp-client.js"
+Cohesion: 0.21
+Nodes (19): acpConnectionMap, acpRequestIdMap, acpSerialQueueMap, acpSessionLoadMap, buildAcpBaseUrl(), buildAcpHeaders(), cancelAcpSession(), disconnectAcp() (+11 more)
+
 ### Community 110 - "requirement-task.test.js"
-Cohesion: 0.15
-Nodes (17): buildCodebuddyStreamUrl(), dispatchCodebuddyJob(), fetchCodebuddyOverview(), fetchCodebuddySessionList(), fetchCodebuddyTranscript(), openCodebuddyInHerdr(), openCodebuddyTerminal(), replyCodebuddyJob() (+9 more)
+Cohesion: 0.09
+Nodes (38): activateCodebuddyInstance(), buildCodebuddyAcpPromptUrl(), cancelCodebuddyAcp(), connectCodebuddyAcp(), dispatchCodebuddyJob(), fetchCodebuddyOverview(), fetchCodebuddySessionHistory(), fetchCodebuddySessionList() (+30 more)
 
 ### Community 111 - "SKILL.md"
 Cohesion: 0.13
@@ -572,16 +581,12 @@ Cohesion: 0.50
 Nodes (4): stage, description, enum, type
 
 ### Community 123 - "DESKTOP-DEV.md"
-Cohesion: 0.25
+Cohesion: 0.22
 Nodes (5): MSVC C++ 生成工具（注意：只能装 C 盘，无法选路径）, Rust 安装（关键：先设环境变量再安装，才能落到 D 盘）, Tauri 项目运行与构建, 卸载方法（本次执行过，留档备查）, 结论速览
 
 ### Community 124 - "需求任务页"
-Cohesion: 0.25
+Cohesion: 0.29
 Nodes (7): ① 任务列表, ② 新建需求任务, ③ 粘贴自动解析, ④ 查看明细, 使用教程（图文）, 设置页, 需求任务页
-
-### Community 125 - "editor-opener.js"
-Cohesion: 0.57
-Nodes (5): buildEditorSpawnCommand(), locateCommandCandidates(), openDirectoryInEditor(), resolveBatchFileTarget(), resolveEditorExecutable()
 
 ### Community 126 - "persistence.test.js"
 Cohesion: 0.24
@@ -595,25 +600,45 @@ Nodes (6): AI 工具（`ai-tools/`，可选）, 前端, 存储, 技术栈, 服�
 Cohesion: 0.40
 Nodes (5): 仅打包 / 开发时需要, 功能依赖（缺了只是对应功能不可用）, 必须（缺了完全跑不起来）, 操作系统, 运行时依赖分级
 
+### Community 129 - "codebuddy-terminal-opener.js"
+Cohesion: 0.20
+Nodes (16): describeCodebuddyEnvironment(), locateOnPath(), readCodebuddyGatewayToken(), resolveCodebuddyExecutable(), resolveGatewaySettingsPath(), activateCodebuddyTerminalWindow(), buildCodebuddyCliArguments(), closeCodebuddyTerminalWindow() (+8 more)
+
+### Community 130 - "herdr-app-opener.js"
+Cohesion: 0.28
+Nodes (18): activateHerdrAppWindow(), closeSpaceInHerdrApp(), ensureAppLayout(), ensureSpaceForDirectory(), findHerdrAppWindowProcessId(), findSpaceByDirectory(), launchHerdrApp(), locateOnPath() (+10 more)
+
+### Community 131 - "records-api.test.js"
+Cohesion: 0.70
+Nodes (4): getJson(), postJson(), putJson(), requestJson()
+
+### Community 132 - "start-server.js"
+Cohesion: 0.33
+Nodes (5): childProcess, cleanEnv, path, projectRoot, { spawn }
+
+### Community 133 - "getJson"
+Cohesion: 0.33
+Nodes (6): fetchBranchOverview(), fetchRequirementDependencyCheck(), fetchRequirementTaskList(), fetchRequirementTaskLocate(), fetchRequirementTaskPage(), getJson()
+
 ## Knowledge Gaps
-- **831 isolated node(s):** `aiToolsDirectory`, `projectRootDirectory`, `skillSourceDirectory`, `mcpSourceDirectory`, `argumentList` (+826 more)
+- **844 isolated node(s):** `aiToolsDirectory`, `projectRootDirectory`, `skillSourceDirectory`, `mcpSourceDirectory`, `argumentList` (+839 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **20 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
+- **Why does `ValidationError` connect `依赖共享与策略` to `RequirementTaskDetailDialog.jsx`, `codebuddy-terminal-opener.js`, `herdr-app-opener.js`, `herdr-opener.js`, `persistence-manager.js`, `api.test.js`, `codebuddy-acp-client.js`, `persistence.test.js`?**
+  _High betweenness centrality (0.008) - this node is a cross-community bridge._
+- **Why does `Impeccable — 高品质前端设计工具集` connect `场景化能力导航` to `SKILL.md`?**
+  _High betweenness centrality (0.007) - this node is a cross-community bridge._
 - **What connects `aiToolsDirectory`, `projectRootDirectory`, `skillSourceDirectory` to the rest of the system?**
-  _831 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _844 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `前端 API 与界面` be split into smaller, more focused modules?**
+  _Cohesion score 0.14814814814814814 - nodes in this community are weakly interconnected._
 - **Should `依赖共享与策略` be split into smaller, more focused modules?**
-  _Cohesion score 0.06184210526315789 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.060781786941580755 - nodes in this community are weakly interconnected._
 - **Should `Electron 打包配置` be split into smaller, more focused modules?**
   _Cohesion score 0.06896551724137931 - nodes in this community are weakly interconnected._
 - **Should `服务端依赖栈` be split into smaller, more focused modules?**
   _Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected._
-- **Should `Tauri 配置` be split into smaller, more focused modules?**
-  _Cohesion score 0.1111111111111111 - nodes in this community are weakly interconnected._
-- **Should `根工程配置` be split into smaller, more focused modules?**
-  _Cohesion score 0.11764705882352941 - nodes in this community are weakly interconnected._
-- **Should `前端依赖栈` be split into smaller, more focused modules?**
-  _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._

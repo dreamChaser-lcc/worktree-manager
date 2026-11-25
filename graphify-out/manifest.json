@@ -40,9 +40,9 @@
     "semantic_hash": "1036525caf40715f639d64c3c10f6e85"
   },
   "package.json": {
-    "mtime": 1793500094.1882694,
-    "ast_hash": "818a76de30c7730b1436c07e2bb510ba",
-    "semantic_hash": "818a76de30c7730b1436c07e2bb510ba"
+    "mtime": 1794990774.0378463,
+    "ast_hash": "12ade6ba0494165a14b2b2b487c1670b",
+    "semantic_hash": ""
   },
   "scripts/dev.js": {
     "mtime": 1793349871.2758543,
@@ -65,8 +65,8 @@
     "semantic_hash": ""
   },
   "server/src/config.js": {
-    "mtime": 1794279171.780386,
-    "ast_hash": "9a5ba133a6c23e9ca6e1f70dcd60c9be",
+    "mtime": 1795500533.4605136,
+    "ast_hash": "c8175a1b58bf009d70b0b96cad3e0586",
     "semantic_hash": ""
   },
   "server/src/core/dep-linker.js": {
@@ -135,8 +135,8 @@
     "semantic_hash": "1c2daab3f8e07a690513eaa9dd6e274a"
   },
   "server/src/routes/filesystem-routes.js": {
-    "mtime": 1794281176.0696054,
-    "ast_hash": "20a866af41aa137b159a82506c6b2a4c",
+    "mtime": 1795577860.767384,
+    "ast_hash": "74b72160464e7e36e1b0964f53645907",
     "semantic_hash": ""
   },
   "server/src/routes/health-routes.js": {
@@ -150,8 +150,8 @@
     "semantic_hash": "4ce4aa958655b848f88f5ff31a87c50c"
   },
   "server/src/routes/requirement-task-routes.js": {
-    "mtime": 1794211298.982402,
-    "ast_hash": "da3565d5fab4638f87f46b5372dc228d",
+    "mtime": 1795590997.397771,
+    "ast_hash": "4b4415a067a97c652488af01fdaac301",
     "semantic_hash": ""
   },
   "server/src/routes/settings-routes.js": {
@@ -185,8 +185,8 @@
     "semantic_hash": "b178367022aa3fbe4d5c9cb4da8eba75"
   },
   "server/src/storage/persistence-manager.js": {
-    "mtime": 1793954424.9715173,
-    "ast_hash": "f8b17d7e05c43d2d0a7b40779f2bdf5a",
+    "mtime": 1795591021.2930799,
+    "ast_hash": "219a22c04c5010057c91ebd5bbac535e",
     "semantic_hash": ""
   },
   "server/src/storage/settings-store.js": {
@@ -285,8 +285,8 @@
     "semantic_hash": ""
   },
   "web/src/api/client.js": {
-    "mtime": 1794281176.9518127,
-    "ast_hash": "44a6f7c60404534cb0432c64f5ced3ae",
+    "mtime": 1795591036.2035224,
+    "ast_hash": "d47e4dbc5a26005c298092f186a7f807",
     "semantic_hash": ""
   },
   "web/src/components/BranchSelector.jsx": {
@@ -335,8 +335,8 @@
     "semantic_hash": "7cdc95eae733176e38e048b941c08100"
   },
   "web/src/components/RequirementTaskPanel.jsx": {
-    "mtime": 1794281181.2839384,
-    "ast_hash": "9b3942db01173bee0aa0a0ef32cc6716",
+    "mtime": 1795592229.0395193,
+    "ast_hash": "16b51a48f8740f255e11eca90c19413b",
     "semantic_hash": ""
   },
   "web/src/components/SearchableSelect.jsx": {
@@ -350,8 +350,8 @@
     "semantic_hash": "6ac0f48f90203fc9d7a8cb241858bc9d"
   },
   "web/src/components/TaskActionsRow.jsx": {
-    "mtime": 1793954198.405178,
-    "ast_hash": "ecd6a0de8d67142c4b04c87cde2fb769",
+    "mtime": 1795592379.145544,
+    "ast_hash": "c070976b3b2f55a2b47ab5727374a033",
     "semantic_hash": ""
   },
   "web/src/components/TaskHistoryPanel.jsx": {
@@ -555,8 +555,8 @@
     "semantic_hash": "d67289993204a88a84fa5772168967a6"
   },
   "web/src/components/RequirementTaskDetailDialog.jsx": {
-    "mtime": 1794281201.030123,
-    "ast_hash": "556d01a020c8d2ef51173b98e54d3b89",
+    "mtime": 1795591163.5587873,
+    "ast_hash": "2d9aacbbdabd44fe88d43bccd8681047",
     "semantic_hash": ""
   },
   ".codebuddy/rules/graphify.md": {
@@ -730,8 +730,8 @@
     "semantic_hash": ""
   },
   "server/src/core/herdr-opener.js": {
-    "mtime": 1794466513.4692924,
-    "ast_hash": "e77c9f58db278415cea3d6983516d8ae",
+    "mtime": 1795578270.5191185,
+    "ast_hash": "8abd86d27c1eb81f53d54eb46c055157",
     "semantic_hash": ""
   },
   ".codebuddy/skills/worktree-manager/scripts/create-requirement.mjs": {
@@ -795,48 +795,73 @@
     "semantic_hash": ""
   },
   "server/src/core/codebuddy-gateway-client.js": {
-    "mtime": 1794459245.030267,
-    "ast_hash": "56b23848b8e19a2bb5f36ab526216263",
+    "mtime": 1794468958.8846095,
+    "ast_hash": "e31dde9e8361caaa875cda7059954fd3",
     "semantic_hash": ""
   },
   "server/src/core/codebuddy-instance-manager.js": {
-    "mtime": 1794466523.251266,
-    "ast_hash": "8c4fcc71acc168891f1b3e18e27d6106",
+    "mtime": 1795590156.396598,
+    "ast_hash": "fb1f056d7d1d5d745aea427c11c9e06f",
     "semantic_hash": ""
   },
   "server/src/core/codebuddy-terminal-opener.js": {
-    "mtime": 1794465185.0346446,
-    "ast_hash": "e0f6f2b8ed39403df7001504a83c9a9d",
+    "mtime": 1795578261.6854167,
+    "ast_hash": "c90ae5aacdefa4bf20b1b286021054a0",
     "semantic_hash": ""
   },
   "server/src/routes/codebuddy-routes.js": {
-    "mtime": 1794466707.8171809,
-    "ast_hash": "5d07a378ad1c250c2d1adad1b206dd6b",
+    "mtime": 1795578314.5409942,
+    "ast_hash": "09357bc2892fe25a5179ea7de40b36fe",
     "semantic_hash": ""
   },
   "web/src/api/codebuddy-client.js": {
-    "mtime": 1794463745.8487983,
-    "ast_hash": "41b1ee5a27120e5f06be01372b6e60b0",
+    "mtime": 1794535255.4325755,
+    "ast_hash": "98003b3f1175373d1716f58fa4b1e97e",
     "semantic_hash": ""
   },
   "web/src/components/CodebuddyChatPanel.jsx": {
-    "mtime": 1794456831.5687275,
-    "ast_hash": "d25ae067ea1de628e32fe9e017183299",
+    "mtime": 1794472820.8828936,
+    "ast_hash": "2bd33afe99658dc0d19297333eee1f7e",
     "semantic_hash": ""
   },
   "web/src/components/CodebuddyPanel.jsx": {
-    "mtime": 1794466561.0338688,
-    "ast_hash": "ccdcdc8f374edb335b9bf34ad885b843",
+    "mtime": 1795578344.3230367,
+    "ast_hash": "9a75b357c9cce31a40d73250ca3a465f",
     "semantic_hash": ""
   },
   "web/src/components/CodebuddySessionPickerDialog.jsx": {
-    "mtime": 1794466535.4034274,
-    "ast_hash": "713338207ca061f71d80f7ae9032b33c",
+    "mtime": 1795578348.9588964,
+    "ast_hash": "7d02a479abefaccde2801fe651ece584",
     "semantic_hash": ""
   },
   "docs/ARCHITECTURE.md": {
     "mtime": 1794466816.4540963,
     "ast_hash": "c1b277586d69602fbd6fa3e10334a13a",
+    "semantic_hash": ""
+  },
+  "scripts/start-server.js": {
+    "mtime": 1794990800.1593616,
+    "ast_hash": "24e7502fc8f10d76b8a91deb2eadaf96",
+    "semantic_hash": ""
+  },
+  "server/src/core/codebuddy-acp-client.js": {
+    "mtime": 1794476996.6723611,
+    "ast_hash": "43a2b39b467f7dc8d8141dd9adb2a62a",
+    "semantic_hash": ""
+  },
+  "server/src/core/herdr-app-opener.js": {
+    "mtime": 1795578953.5189664,
+    "ast_hash": "aaf66befc2d11b1215015e0b4edb1dae",
+    "semantic_hash": ""
+  },
+  "web/src/components/CodebuddyAcpPanel.jsx": {
+    "mtime": 1794494214.6436949,
+    "ast_hash": "103e1f56d1763bd5cfaaba470aa66328",
+    "semantic_hash": ""
+  },
+  "web/src/utils/codebuddy-ui-config.js": {
+    "mtime": 1794471273.1248283,
+    "ast_hash": "93d1e5fc2ab4f6ea26b32d5795fcaf70",
     "semantic_hash": ""
   }
 }

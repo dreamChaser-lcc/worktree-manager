@@ -62,7 +62,7 @@
   "60": "TaskActionsRow.jsx",
   "61": "RequirementTaskPanel.jsx",
   "62": "App.jsx",
-  "63": "WorktreeListPanel.jsx",
+  "63": "requirement-task-routes.js",
   "64": "RequirementTaskDetailDialog.jsx",
   "65": "onboard.md",
   "66": "The Toolkit",
@@ -108,6 +108,7 @@
   "106": "worktree-manager 平台接口全表",
   "107": "config.js",
   "108": "Generate Report",
+  "109": "codebuddy-acp-client.js",
   "110": "requirement-task.test.js",
   "111": "SKILL.md",
   "112": "create-requirement.schema.json",
@@ -123,8 +124,12 @@
   "122": "stage",
   "123": "DESKTOP-DEV.md",
   "124": "需求任务页",
-  "125": "editor-opener.js",
   "126": "persistence.test.js",
   "127": "技术栈",
-  "128": "运行时依赖分级"
+  "128": "运行时依赖分级",
+  "129": "codebuddy-terminal-opener.js",
+  "130": "herdr-app-opener.js",
+  "131": "records-api.test.js",
+  "132": "start-server.js",
+  "133": "getJson"
 }
