@@ -19,9 +19,11 @@ import {
   openDirectoryInEditor,
   openInHerdr,
   closeInHerdr,
+  openInHerdrApp,
+  closeHerdrAppSpace,
   fetchRequirementTaskPage,
   setRequirementPublished,
-  setRequirementStage,
+  setRequirementLifecycle,
   reorderRequirementTasks
 } from '../api/client.js';
 
@@ -31,12 +33,15 @@ function formatTimeText(isoText) {
 
 /**
  * 需求任务列表 tab：statusKey 与后端 status 查询参数一一对应。
- * 原「未发布」按是否已提测拆分：待提测 = 未发布且阶段标签不是「测试中」，已提测 = 未发布且阶段标签为「测试中」。
+ * 状态只有一个来源 lifecycle：
+ * 待提测 = lifecycle ∈ {待开发, 开发中}；已提测 = 测试中；已发布 = 已发布；
+ * 已删除 = deletedAt 有值（软删，独立 tab，不再混进业务 tab）。
  */
 const REQUIREMENT_STATUS_TAB_LIST = [
   { statusKey: 'pending-test', label: '待提测' },
   { statusKey: 'tested', label: '已提测' },
   { statusKey: 'published', label: '已发布' },
+  { statusKey: 'deleted', label: '已删除' },
   { statusKey: 'all', label: '全部' }
 ];
 
@@ -52,8 +57,8 @@ const STAGE_TAG_FILTER_OPTION_LIST = [
   { value: '待开发', label: '待开发' },
   { value: '开发中', label: '开发中' },
   { value: '测试中', label: '测试中' },
-  { value: 'unset', label: '未设置' }
-];
+  { value: '已发布', label: '已发布' }
+  ];
 
 /** 列表是否处于筛选态（阶段标签或日期任一非空） */
 function hasActiveListFilter(listFilter) {
@@ -411,18 +416,20 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
     });
   }
 
-  /** 设置阶段标签 */
-  async function handleSetStage(taskEntry, stageTag) {
+  /** 设置生命周期（待开发 / 开发中 / 测试中 / 已发布）：状态的唯一写入入口 */
+  async function handleSetLifecycle(taskEntry, lifecycle) {
     try {
-      await setRequirementStage(taskEntry.id, stageTag);
+      await setRequirementLifecycle(taskEntry.id, lifecycle);
       setTaskList((previousList) =>
         previousList.map((taskEntryItem) =>
-          taskEntryItem.id === taskEntry.id ? { ...taskEntryItem, stageTag: stageTag ||  null } : taskEntryItem
+          taskEntryItem.id === taskEntry.id ? { ...taskEntryItem, lifecycle } : taskEntryItem
         )
       );
-      setActionMessage({ type: 'success', text: stageTag ? '已标记阶段标签。' : '已清除阶段标签。' });
-    } catch (stageError) {
-      setActionMessage({ type: 'error', text: stageError.message });
+      setActionMessage({ type: 'success', text: `已切换生命周期：${lifecycle}` });
+      return { ok: true, text: `已切换生命周期：${lifecycle}` };
+    } catch (lifecycleError) {
+      setActionMessage({ type: 'error', text: lifecycleError.message });
+      return { ok: false, text: lifecycleError.message };
     }
   }
   async function handleRefreshAll() {
@@ -516,6 +523,42 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
         };
       } catch (herdrError) {
         return { ok: false, text: herdrError.message };
+      }
+    });
+  }
+
+  /** 在 herdr app（PC 客户端）里打开该需求的终端，工作目录取工作区文件所在目录 */
+  async function handleOpenInHerdrApp(targetPath, label, taskId) {
+    return pathActionPending.run(`herdr-app:${targetPath}`, async () => {
+      try {
+        const appResult = await openInHerdrApp(targetPath, label, taskId);
+        const frontText = appResult.windowActivated ? '，已切到前台' : '（窗口未能激活，请手动切换）';
+        const actionText = appResult.created
+          ? `已在 herdr app 新建 space「${appResult.spaceName}」并切换过去`
+          : `已切换到 herdr app 已有 space「${appResult.spaceName}」`;
+        return {
+          ok: true,
+          text: `${actionText}${frontText}。目录：${appResult.targetPath}`
+        };
+      } catch (appError) {
+        return { ok: false, text: appError.message };
+      }
+    });
+  }
+
+  /** 关闭该需求在 herdr app 里的 space（space 内的终端会一并结束） */
+  async function handleCloseHerdrAppSpace(targetPath) {
+    return pathActionPending.run(`herdr-app-close:${targetPath}`, async () => {
+      try {
+        const closeResult = await closeHerdrAppSpace(targetPath);
+        return {
+          ok: true,
+          text: closeResult.closed
+            ? `已关闭 herdr app space「${closeResult.spaceName}」（${closeResult.terminalCount} 个终端）`
+            : closeResult.message || '未找到可关闭的 herdr app space'
+        };
+      } catch (closeError) {
+        return { ok: false, text: closeError.message };
       }
     });
   }
@@ -939,7 +982,10 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                       </button>
                     </div>
                     {taskEntry.deletedAt ? <span className="badge-status badge-occupied">已删除</span> : null}
-                    {taskEntry.publishedAt ? <span className="badge-status badge-main">已发布</span> : null}
+                    {taskEntry.lifecycle === '已发布' ? (
+                    <span className="badge-status badge-main">已发布</span>
+                  ) : null}
+                  {taskEntry.deletedAt ? <span className="badge-status badge-dirty">已删除</span> : null}
                   </td>
                   <td>
                     <div className="branch-name-cell">
@@ -1032,7 +1078,8 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                   onMoveDown={() => handleMoveTask(taskEntry, 'down')}
                   onPublish={() => handleSetPublished(taskEntry, true)}
                   onUnpublish={() => handleSetPublished(taskEntry, false)}
-                  onSetStage={(nextStageTag) => handleSetStage(taskEntry, nextStageTag)}
+                  onSetLifecycle={(nextLifecycle) => handleSetLifecycle(taskEntry, nextLifecycle)}
+                  onRestore={() => handleRestore(taskEntry)}
                 />
                 <tr className="remark-row">
                   <td colSpan={5}>
@@ -1139,6 +1186,9 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
           onRevealPath={handleRevealPath}
           onOpenInHerdr={handleOpenInHerdr}
           onCloseInHerdr={handleCloseInHerdr}
+          onOpenInHerdrApp={handleOpenInHerdrApp}
+          onCloseHerdrAppSpace={handleCloseHerdrAppSpace}
+          onSetLifecycle={handleSetLifecycle}
           onRegenerateWorkspace={handleRegenerateWorkspace}
           onRestoreShared={(projectIndex, projectEntry) =>
             handleRestoreShared(detailDialogTaskEntry, projectIndex, projectEntry)

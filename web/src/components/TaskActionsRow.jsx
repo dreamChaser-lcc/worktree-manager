@@ -1,27 +1,50 @@
 ﻿import React, { useEffect, useRef, useState } from 'react';
 
-const STAGE_OPTIONS = ['待开发', '开发中', '测试中'];
+const LIFECYCLE_OPTION_LIST = ['待开发', '开发中', '测试中', '已发布'];
 
-/** 阶段标签下拉：fixed 定位浮层（不受表格滚动容器裁剪），点击外部关闭 */
-function StageTagMenu({ anchorRect, currentStage, onSelect, onClose }) {
+const STAGE_CLASS_MAP = {
+  待开发: 'stage-tag-wait',
+  开发中: 'stage-tag-dev',
+  测试中: 'stage-tag-test',
+  已发布: 'stage-tag-published'
+};
+
+/** ISO 时间 → 本地 YYYY-MM-DD HH:mm（仅用于展示删除时间） */
+function formatTimestamp(isoText) {
+  if (!isoText) {
+    return '';
+  }
+  const dateValue = new Date(isoText);
+  if (Number.isNaN(dateValue.getTime())) {
+    return String(isoText);
+  }
+  const padText = (value) => String(value).padStart(2, '0');
+  return [
+    `${dateValue.getFullYear()}-${padText(dateValue.getMonth() + 1)}-${padText(dateValue.getDate())}`,
+    `${padText(dateValue.getHours())}:${padText(dateValue.getMinutes())}`
+  ].join(' ');
+}
+
+/** 生命周期下拉：fixed 定位浮层（不受表格滚动容器裁剪），点击外部关闭 */
+function LifecycleMenu({ anchorRect, currentLifecycle, onSelect, onClose }) {
   const menuReference = useRef(null);
   const [menuStyle, setMenuStyle] = useState(null);
 
   useEffect(() => {
-    const menuHeight = 120;
-    let top = anchorRect.bottom + 2;
+    // 4 项 × 约 30px + 上下内边距 ≈ 136
+    const menuHeight = 136;
+    const menuWidth = 126;
+    let top = anchorRect.bottom + 4;
     if (top + menuHeight > window.innerHeight - 8) {
-      top = anchorRect.top - menuHeight;
+      top = anchorRect.top - menuHeight - 4;
     }
     setMenuStyle({
       top: Math.max(8, top),
-      left: Math.min(Math.max(8, anchorRect.left), window.innerWidth - 170)
+      left: Math.min(Math.max(8, anchorRect.left), window.innerWidth - menuWidth - 8)
     });
     function handleDocumentMouseDown(mouseEvent) {
-      if (menuReference.current) {
-        if (!menuReference.current.contains(mouseEvent.target)) {
-          onClose();
-        }
+      if (menuReference.current && !menuReference.current.contains(mouseEvent.target)) {
+        onClose();
       }
     }
     document.addEventListener('mousedown', handleDocumentMouseDown);
@@ -29,40 +52,39 @@ function StageTagMenu({ anchorRect, currentStage, onSelect, onClose }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  if (!menuStyle) {
+    return null;
+  }
+
   return (
     <div
       ref={menuReference}
-      className="stage-tag-pop"
-      style={menuStyle ? menuStyle : { opacity: 0, pointerEvents: 'none' }}
+      className="stage-tag-menu"
+      style={{ position: 'fixed', top: menuStyle.top, left: menuStyle.left, zIndex: 60 }}
     >
-      {STAGE_OPTIONS.map((stageName) => (
+      {LIFECYCLE_OPTION_LIST.map((optionItem) => (
         <button
-          key={stageName}
+          key={optionItem}
           type="button"
-          className={
-            currentStage === stageName
-              ? 'stage-tag-menu-item stage-tag-menu-item-active'
-              : 'stage-tag-menu-item'
-          }
-          onClick={() => onSelect(currentStage === stageName ? null : stageName)}
+          className={[
+            'stage-tag-menu-item',
+            currentLifecycle === optionItem ? 'stage-tag-menu-item-active' : ''
+          ]
+            .filter(Boolean)
+            .join(' ')}
+          onClick={() => onSelect(optionItem)}
         >
-          {stageName}
+          {optionItem}
         </button>
       ))}
     </div>
   );
 }
 
-const STAGE_CLASS_MAP = {
-  待开发: 'stage-tag-wait',
-  开发中: 'stage-tag-dev',
-  测试中: 'stage-tag-test'
-};
-
 /**
- * 需求任务的"操作行"：渲染在主行与备注行之间，平铺展示
- * 上移 / 下移 / 标记已发布（或取消发布）/ 阶段标签（点击弹下拉切换）。
- * 阶段标签菜单状态自包含在本组件内，父组件只需传回调。
+ * 需求任务的"操作行"：渲染在主行与备注行之间，平铺展示操作按钮。
+ * 生命周期徽标可点击切换（与明细里的下拉写同一个 lifecycle 接口，只有一处状态来源）。
+ * 已删除任务只保留「恢复」，并展示删除时间与删除前状态。
  */
 export function TaskActionsRow({
   taskEntry,
@@ -74,16 +96,37 @@ export function TaskActionsRow({
   onMoveDown,
   onPublish,
   onUnpublish,
-  onSetStage
+  onSetLifecycle,
+  onRestore
 }) {
-  const [stageAnchorRect, setStageAnchorRect] = useState(null);
-  const isEditable = !taskEntry.deletedAt;
-  // 发布状态按记录自身判断（「全部」tab 里已发布与未发布混排）；排序仅未发布任务可用，「全部」tab 不参与拖拽排序
-  const isPublishedTask = Boolean(taskEntry.publishedAt);
+  const [lifecycleAnchorRect, setLifecycleAnchorRect] = useState(null);
+  const isDeletedTask = Boolean(taskEntry.deletedAt);
+  const isPublishedTask = taskEntry.lifecycle === '已发布';
+  // 「全部」tab 混排所有状态，不参与拖拽排序
   const isReorderEnabled = activeStatusTab !== 'all';
-  const stageTagClass = ['stage-tag', STAGE_CLASS_MAP[taskEntry.stageTag] ? STAGE_CLASS_MAP[taskEntry.stageTag] : '']
+  const stageTagClass = ['stage-tag', taskEntry.lifecycle ? STAGE_CLASS_MAP[taskEntry.lifecycle] || '' : '']
     .filter(Boolean)
     .join(' ');
+
+  if (isDeletedTask) {
+    return (
+      <tr className="task-actions-row">
+        <td colSpan={5}>
+          <div className="task-actions-line">
+            <span className="detail-line-label">已删除</span>
+            <span className="task-deleted-meta">
+              删除于 {formatTimestamp(taskEntry.deletedAt)}
+              {taskEntry.lifecycleBeforeDelete ? ` · 删除前「${taskEntry.lifecycleBeforeDelete}」` : ''}
+            </span>
+            <button type="button" className="button-secondary task-action-button" onClick={onRestore}>
+              恢复
+            </button>
+            <span className="task-deleted-hint">彻底删除在右侧「⋯」菜单里（可勾选强制）</span>
+          </div>
+        </td>
+      </tr>
+    );
+  }
 
   return (
     <tr className="task-actions-row">
@@ -92,28 +135,25 @@ export function TaskActionsRow({
           <span className="detail-line-label">操作</span>
           <span
             className={stageTagClass}
+            title="点击切换生命周期"
             onClick={(clickEvent) => {
-              if (!isEditable) {
-                return;
-              }
-              setStageAnchorRect(clickEvent.currentTarget.getBoundingClientRect());
+              setLifecycleAnchorRect(clickEvent.currentTarget.getBoundingClientRect());
             }}
-            title={isEditable ? '点击设置阶段标签' : ''}
           >
-            {taskEntry.stageTag ? taskEntry.stageTag : '未设置'}
+            {taskEntry.lifecycle || '待开发'}
           </span>
-          {stageAnchorRect ? (
-            <StageTagMenu
-              anchorRect={stageAnchorRect}
-              currentStage={taskEntry.stageTag ? taskEntry.stageTag : null}
-              onSelect={(nextStageTag) => {
-                setStageAnchorRect(null);
-                onSetStage(nextStageTag);
+          {lifecycleAnchorRect ? (
+            <LifecycleMenu
+              anchorRect={lifecycleAnchorRect}
+              currentLifecycle={taskEntry.lifecycle || '待开发'}
+              onSelect={(nextLifecycle) => {
+                setLifecycleAnchorRect(null);
+                onSetLifecycle(nextLifecycle);
               }}
-              onClose={() => setStageAnchorRect(null)}
+              onClose={() => setLifecycleAnchorRect(null)}
             />
           ) : null}
-          {isReorderEnabled && !isPublishedTask && isEditable ? (
+          {isReorderEnabled && !isPublishedTask ? (
             <>
               <button
                 type="button"
@@ -133,27 +173,25 @@ export function TaskActionsRow({
               </button>
             </>
           ) : null}
-          {isEditable ? (
-            isPublishedTask ? (
-              <button
-                type="button"
-                className="button-secondary task-action-button"
-                disabled={publishPending}
-                onClick={onUnpublish}
-              >
-                {publishPending ? '操作中...' : '取消发布'}
-              </button>
-            ) : (
-              <button
-                type="button"
-                className="button-secondary task-action-button"
-                disabled={publishPending}
-                onClick={onPublish}
-              >
-                {publishPending ? '发布中...' : '标记已发布'}
-              </button>
-            )
-          ) : null}
+          {isPublishedTask ? (
+            <button
+              type="button"
+              className="button-secondary task-action-button"
+              disabled={publishPending}
+              onClick={onUnpublish}
+            >
+              {publishPending ? '操作中...' : '取消发布'}
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="button-secondary task-action-button"
+              disabled={publishPending}
+              onClick={onPublish}
+            >
+              {publishPending ? '发布中...' : '标记已发布'}
+            </button>
+          )}
         </div>
       </td>
     </tr>

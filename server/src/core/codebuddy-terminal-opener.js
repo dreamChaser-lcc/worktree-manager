@@ -273,6 +273,29 @@ if ($script:targetHandle -ne [IntPtr]::Zero) {
 }
 
 /**
+ * 构造 CodeBuddy CLI 的交互式启动参数（终端窗口 / herdr 工作区 / herdr app 三处共用）。
+ *
+ * --permission-mode bypassPermissions：跳过工具调用的权限确认，只作用于本次进程，不写全局设置。
+ * 比 -y/--dangerously-skip-permissions 更彻底——后者对 HIGH/CRITICAL 操作仍会询问。
+ */
+export function buildCodebuddyCliArguments({ port, sessionId, includeResumeMissing = false }) {
+  const argumentList = [];
+  const normalizedPort = String(port || '').trim();
+  if (normalizedPort) {
+    argumentList.push('--port', normalizedPort);
+  }
+  const normalizedSessionId = String(sessionId || '').trim();
+  if (normalizedSessionId) {
+    argumentList.push('--resume', normalizedSessionId);
+    if (includeResumeMissing) {
+      argumentList.push('--resume-create-missing');
+    }
+  }
+  argumentList.push('--permission-mode', 'bypassPermissions');
+  return argumentList;
+}
+
+/**
  * 打开终端窗口并启动 codebuddy TUI。
  * resumeSessionId 由调用方提供（平台侧已记录），有值走 --resume 续接同一段上下文，否则起新会话。
  */
@@ -299,15 +322,10 @@ export function openCodebuddyTerminalWindow({ workingDirectoryPath, resumeSessio
     throw new ValidationError('当前系统暂不支持一键打开终端 CLI（仅实现 Windows）');
   }
 
-  const normalizedSessionId = String(resumeSessionId || '').trim() || null;
-  const normalizedPort = String(port || '').trim();
-  const codebuddyArgumentList = [];
-  if (normalizedPort) {
-    codebuddyArgumentList.push('--port', normalizedPort);
-  }
-  if (normalizedSessionId) {
-    codebuddyArgumentList.push('--resume', normalizedSessionId);
-  }
+  const codebuddyArgumentList = buildCodebuddyCliArguments({
+    port,
+    sessionId: resumeSessionId
+  });
 
   /**
    * 用 `wt -w new` 开独立窗口，而不是当前窗口的新标签页。

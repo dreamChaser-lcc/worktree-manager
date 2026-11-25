@@ -520,32 +520,41 @@ button {
   min-width: 110px;
 }
 
+/* 生命周期下拉浮层：竖排 + 白底阴影，避免横排铺开遮挡相邻列 */
 .stage-tag-menu {
-  display: inline-flex;
-  display: inline-flex;
-  gap: 6px;
-  margin-right: 8px;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  min-width: 112px;
+  padding: 4px;
+  background-color: #ffffff;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(140, 149, 159, 0.25);
 }
 
 .stage-tag-menu-item {
-  padding: 2px 10px;
+  display: block;
+  width: 100%;
+  padding: 6px 10px;
   font-size: 12px;
-  border-radius: 10px;
-  border: 1px solid #d0d7de;
-  background-color: #ffffff;
-  color: #57606a;
+  line-height: 1.4;
+  text-align: left;
+  border: none;
+  border-radius: 6px;
+  background-color: transparent;
+  color: #24292f;
   cursor: pointer;
 }
 
 .stage-tag-menu-item:hover {
-  border-color: #0969da;
+  background-color: #f3f4f6;
   color: #0969da;
 }
 
 .stage-tag-menu-item-active {
   background-color: #0969da;
   color: #ffffff;
-  border-color: #0969da;
 }
 
 .requirement-row-drag-over td {
@@ -2292,4 +2301,29 @@ button {
 
 .codebuddy-launch-footer-hint {
   margin: 0 10px 0 0;
+}
+
+/* ===== 生命周期与已删除状态 ===== */
+.task-deleted-meta {
+  color: #6b7280;
+  font-size: 12px;
+  margin-right: 8px;
+}
+
+.task-deleted-hint {
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.detail-lifecycle-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.detail-lifecycle-select {
+  width: 140px;
+  margin-right: 10px;
+  margin-bottom: 4px;
 }

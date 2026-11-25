@@ -6,7 +6,8 @@ import net from 'node:net';
 import path from 'node:path';
 import { persistenceManager } from '../storage/persistence-manager.js';
 import { resolveCodebuddyExecutable } from './codebuddy-cli-resolver.js';
-import { listRunningInteractiveSessions } from './codebuddy-terminal-opener.js';
+import { buildCodebuddyCliArguments, listRunningInteractiveSessions } from './codebuddy-terminal-opener.js';
+import { startCommandInHerdrApp } from './herdr-app-opener.js';
 import { openWorkspaceInHerdr, resolveHerdrExecutable, startCodebuddyTuiInHerdrPane } from './herdr-opener.js';
 import { NotFoundError, ValidationError } from './errors.js';
 
@@ -93,8 +94,10 @@ async function persistInstanceStateToDisk() {
     activeSessionId: instanceRecord.activeSessionId || null,
     // 会话通道：rest = 轻量（纯文本）；acp = 完整（模型/权限/图片/停止）
     sessionChannel: instanceRecord.sessionChannel === 'acp' ? 'acp' : 'rest',
-    // 打开位置：window = 终端窗口（激活用 AppActivate）；herdr = herdr 工作区
-    launchTarget: instanceRecord.launchTarget === 'herdr' ? 'herdr' : 'window',
+    // 打开位置：window = 终端窗口；herdr = herdr TUI 工作区；herdr-app = herdr 桌面客户端
+    launchTarget: ['herdr', 'herdr-app'].includes(instanceRecord.launchTarget)
+      ? instanceRecord.launchTarget
+      : 'window',
     // true = 平台自己起的 serve 进程（可停止）；false = 复用你已打开的 TUI 进程（只能解绑）
     ownedByPlatform: instanceRecord.ownedByPlatform === true,
     // 区分「用户主动停止」与「探活失败的停止」：前者重载后不再探活
@@ -128,7 +131,9 @@ function isPortAvailable(portNumber) {
     probeServer.once('listening', () => {
       probeServer.close(() => resolve(true));
     });
-    probeServer.listen(portNumber, '127.0.0.1');
+    // 绑 0.0.0.0 而不是 127.0.0.1：Windows 下若对端只监听了回环，
+    // 用 127.0.0.1 探测有时会误判为空闲，导致两个实例抢同一端口
+    probeServer.listen(portNumber, '0.0.0.0');
   });
 }
 
@@ -166,6 +171,18 @@ function findListeningProcessId(portNumber) {
 export async function checkInstanceHealth(instanceRecord, timeoutMilliseconds = HEALTH_CHECK_TIMEOUT_MS) {
   if (!instanceRecord || !instanceRecord.port || !instanceRecord.authToken) {
     return false;
+  }
+
+  /**
+   * 端口可能被别的任务实例占着（历史记录里多条记录共用一个端口）：
+   * 只请求 /health 会因为 gateway 密码相同而误判成"自己的实例还活着"，
+   * 必须确认监听该端口的进程就是记录里的那个 pid。
+   */
+  if (instanceRecord.pid) {
+    const listeningProcessId = findListeningProcessId(instanceRecord.port);
+    if (listeningProcessId && listeningProcessId !== instanceRecord.pid) {
+      return false;
+    }
   }
   const abortController = new AbortController();
   const abortTimer = setTimeout(() => abortController.abort(), timeoutMilliseconds);
@@ -220,8 +237,41 @@ export async function refreshAllInstanceStates({ force = false } = {}) {
   lastStateRefreshAt = nowTimestamp;
   const instanceList = Array.from(instanceMap.values());
   await Promise.all(instanceList.map((instanceRecord) => refreshInstanceState(instanceRecord)));
+
+  /**
+   * 一个进程只能服务一个实例。
+   * 历史上端口冲突时，多个任务记录会通过端口反查拿到同一个 pid，
+   * 于是都显示"运行中"，实际只有一个进程——表现就是"每个任务共用同一个 CodeBuddy 实例"。
+   * 这里按 pid 去重：保留最近活跃的那条，其余标记异常。
+   */
+  let hasConflictChange = false;
+  const pidOwnerMap = new Map();
+  for (const instanceRecord of instanceList) {
+    if (instanceRecord.state !== 'running' || !instanceRecord.pid) {
+      continue;
+    }
+    const ownerRecord = pidOwnerMap.get(instanceRecord.pid);
+    if (!ownerRecord) {
+      pidOwnerMap.set(instanceRecord.pid, instanceRecord);
+      continue;
+    }
+
+    const keepRecord =
+      new Date(instanceRecord.lastActiveAt || 0) > new Date(ownerRecord.lastActiveAt || 0)
+        ? instanceRecord
+        : ownerRecord;
+    const dropRecord = keepRecord === instanceRecord ? ownerRecord : instanceRecord;
+    dropRecord.state = 'error';
+    dropRecord.lastError = `端口 ${dropRecord.port} 被另一实例的进程（pid ${dropRecord.pid}）占用，本实例并未真正启动`;
+    hasConflictChange = true;
+    pidOwnerMap.set(instanceRecord.pid, keepRecord);
+  }
+
+  if (hasConflictChange) {
+    await persistInstanceStateToDisk();
+  }
   return instanceList;
-}
+  }
 
 /** 内部用：只保证磁盘记录已载入，不触发探活（避免递归） */
 async function ensureInitializedWithoutRefresh() {
@@ -258,6 +308,10 @@ function findReusableGatewaySession(candidateDirectoryList) {
 
 /** 选一个可用端口：优先用户指定，其次从端口池里挑第一个空闲且未被记录的 */
 async function resolveInstancePort(requestedPort) {
+  // 先把持久化的实例记录灌进内存表：服务刚启动时 instanceMap 是空的，
+  // 不加载的话每次都从 59000 起分配，多个任务会拿到同一个端口（后启动的抢不到端口）
+  await ensureInitializedWithoutRefresh();
+
   const usedPortSet = new Set(
     Array.from(instanceMap.values())
       .filter((instanceRecord) => instanceRecord.state !== 'stopped')
@@ -466,7 +520,9 @@ export async function startCodebuddyInstance(startInput) {
   let childProcess = null;
   if (launchMode === 'tui') {
     // TUI 形态：一个进程同时提供「终端界面」和「HTTP API」（--port 对交互式同样生效，已实测）。
-    const launchTarget = startInput.launchTarget === 'herdr' ? 'herdr' : 'window';
+    const launchTarget = ['herdr', 'herdr-app'].includes(startInput.launchTarget)
+      ? startInput.launchTarget
+      : 'window';
     // 会话续接按工作目录查找，优先落在 worktree 目录上
     const tuiWorkingDirectory =
       (Array.isArray(startInput.candidateDirectoryList) && startInput.candidateDirectoryList[0]) ||
@@ -502,6 +558,39 @@ export async function startCodebuddyInstance(startInput) {
       } catch {
         // 日志写失败不影响启动
       }
+    } else if (launchTarget === 'herdr-app') {
+      // 在 herdr app（桌面客户端）里开带 codebuddy 的标签页：
+      // 先切到该目录的 space，再用 tab.new 带 argv 启动，平台仍通过同一端口当网关
+      const appCliArgumentList = buildCodebuddyCliArguments({
+        port: portNumber,
+        sessionId: inheritedJobSessionId,
+        includeResumeMissing: true
+      });
+      /**
+       * argv 必须带程序名：herdr app 的 tab.new 是「直接执行 argv」而不是往 shell 里敲命令，
+       * 只传参数会让终端把 `--port` 当成命令（CommandNotFoundException）。
+       * 且 Windows 下 codebuddy 是 .CMD 包装脚本，不能被 CreateProcess 直接执行，需要 cmd /c。
+       */
+      const appLaunchArgumentList = ['cmd', '/c', executablePath, ...appCliArgumentList];
+      const appLaunchResult = await startCommandInHerdrApp({
+        // codebuddy 跑在 worktree 目录（--resume 按工作目录找会话）
+        workingDirectoryPath: tuiWorkingDirectory,
+        // space 归到需求聚合目录，侧边栏里显示的是需求名，而不是某个项目名
+        spaceDirectoryPath: instanceDirectoryPath,
+        argumentList: appLaunchArgumentList,
+        tabName: `cb-${portNumber}`
+      });
+      // herdr app 里没有可持有的子进程句柄，用空壳占位，就绪状态交给健康检查
+      childProcess = { pid: null, unref() {}, on() {} };
+      try {
+        fs.appendFileSync(
+          logFilePath,
+          `[${new Date().toISOString()}] 在 herdr app 空间「${appLaunchResult.spaceName}」启动 TUI：` +
+            `${appLaunchArgumentList.join(' ')} (cwd: ${tuiWorkingDirectory})\n`
+        );
+      } catch {
+        // 日志写失败不影响启动
+      }
     } else {
       /**
        * 用 `wt -w new` 开独立终端窗口（而不是当前窗口的新标签页）。
@@ -530,6 +619,8 @@ export async function startCodebuddyInstance(startInput) {
         // 记录里的会话可能已经被删（例如目录被清理），--resume-create-missing 让它退回新会话而不是直接退出
         tuiArgumentList.push('--resume', inheritedJobSessionId, '--resume-create-missing');
       }
+      // 跳过工具调用确认（仅本次进程生效，不写全局设置）
+      tuiArgumentList.push('--permission-mode', 'bypassPermissions');
       childProcess = spawn('wt.exe', tuiArgumentList, {
         cwd: tuiWorkingDirectory,
         detached: true,

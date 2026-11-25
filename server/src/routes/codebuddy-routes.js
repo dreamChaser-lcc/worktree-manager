@@ -44,13 +44,7 @@ import {
   openCodebuddyTerminalWindow,
   resolveResumableSessionId
 } from '../core/codebuddy-terminal-opener.js';
-import {
-  findHerdrPaneByWorkingDirectory,
-  focusHerdrWorkspace,
-  openWorkspaceInHerdr,
-  resumeCodebuddyInHerdrPane,
-  resolveHerdrExecutable
-} from '../core/herdr-opener.js';
+import { openInHerdrApp } from '../core/herdr-app-opener.js';
 import { NotFoundError, ValidationError } from '../core/errors.js';
 
 const SSE_HEARTBEAT_INTERVAL_MS = 15_000;
@@ -663,13 +657,27 @@ export function registerCodebuddyRoutes(router) {
    */
   router.post('/api/codebuddy/instances/:instanceId/activate', async (context) => {
     const instanceRecord = await getCodebuddyInstanceById(context.params.instanceId);
-    const launchTarget = instanceRecord.launchTarget === 'herdr' ? 'herdr' : 'terminal';
+    const launchTarget = ['herdr', 'herdr-app'].includes(instanceRecord.launchTarget)
+      ? instanceRecord.launchTarget
+      : 'terminal';
 
     if (launchTarget === 'herdr') {
       const focusResult = await focusHerdrWorkspace(instanceRecord.instanceDirectoryPath);
       context.body = {
         activated: Boolean(focusResult && focusResult.ok !== false),
         mode: 'herdr',
+        sessionName: ''
+      };
+      return;
+    }
+
+    if (launchTarget === 'herdr-app') {
+      // herdr app：切到该目录对应的 space 并置前，不重开终端
+      const spaceResult = await openInHerdrApp({ targetPath: instanceRecord.instanceDirectoryPath });
+      context.body = {
+        activated: Boolean(spaceResult && spaceResult.selected),
+        mode: 'herdr-app',
+        spaceName: spaceResult ? spaceResult.spaceName : '',
         sessionName: ''
       };
       return;
@@ -705,8 +713,9 @@ export function registerCodebuddyRoutes(router) {
     const stoppedInstance = await stopCodebuddyInstance(context.params.instanceId);
     // 实例要停了，ACP 连接一并释放，避免残留半开连接
     await disconnectAcp(stoppedInstance);
-    // 终端模式下顺手关掉窗口，避免留下「已退出进程」的黑窗
-    if (stoppedInstance.launchTarget !== 'herdr') {
+    // 终端模式下顺手关掉窗口，避免留下「已退出进程」的黑窗；
+    // herdr / herdr-app 的终端归 space 管理，这里不动（space 可能还有别的标签页）
+    if (!['herdr', 'herdr-app'].includes(stoppedInstance.launchTarget)) {
       await closeCodebuddyTerminalWindow(buildInstanceWindowTitle(stoppedInstance.taskId));
     }
     context.body = {

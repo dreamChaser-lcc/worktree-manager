@@ -92,6 +92,9 @@ export function RequirementTaskDetailDialog({
   onRevealPath,
   onOpenInHerdr,
   onCloseInHerdr,
+  onOpenInHerdrApp,
+  onCloseHerdrAppSpace,
+  onSetLifecycle,
   onRegenerateWorkspace,
   onRestoreShared,
   onRequestIndependentInstall,
@@ -104,12 +107,16 @@ export function RequirementTaskDetailDialog({
   const [herdrNotice, setHerdrNotice] = useState(null);
   // herdr 服务未运行时的启动确认层
   const [confirmHerdrStart, setConfirmHerdrStart] = useState(false);
+  // 生命周期切换的结果提示与请求中状态
+  const [lifecycleNotice, setLifecycleNotice] = useState(null);
+  const [lifecyclePending, setLifecyclePending] = useState(false);
 
   // ===== CodeBuddy 实例（一个需求一个实例，入口在这个弹窗里） =====
   const [codebuddyInstance, setCodebuddyInstance] = useState(null);
   const [codebuddyPending, setCodebuddyPending] = useState('');
   const [codebuddyNotice, setCodebuddyNotice] = useState(null);
-  const [codebuddyLaunchTarget, setCodebuddyLaunchTarget] = useState('window');
+  // 默认在 herdr app 里打开：桌面客户端里能直接看到需求空间，不需要额外找窗口
+  const [codebuddyLaunchTarget, setCodebuddyLaunchTarget] = useState('herdr-app');
   const [codebuddySessionList, setCodebuddySessionList] = useState([]);
   const [codebuddySessionListOpen, setCodebuddySessionListOpen] = useState(false);
 
@@ -241,7 +248,9 @@ export function RequirementTaskDetailDialog({
       await startCodebuddyInstance({
         taskId: requirementTask.id,
         port: String(codebuddyInstance.port),
-        launchTarget: codebuddyInstance.launchTarget === 'herdr' ? 'herdr' : 'window',
+        launchTarget: ['herdr', 'herdr-app'].includes(codebuddyInstance.launchTarget)
+          ? codebuddyInstance.launchTarget
+          : 'window',
         sessionId,
         forceRestart: true
       });
@@ -265,6 +274,46 @@ export function RequirementTaskDetailDialog({
           <button type="button" className="button-secondary" onClick={onClose}>
             关闭
           </button>
+        </div>
+
+        <div className="requirement-detail-body">
+          <span className="form-label">生命周期</span>
+          <div className="detail-lifecycle-row">
+            <select
+              className="form-input detail-lifecycle-select"
+              value={requirementTask.lifecycle || '待开发'}
+              disabled={Boolean(requirementTask.deletedAt) || lifecyclePending}
+              onChange={async (changeEvent) => {
+                const nextLifecycle = changeEvent.target.value;
+                setLifecycleNotice(null);
+                setLifecyclePending(true);
+                try {
+                  const updateResult = await onSetLifecycle(requirementTask, nextLifecycle);
+                  if (updateResult) {
+                    setLifecycleNotice({ type: updateResult.ok ? 'success' : 'error', text: updateResult.text });
+                  }
+                } finally {
+                  setLifecyclePending(false);
+                }
+              }}
+            >
+              <option value="待开发">待开发</option>
+              <option value="开发中">开发中</option>
+              <option value="测试中">测试中</option>
+              <option value="已发布">已发布</option>
+            </select>
+            <span className="form-hint">
+              决定任务落在哪个 tab：待开发/开发中 → 待提测，测试中 → 已提测，已发布 → 已发布
+            </span>
+          </div>
+          {requirementTask.deletedAt ? (
+            <div className="alert-warning">该任务已删除，状态不可修改；恢复后可继续推进。</div>
+          ) : null}
+          {lifecycleNotice ? (
+            <div className={lifecycleNotice.type === 'success' ? 'alert-success' : 'alert-error'}>
+              {lifecycleNotice.text}
+            </div>
+          ) : null}
         </div>
 
         <div className="requirement-detail-body">
@@ -349,6 +398,60 @@ export function RequirementTaskDetailDialog({
                     </span>
                   ) : (
                     '在 herdr 打开'
+                  )}
+                </button>
+                <button
+                  type="button"
+                  className="button-secondary"
+                  title="在 herdr app（PC 客户端）里打开该需求的终端，工作目录为工作区文件所在目录"
+                  disabled={pathActionPending.isPending(`herdr-app:${requirementTask.workspaceFilePath}`)}
+                  onClick={async () => {
+                    setHerdrNotice(null);
+                    const appResult = await onOpenInHerdrApp(
+                      requirementTask.workspaceFilePath,
+                      requirementTask.requirementName,
+                      requirementTask.id
+                    );
+                    if (appResult) {
+                      setHerdrNotice({
+                        type: appResult.ok ? 'success' : 'error',
+                        text: appResult.text
+                      });
+                    }
+                  }}
+                >
+                  {pathActionPending.isPending(`herdr-app:${requirementTask.workspaceFilePath}`) ? (
+                    <span>
+                      <span className="button-spinner" />
+                      打开中...
+                    </span>
+                  ) : (
+                    '在 herdr app 打开'
+                  )}
+                </button>
+                <button
+                  type="button"
+                  className="button-secondary"
+                  title="关闭该需求在 herdr app 里的 space（space 内的终端会一并结束）"
+                  disabled={pathActionPending.isPending(`herdr-app-close:${requirementTask.workspaceFilePath}`)}
+                  onClick={async () => {
+                    setHerdrNotice(null);
+                    const appCloseResult = await onCloseHerdrAppSpace(requirementTask.workspaceFilePath);
+                    if (appCloseResult) {
+                      setHerdrNotice({
+                        type: appCloseResult.ok ? 'success' : 'error',
+                        text: appCloseResult.text
+                      });
+                    }
+                  }}
+                >
+                  {pathActionPending.isPending(`herdr-app-close:${requirementTask.workspaceFilePath}`) ? (
+                    <span>
+                      <span className="button-spinner" />
+                      关闭中...
+                    </span>
+                  ) : (
+                    '关闭 herdr app 空间'
                   )}
                 </button>
                 <button
@@ -527,6 +630,14 @@ export function RequirementTaskDetailDialog({
                       onChange={() => setCodebuddyLaunchTarget('herdr')}
                     />
                     <span>herdr 工作区</span>
+                  </label>
+                  <label className="codebuddy-instance-radio">
+                    <input
+                      type="radio"
+                      checked={codebuddyLaunchTarget === 'herdr-app'}
+                      onChange={() => setCodebuddyLaunchTarget('herdr-app')}
+                    />
+                    <span>herdr app</span>
                   </label>
                 </div>
                 <div className="codebuddy-instance-launch-actions">

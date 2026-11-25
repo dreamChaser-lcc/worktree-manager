@@ -4,7 +4,7 @@ import path from 'node:path';
 import { isGitRepository } from '../core/validators.js';
 import { executeGitCommand } from '../core/git-executor.js';
 import { revealInExplorer } from '../core/explorer-revealer.js';
-import { openWorkspaceInHerdr, closeWorkspaceInHerdr } from '../core/herdr-opener.js';
+import { openInHerdrApp, closeSpaceInHerdrApp } from '../core/herdr-app-opener.js';
 import { persistenceManager } from '../storage/persistence-manager.js';
 import { NotFoundError, ValidationError } from '../core/errors.js';
 
@@ -68,25 +68,24 @@ export function registerFilesystemRoutes(router) {
     context.body = revealInExplorer(resolvedPath);
   });
 
-  // 在 herdr 里打开（或复用）工作区：工作目录指向 targetPath（传 .code-workspace 文件时取其所在目录）
-  router.post('/api/filesystem/open-herdr', async (context) => {
+  // 在 herdr app（PC 客户端）里打开该需求的终端，工作目录指向 targetPath 所在目录
+  router.post('/api/filesystem/open-herdr-app', async (context) => {
     const targetPath = context.request.body?.targetPath;
     const label = context.request.body?.label;
-    const startServer = Boolean(context.request.body?.startServer);
+    const taskId = context.request.body?.taskId;
     if (!targetPath || typeof targetPath !== 'string') {
       throw new ValidationError('缺少 targetPath');
     }
-    context.body = await openWorkspaceInHerdr({ targetPath, label, startServer });
+    context.body = await openInHerdrApp({ targetPath, label, taskId });
   });
 
-  // 关闭该需求在 herdr 里的工作区（删掉对应终端，窗格进程一并结束）
-  router.post('/api/filesystem/close-herdr', async (context) => {
+  // 关闭该需求在 herdr app 里的 space（space 内的终端会一并结束）
+  router.post('/api/filesystem/close-herdr-app', async (context) => {
     const targetPath = context.request.body?.targetPath;
-    const label = context.request.body?.label;
     if (!targetPath || typeof targetPath !== 'string') {
       throw new ValidationError('缺少 targetPath');
     }
-    context.body = closeWorkspaceInHerdr({ targetPath, label });
+    context.body = closeSpaceInHerdrApp({ targetPath });
   });
 
   // 实时校验所选目录是否为 git 仓库

@@ -59,10 +59,11 @@ export function createPersistenceManager(managerOptions = {}) {
     if (!stageTag) {
       return recordList;
     }
+    // 阶段筛选改为按 lifecycle 过滤（参数名沿用 stageTag，取值与生命周期一致，前端无需改）
     if (stageTag === 'unset') {
-      return recordList.filter((record) => !record.stageTag);
+      return recordList.filter((record) => !record.lifecycle);
     }
-    return recordList.filter((record) => record.stageTag === stageTag);
+    return recordList.filter((record) => record.lifecycle === stageTag);
   }
 
   /** 未发布列表排序：拖拽顺序（sortOrder 升序）优先，未排序的按更新时间倒序排在其后 */
@@ -75,6 +76,38 @@ export function createPersistenceManager(managerOptions = {}) {
       }
       return String(secondRecord.updatedAt || '').localeCompare(String(firstRecord.updatedAt || ''));
     });
+  }
+
+  /** 四个业务生命周期（「已删除」用 deletedAt 表达，不占 lifecycle 值） */
+  const REQUIREMENT_LIFECYCLE_LIST = ['待开发', '开发中', '测试中', '已发布'];
+
+  /**
+   * 取记录的生命周期。
+   * 迁移尚未覆盖到的历史记录按旧三字段兜底推导，保证列表不会漏数据：
+   * publishedAt 有值 → 已发布；stageTag 测试中/开发中 → 对应阶段；其余 → 待开发。
+   */
+  function resolveRecordLifecycle(record) {
+    if (record.lifecycle) {
+      return record.lifecycle;
+    }
+    if (record.publishedAt) {
+      return '已发布';
+    }
+    if (record.stageTag === '测试中') {
+      return '测试中';
+    }
+    if (record.stageTag === '开发中') {
+      return '开发中';
+    }
+    return '待开发';
+  }
+
+  /** 给记录补上 lifecycle（前端只认这个字段，不再自己按 publishedAt/stageTag 推导） */
+  function attachLifecycle(record) {
+    if (!record) {
+      return record;
+    }
+    return { ...record, lifecycle: resolveRecordLifecycle(record) };
   }
 
   /**
@@ -199,6 +232,8 @@ export function createPersistenceManager(managerOptions = {}) {
       try {
         await openStores(candidate.dataRootPath);
         initialized = true;
+      // 历史数据迁移（幂等）：按 publishedAt / stageTag 推导出 lifecycle
+      await migrateRequirementTaskLifecycle();
         if (candidate.source !== 'settings' && settingsCache.dataDirectory && !dataRootOverride) {
           warnStorageError(
             `配置的数据目录不可用，已回退到 ${candidate.source} 目录`,
@@ -654,7 +689,7 @@ export function createPersistenceManager(managerOptions = {}) {
 
   async function findRequirementTaskById(taskId) {
     if (!initialized) return null;
-    return stripInternalId(await requirementTasksDatastore.findOneAsync({ id: taskId }));
+    return attachLifecycle(stripInternalId(await requirementTasksDatastore.findOneAsync({ id: taskId })));
   }
 
   async function listRequirementTaskRecords(listOptions = {}) {
@@ -662,23 +697,23 @@ export function createPersistenceManager(managerOptions = {}) {
     const { status = 'all', page, pageSize, timeField, startDate, endDate, stageTag } = listOptions;
     try {
       let recordList = await requirementTasksDatastore.findAsync({}).sort({ updatedAt: -1 }).execAsync();
-      recordList = recordList.map(stripInternalId);
-      if (status === 'published') {
-        recordList = recordList.filter((record) => Boolean(record.publishedAt));
-      } else if (status === 'pending-test' || status === 'tested' || status === 'unpublished') {
-        // 已提测 = 未发布且阶段标签为「测试中」；待提测用排除法（除已提测、已发布外都算待提测），
-        // 这样后续新增阶段标签无需再改判断，也不会把记录漏在两个 tab 之外
-        const unpublishedRecordList = recordList.filter((record) => !record.publishedAt);
-        const testedRecordList = unpublishedRecordList.filter((record) => record.stageTag === '测试中');
-        if (status === 'tested') {
-          recordList = sortUnpublishedRecords(testedRecordList);
+      recordList = recordList.map(stripInternalId).map(attachLifecycle);
+
+      if (status === 'deleted') {
+        // 已删除单独成 tab：软删记录不再参与任何业务 tab
+        recordList = recordList.filter((record) => Boolean(record.deletedAt));
+      } else {
+        recordList = recordList.filter((record) => !record.deletedAt);
+        if (status === 'published') {
+          recordList = recordList.filter((record) => record.lifecycle === '已发布');
+        } else if (status === 'tested') {
+          recordList = sortUnpublishedRecords(recordList.filter((record) => record.lifecycle === '测试中'));
         } else if (status === 'pending-test') {
-          const testedTaskIdSet = new Set(testedRecordList.map((record) => record.id));
           recordList = sortUnpublishedRecords(
-            unpublishedRecordList.filter((record) => !testedTaskIdSet.has(record.id))
+            recordList.filter((record) => record.lifecycle === '待开发' || record.lifecycle === '开发中')
           );
-        } else {
-          recordList = sortUnpublishedRecords(unpublishedRecordList);
+        } else if (status === 'unpublished') {
+          recordList = sortUnpublishedRecords(recordList.filter((record) => record.lifecycle !== '已发布'));
         }
       }
       // 阶段标签过滤（在分页之前）：与状态 tab 取交集，如「待提测」里只看「开发中」
@@ -716,11 +751,69 @@ export function createPersistenceManager(managerOptions = {}) {
     return updatedCount;
   }
 
-  /** 设置/清除需求任务的发布标记（publishedAt：ISO 时间或 null） */
+  /**
+   * 设置/取消发布。
+   * 发布：lifecycle = 已发布，并记下发布时间；
+   * 取消发布：回到发布前一步「测试中」（不是掉回待提测）。
+   */
   async function setRequirementTaskPublished(taskId, published) {
     if (!initialized) return null;
-    const publishedAt = published ? new Date().toISOString() : null;
-    return updateRequirementTaskRecord(taskId, { publishedAt, updatedAt: publishedAt });
+    const nowTimestamp = new Date().toISOString();
+    if (published) {
+      return updateRequirementTaskRecord(taskId, {
+        lifecycle: '已发布',
+        publishedAt: nowTimestamp,
+        updatedAt: nowTimestamp
+      });
+    }
+    return updateRequirementTaskRecord(taskId, {
+      lifecycle: '测试中',
+      publishedAt: null,
+      updatedAt: nowTimestamp
+    });
+  }
+
+  /** 设置生命周期（四个业务值）；切到「已发布」时同步写 publishedAt，切走时清空 */
+  async function setRequirementTaskLifecycle(taskId, lifecycle) {
+    if (!initialized) return null;
+    if (!REQUIREMENT_LIFECYCLE_LIST.includes(lifecycle)) {
+      return null;
+    }
+    const nowTimestamp = new Date().toISOString();
+    return updateRequirementTaskRecord(taskId, {
+      lifecycle,
+      publishedAt: lifecycle === '已发布' ? nowTimestamp : null,
+      updatedAt: nowTimestamp
+    });
+  }
+
+  /**
+   * 一次性迁移：按旧字段（publishedAt / stageTag）推导出 lifecycle 写回磁盘，幂等。
+   * 已有 lifecycle 的记录跳过；已删除记录顺带补 lifecycleBeforeDelete，供恢复时回到原状态。
+   * 迁移不改 updatedAt，避免打乱列表排序。
+   */
+  async function migrateRequirementTaskLifecycle() {
+    if (!initialized) return 0;
+    let migratedCount = 0;
+    try {
+      const recordList = await requirementTasksDatastore.findAsync({}).execAsync();
+      for (const rawRecord of recordList) {
+        const record = stripInternalId(rawRecord);
+        if (record.lifecycle) {
+          continue;
+        }
+        const derivedLifecycle = resolveRecordLifecycle(record);
+        const patch = { lifecycle: derivedLifecycle };
+        if (record.deletedAt && !record.lifecycleBeforeDelete) {
+          patch.lifecycleBeforeDelete = derivedLifecycle;
+        }
+        await requirementTasksDatastore.updateAsync({ id: record.id }, { $set: patch }, {});
+        migratedCount += 1;
+      }
+    } catch (migrationError) {
+      warnStorageError('需求任务生命周期迁移失败', migrationError);
+    }
+    return migratedCount;
   }
 
   async function deleteRequirementTaskRecord(taskId) {
@@ -764,7 +857,10 @@ export function createPersistenceManager(managerOptions = {}) {
     findRequirementTaskById,
     listRequirementTaskRecords,
     setRequirementTaskPublished,
+    setRequirementTaskLifecycle,
     setRequirementTaskStage,
+    migrateRequirementTaskLifecycle,
+    REQUIREMENT_LIFECYCLE_LIST,
     reorderRequirementTasks,
     deleteRequirementTaskRecord
   };

@@ -92,6 +92,14 @@ export function CodebuddySessionPickerDialog({
                 />
                 herdr 工作区
               </label>
+              <label className="radio-label">
+                <input
+                  type="radio"
+                  checked={launchTarget === 'herdr-app'}
+                  onChange={() => onLaunchTargetChange('herdr-app')}
+                />
+                herdr app
+              </label>
             </div>
             <div className="codebuddy-launch-row">
               <span className="form-label codebuddy-launch-label">端口</span>

@@ -28,10 +28,9 @@ export const serverConfig = {
   /** 默认编辑器启动命令，可被请求参数覆盖 */
   defaultEditorCommand: 'code',
   /**
-   * herdr 可执行文件：留空表示自动探测（PATH → ~/.herdr/packages/standalone/releases 下最高版本）。
-   * 安装在非标准位置时可填绝对路径。
+   * herdr app（PC 客户端）可执行文件：留空自动探测（运行中的进程 → PATH → 开始菜单快捷方式 → 常见安装目录）。
    */
-  herdrCommand: '',
+  herdrAppCommand: '',
   /** 忽略文件复制默认白名单 */
   defaultIgnoreFilePatterns: ['.env', '.env.local', '*.local'],
   /**

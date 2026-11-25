@@ -140,9 +140,14 @@ export function setRequirementPublished(taskId, published) {
   return postJson(`/api/requirement-tasks/${encodeURIComponent(taskId)}/publish`, { published });
 }
 
-/** 设置阶段标签（待开发/开发中/测试中，null 清除） */
+/** 设置阶段标签（待开发/开发中/测试中，null 清除）—— 旧接口，状态请用 setRequirementLifecycle */
 export function setRequirementStage(taskId, stageTag) {
   return postJson(`/api/requirement-tasks/${encodeURIComponent(taskId)}/stage`, { stageTag });
+}
+
+/** 设置生命周期（待开发 / 开发中 / 测试中 / 已发布）：唯一的状态修改入口 */
+export function setRequirementLifecycle(taskId, lifecycle) {
+  return requestJson('PATCH', `/api/requirement-tasks/${encodeURIComponent(taskId)}/lifecycle`, { lifecycle });
 }
 
 /** 拖拽排序持久化 */
@@ -199,6 +204,16 @@ export function openInHerdr(targetPath, label, startServer = false) {
 /** 关闭该需求在 herdr 里的工作区（删掉对应终端） */
 export function closeInHerdr(targetPath, label) {
   return postJson('/api/filesystem/close-herdr', { targetPath, label });
+}
+
+/** 在 herdr app（PC 客户端）里打开该需求的终端，工作目录为 targetPath 所在目录 */
+export function openInHerdrApp(targetPath, label, taskId) {
+  return postJson('/api/filesystem/open-herdr-app', { targetPath, label, taskId });
+}
+
+/** 关闭该需求在 herdr app 里的 space（space 内的终端会一并结束） */
+export function closeHerdrAppSpace(targetPath) {
+  return postJson('/api/filesystem/close-herdr-app', { targetPath });
 }
 
 export function fetchRequirementDependencyCheck(taskId) {

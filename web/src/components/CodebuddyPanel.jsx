@@ -49,7 +49,7 @@ export function CodebuddyPanel() {
   const [pendingElapsedSeconds, setPendingElapsedSeconds] = useState(0);
   const [overviewRefreshing, setOverviewRefreshing] = useState(false);
   // 启动弹窗里的配置：启动位置（窗口 / herdr）、端口（留空自动分配）、续接方式
-  const [launchTarget, setLaunchTarget] = useState('window');
+  const [launchTarget, setLaunchTarget] = useState('herdr-app');
   const [launchPort, setLaunchPort] = useState('');
   // last = 直接续接上次会话；switch = 启动后再弹窗让用户挑
   const [launchResumeMode, setLaunchResumeMode] = useState('last');
@@ -211,7 +211,7 @@ export function CodebuddyPanel() {
       });
       return;
     }
-    setLaunchTarget(presetTarget || 'window');
+    setLaunchTarget(presetTarget || 'herdr-app');
     setLaunchPort(selectedInstance ? String(selectedInstance.port) : '');
     await openSessionPicker('launch');
   }
@@ -238,7 +238,12 @@ export function CodebuddyPanel() {
       });
       setSessionPickerVisible(false);
       setLaunchPort('');
-      const targetText = launchTarget === 'herdr' ? 'herdr 工作区' : '独立终端窗口';
+      const targetTextMap = {
+      herdr: 'herdr 工作区',
+      'herdr-app': 'herdr app',
+      window: '独立终端窗口'
+    };
+    const targetText = targetTextMap[launchTarget] || '独立终端窗口';
       setNoticeMessage({
         type: 'success',
         text: `已在${targetText}启动 CodeBuddy TUI（端口 ${startResult.instance.port}）`

@@ -73,6 +73,26 @@ export function registerRequirementTaskRoutes(router) {
     context.body = { task: updatedRecord, published };
   });
 
+  // 设置生命周期（待开发 / 开发中 / 测试中 / 已发布）：唯一的状态修改入口
+  router.patch('/api/requirement-tasks/:taskId/lifecycle', async (context) => {
+    const taskId = context.params.taskId;
+    const taskRecord = await persistenceManager.findRequirementTaskById(taskId);
+    if (!taskRecord) {
+      throw new NotFoundError(`需求任务不存在: ${taskId}`);
+    }
+    if (taskRecord.deletedAt) {
+      throw new ValidationError('已删除的需求任务不能改状态，请先恢复');
+    }
+    const lifecycleValue = String((context.request.body || {}).lifecycle || '').trim();
+    if (!persistenceManager.REQUIREMENT_LIFECYCLE_LIST.includes(lifecycleValue)) {
+      throw new ValidationError(
+        `生命周期不合法：${lifecycleValue || '(空)'}，可选值：${persistenceManager.REQUIREMENT_LIFECYCLE_LIST.join(' / ')}`
+      );
+    }
+    const updatedRecord = await persistenceManager.setRequirementTaskLifecycle(taskId, lifecycleValue);
+    context.body = { task: updatedRecord, lifecycle: lifecycleValue };
+  });
+
   router.post('/api/requirement-tasks', async (context) => {
     const requestBody = context.request.body || {};
     const taskInput = normalizeRequirementTaskInput(requestBody);
@@ -80,6 +100,8 @@ export function registerRequirementTaskRoutes(router) {
     const taskRecord = {
       id: randomUUID(),
       ...taskInput,
+      // 新任务默认「待开发」；旧调用方仍传 stageTag 时按其映射
+      lifecycle: mapStageTagToLifecycle(requestBody.stageTag),
       workspaceFilePath: null,
       createdAt: timestampIso,
       updatedAt: timestampIso
@@ -108,11 +130,17 @@ export function registerRequirementTaskRoutes(router) {
     if (requestBody.stageTag !== undefined) {
       stageTagValue = ['待开发', '开发中', '测试中'].includes(requestBody.stageTag) ? requestBody.stageTag : null;
     }
-    const updatedRecord = await persistenceManager.updateRequirementTaskRecord(taskId, {
+    const updatePatch = {
       ...taskInput,
-      stageTag: stageTagValue,
       updatedAt: new Date().toISOString()
-    });
+    };
+    // stageTag 仅作为兼容字段保留：只有调用方显式传它时才同步 lifecycle，
+    // 否则编辑需求名/项目时会把已经推进的生命周期冲回「待开发」
+    if (requestBody.stageTag !== undefined) {
+      updatePatch.stageTag = stageTagValue;
+      updatePatch.lifecycle = mapStageTagToLifecycle(stageTagValue);
+    }
+    const updatedRecord = await persistenceManager.updateRequirementTaskRecord(taskId, updatePatch);
 
     let workspaceResult = null;
     if (requestBody.generateWorkspace !== false) {
@@ -413,6 +441,8 @@ export function registerRequirementTaskRoutes(router) {
 
     await persistenceManager.updateRequirementTaskRecord(taskId, {
       deletedAt: new Date().toISOString(),
+      // 记住删除前的状态，恢复时回到原位（而不是掉进「待提测」）
+      lifecycleBeforeDelete: taskRecord.lifecycle || '待开发',
       projectList: nextProjectList
     });
     context.body = {
@@ -557,6 +587,9 @@ export function registerRequirementTaskRoutes(router) {
 
     const updatedRecord = await persistenceManager.updateRequirementTaskRecord(taskId, {
       deletedAt: null,
+      // 回到删除前的生命周期；老数据没有该字段时按当前值兜底
+      lifecycle: taskRecord.lifecycleBeforeDelete || taskRecord.lifecycle || '待开发',
+      lifecycleBeforeDelete: null,
       updatedAt: new Date().toISOString()
     });
 
@@ -731,6 +764,20 @@ export function convertRemoteUrlToWebUrl(remoteUrl) {
 }
 
 /** 校验并规范化表单输入：需求链接/分支名称/至少一个项目（名称+主仓库路径），需求名称与预留字段可选 */
+/**
+ * 旧的阶段标签映射到生命周期。
+ * 只有仍在传 stageTag 的调用方（旧前端 / MCP 旧版本）会走到这里，映射后即得到 lifecycle。
+ */
+function mapStageTagToLifecycle(stageTag) {
+  if (stageTag === '测试中') {
+    return '测试中';
+  }
+  if (stageTag === '开发中') {
+    return '开发中';
+  }
+  return '待开发';
+}
+
 function normalizeRequirementTaskInput(requestBody) {
   const requirementNameText = typeof requestBody.requirementName === 'string' ? requestBody.requirementName.trim() : '';
   const requirementUrlText = requireNonEmptyText(requestBody.requirementUrl, '需求链接');
