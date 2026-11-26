@@ -91,11 +91,8 @@ export function TaskActionsRow({
   activeStatusTab,
   canMoveUp,
   canMoveDown,
-  publishPending,
   onMoveUp,
   onMoveDown,
-  onPublish,
-  onUnpublish,
   onSetLifecycle,
   onRestore
 }) {
@@ -173,25 +170,7 @@ export function TaskActionsRow({
               </button>
             </>
           ) : null}
-          {isPublishedTask ? (
-            <button
-              type="button"
-              className="button-secondary task-action-button"
-              disabled={publishPending}
-              onClick={onUnpublish}
-            >
-              {publishPending ? '操作中...' : '取消发布'}
-            </button>
-          ) : (
-            <button
-              type="button"
-              className="button-secondary task-action-button"
-              disabled={publishPending}
-              onClick={onPublish}
-            >
-              {publishPending ? '发布中...' : '标记已发布'}
-            </button>
-          )}
+          <span className="task-lifecycle-hint">点左侧标签切换状态（含已发布）</span>
         </div>
       </td>
     </tr>

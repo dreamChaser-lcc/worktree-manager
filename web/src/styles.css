@@ -2327,3 +2327,8 @@ button {
   margin-right: 10px;
   margin-bottom: 4px;
 }
+
+.task-lifecycle-hint {
+  color: #9ca3af;
+  font-size: 12px;
+}

@@ -22,7 +22,6 @@ import {
   openInHerdrApp,
   closeHerdrAppSpace,
   fetchRequirementTaskPage,
-  setRequirementPublished,
   setRequirementLifecycle,
   reorderRequirementTasks
 } from '../api/client.js';
@@ -220,8 +219,6 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
   // 删除/彻底删除确认弹窗的提交中标记（确认按钮 spinner 与禁用）
   const [deleteSubmitting, setDeleteSubmitting] = useState(false);
   const [permanentDeleting, setPermanentDeleting] = useState(false);
-  // 发布标记请求中（按任务 id，禁用按钮 + spinner）
-  const [publishPendingId, setPublishPendingId] = useState(null);
   // 恢复 / 工作区重新生成 / 打开与显示 等异步按钮的 pending 管理
   const restorePending = usePendingActions();
   const workspaceRegenPending = usePendingActions();
@@ -383,22 +380,6 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
     }
   }
 
-  /** 标记/取消发布（切换 publishedAt 标记） */
-  async function handleSetPublished(taskEntry, published) {
-    try {
-      setPublishPendingId(taskEntry.id);
-      await setRequirementPublished(taskEntry.id, published);
-      setActionMessage({
-        type: 'success',
-        text: published ? '已标记为已发布。' : '已取消发布标记。'
-      });
-      refreshTaskList();
-    } catch (publishError) {
-      setActionMessage({ type: 'error', text: publishError.message });
-    } finally {
-      setPublishPendingId(null);
-    }
-  }
   /** 上移/下移排序：乐观更新本地顺序，持久化到后端 */
   function handleMoveTask(taskEntry, direction) {
     const currentIndex = taskList.findIndex((taskEntryItem) => taskEntryItem.id === taskEntry.id);
@@ -1073,11 +1054,8 @@ export function RequirementTaskPanel({ initialBrowsePath, workspaceDirectory, wo
                   canMoveDown={
                     taskList.findIndex((taskEntryItem) => taskEntryItem.id === taskEntry.id) < taskList.length - 1
                   }
-                  publishPending={publishPendingId === taskEntry.id}
                   onMoveUp={() => handleMoveTask(taskEntry, 'up')}
                   onMoveDown={() => handleMoveTask(taskEntry, 'down')}
-                  onPublish={() => handleSetPublished(taskEntry, true)}
-                  onUnpublish={() => handleSetPublished(taskEntry, false)}
                   onSetLifecycle={(nextLifecycle) => handleSetLifecycle(taskEntry, nextLifecycle)}
                   onRestore={() => handleRestore(taskEntry)}
                 />
